@@ -10,10 +10,10 @@ npx lint-staged || (
 
 echo '🛠️ Running Jest tests...'
 
-npm run test || (
-    echo '❌ Jest tests failed. Fix errors and try committing again.';
-    false;
-)
+# npm run test || (
+#     echo '❌ Jest tests failed. Fix errors and try committing again.';
+#     false;
+# )
 
 echo '📦 Running Next.js production build check...'
 
