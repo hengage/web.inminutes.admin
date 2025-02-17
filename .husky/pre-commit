@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo '🏗️👷 Running lint-staged (Prettier + ESLint on staged files)...'
+
+npx lint-staged || (
+    echo '❌ Lint-Staged checks failed. Fix the issues, add changes, and try again.';
+    false;
+)
+
+echo '🛠️ Running Jest tests...'
+
+npm run test || (
+    echo '❌ Jest tests failed. Fix errors and try committing again.';
+    false;
+)
+
+echo '📦 Running Next.js production build check...'
+
+npm run build || (
+    echo '❌ Next.js build failed. Fix errors and try again.';
+    false;
+)
+
+echo '✅ All checks passed! Proceeding with commit...'
+
+chmod +x .husky/pre-commit

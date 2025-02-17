@@ -1,0 +1,12 @@
+node_modules
+.next
+build
+dist
+components/ui/*
+cypress/*
+.vscode/*
+eslint.config.mjs
+components.json
+tailwind.config.ts
+.prettierrc
+.prettierignore
