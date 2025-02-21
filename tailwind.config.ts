@@ -58,6 +58,7 @@ export default {
         },
         ctm: {
           "primary-colour": "var(--ctm-primary-colour)",
+          "secondary-colour": "var(--ctm-secondary-colour)",
           "normal-grey": "var(--ctm-normal-grey)",
           "light-grey": "var(--ctm-light-grey)",
           "dark-grey": "var(--ctm-dark-grey)",

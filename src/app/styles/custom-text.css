@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ctm-header-1 {
+  @apply text-[40px] font-bold leading-normal;
+}
+
+.ctm-header-2 {
+  @apply text-[32px] font-semibold leading-normal;
+}
+
+.ctm-header-3 {
+  @apply text-[24px] font-medium leading-normal;
+}
+
+.ctm-header-4 {
+  @apply text-[18px] font-normal leading-normal;
+}
+
+.ctm-header-5 {
+  @apply text-[16px] font-normal leading-normal;
+}
+
+.ctm-header-6 {
+  @apply text-[14px] font-normal leading-normal;
+}
+
+.ctm-paragraph-1 {
+  @apply !text-[1rem] font-normal leading-tight;
+}
+
+.ctm-paragraph-2 {
+  @apply text-[14px] font-normal leading-tight;
+}
+
+.ctm-paragraph-3 {
+  @apply !text-[0.75rem] font-normal leading-tight;
+}
+
+.ctm-paragraph-4 {
+  @apply text-[10px] font-normal leading-tight;
+}
+
+.ctm-paragraph-5 {
+  @apply text-[8px] font-normal leading-tight;
+}
+
+.ctm-link-500 {
+  @apply text-ctm-primary-colour text-sm font-medium;
+}
+.ctm-link-600 {
+  @apply text-ctm-primary-colour text-sm font-semibold;
+}

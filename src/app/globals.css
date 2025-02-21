@@ -1,3 +1,5 @@
+@import "./styles/index.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,8 +10,9 @@ body {
 
 :root {
   --ctm-primary-colour: #3f2bc3;
+  --ctm-secondary-colour: #160a62;
   --ctm-black: #000000;
-  --ctm-normal-grey: #f7f6ff;
+  --ctm-normal-grey: #98a2b3;
   --ctm-light-grey: #ebebeb;
   --ctm-dark-grey: #5b616b;
   --ctm-darker-grey: #35393f;
@@ -17,7 +20,7 @@ body {
   --ctm-success-green: #0f973d;
   --ctm-error-red: #d42620;
 }
-
+/* #f7f6ff */
 @layer base {
   :root {
     --background: 0 0% 100%;

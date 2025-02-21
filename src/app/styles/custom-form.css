@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .form-item {
+    @apply flex flex-col gap-1.5 w-full rounded-lg border border-gray-300 pt-2 px-3;
+  }
+
+  .form-label-semibold {
+    @apply w-full max-w-[375px] !text-[18px] !font-semibold leading-normal;
+  }
+
+  .form-message {
+    @apply text-red-500;
+  }
+
+  .form-link {
+    @apply cursor-pointer font-medium;
+  }
+
+  .input-class {
+    @apply text-gray-900 placeholder:!text-ctm-normal-grey !p-0 focus-visible:outline-none focus-visible:!ring-0 !shadow-none;
+  }
+}
