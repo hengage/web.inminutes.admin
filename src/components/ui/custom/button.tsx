@@ -22,14 +22,39 @@ const buttonVariants = cva(
   }
 );
 
+const spinVariants = cva("loading loading-spinner", {
+  variants: {
+    variant: {
+      "ctm-primary": "",
+      "ctm-outline": "text-ctm-primary-colour",
+    },
+    size: {
+      default: "loading-xs",
+      sm: "loading-sm",
+      lg: "loading-md",
+      icon: "loading-xs",
+    },
+  },
+});
+
 interface CustomButtonProps
   extends Omit<ButtonProps, "variant">,
-    VariantProps<typeof buttonVariants> {}
+    VariantProps<typeof buttonVariants> {
+  loading?: boolean;
+}
 
-export function CustomButton({ className, size, variant, children, ...props }: CustomButtonProps) {
+export function CustomButton({
+  className,
+  size,
+  variant,
+  children,
+  loading = false,
+  ...props
+}: CustomButtonProps) {
+  const render = loading ? <span className={cn(spinVariants({ variant, size }))}></span> : children;
   return (
     <Button className={cn(buttonVariants({ variant, size, className }))} {...props}>
-      {children}
+      {render}
     </Button>
   );
 }
