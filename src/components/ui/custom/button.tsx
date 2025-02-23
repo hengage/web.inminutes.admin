@@ -11,6 +11,7 @@ const buttonVariants = cva(
           "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
         "ctm-outline":
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        "ctm-ghost": "bg-transparent hover:bg-accent hover:text-accent-foreground",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -25,7 +26,6 @@ const buttonVariants = cva(
 const spinVariants = cva("loading loading-spinner", {
   variants: {
     variant: {
-      "ctm-primary": "",
       "ctm-outline": "text-ctm-primary-colour",
     },
     size: {
@@ -36,6 +36,15 @@ const spinVariants = cva("loading loading-spinner", {
     },
   },
 });
+
+const filterSpinVariants = (variant: VariantProps<typeof buttonVariants>["variant"]) => {
+  switch (variant) {
+    case "ctm-outline":
+      return "ctm-outline";
+    default:
+      return null;
+  }
+};
 
 interface CustomButtonProps
   extends Omit<ButtonProps, "variant">,
@@ -51,7 +60,11 @@ export function CustomButton({
   loading = false,
   ...props
 }: CustomButtonProps) {
-  const render = loading ? <span className={cn(spinVariants({ variant, size }))}></span> : children;
+  const render = loading ? (
+    <span className={cn(spinVariants({ variant: filterSpinVariants(variant), size }))}></span>
+  ) : (
+    children
+  );
   return (
     <Button className={cn(buttonVariants({ variant, size, className }))} {...props}>
       {render}

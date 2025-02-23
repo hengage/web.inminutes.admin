@@ -22,16 +22,18 @@ const VerifyForm = ({ email }: { email: string }) => {
     push(`/`);
   };
   return (
-    <div>
-      <span className="ctm-header-4 text-ctm-darker-grey">
-        A 5 digit code has been sent to <em className="text-ctm-primary-colour">{email}</em>. Enter
-        code below to continue your registration process.
+    <div className="flex flex-col justify-center gap-2 m-auto w-[80%] md:w-[35%] h-fit">
+      <span className="ctm-header-4 text-ctm-darker-grey text-center">
+        <p>
+          A 5 digit code has been sent to <em className="text-ctm-primary-colour">{email}</em>.
+        </p>{" "}
+        <p>Enter code below to continue your registration process.</p>
       </span>
 
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="flex flex-col gap-2 m-auto w-[80%] md:w-[35%] h-fit"
+          className="flex flex-col justify-center items-center gap-2 m-auto h-fit"
         >
           <FormField
             control={form.control}
@@ -39,13 +41,32 @@ const VerifyForm = ({ email }: { email: string }) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <InputOTP maxLength={5} {...field}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
+                  <InputOTP
+                    className="justify-center border-ctm-primary-colour border"
+                    maxLength={5}
+                    {...field}
+                  >
+                    <InputOTPGroup className="gap-4">
+                      <InputOTPSlot
+                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        index={0}
+                      />
+                      <InputOTPSlot
+                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        index={1}
+                      />
+                      <InputOTPSlot
+                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        index={2}
+                      />
+                      <InputOTPSlot
+                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        index={3}
+                      />
+                      <InputOTPSlot
+                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        index={4}
+                      />
                     </InputOTPGroup>
                   </InputOTP>
                 </FormControl>
@@ -64,7 +85,8 @@ const VerifyForm = ({ email }: { email: string }) => {
         </form>
       </Form>
       <span>
-        If you don’t receive a message within 5 mins.<Button>Click to resend mail</Button>
+        If you don’t receive a message within 5 mins.
+        <Button variant={"ctm-ghost"}>Click to resend mail</Button>
       </span>
     </div>
   );
