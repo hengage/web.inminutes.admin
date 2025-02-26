@@ -11,7 +11,8 @@ const buttonVariants = cva(
           "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
         "ctm-outline":
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        "ctm-ghost": "bg-transparent hover:bg-accent hover:text-accent-foreground",
+        "ctm-ghost":
+          "bg-transparent text-accent-foreground hover:bg-transparent hover:text-ctm-primary-colour",
       },
       size: {
         default: "h-9 px-4 py-2",

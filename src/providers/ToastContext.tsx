@@ -25,7 +25,7 @@ export function ToastProvider({ children }: Readonly<{ children: React.ReactNode
     const handleOffline = () => {
       toast.error("Unable to connect. Please check your internet connection", {
         ...defaultOptions,
-        position: "top-center",
+        position: "bottom-left",
         toastId: "offline-toast",
         autoClose: false,
       });
@@ -35,7 +35,7 @@ export function ToastProvider({ children }: Readonly<{ children: React.ReactNode
       toast.dismiss("offline-toast");
       toast.success("Internet connection restored", {
         ...defaultOptions,
-        position: "top-center",
+        position: "bottom-left",
         toastId: "online-toast",
       });
     };

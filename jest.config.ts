@@ -10,8 +10,17 @@ const createJestConfig = nextJest({
 const config: Config = {
   coverageProvider: "v8",
   testEnvironment: "jsdom",
-  // Add more setup options before each test is run
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"], // Ensure setup file is loaded
+  // testMatch: ["**/__tests__/**/*.test.ts", "**/__tests__/**/*.test.tsx"],
+  // transformIgnorePatterns: [
+  //   "**/node_modules/(?!lucide-react|@some-other-esm-lib)", // Allow Jest to transform ESM modules
+  // ],
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1", // Fixes Jest's handling of .js imports in ESM
+  },
+  // transform: {
+  //   "^.+\\.(ts|tsx)$": ["@swc/jest"], // Use SWC for faster TypeScript support
+  // },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

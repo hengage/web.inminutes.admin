@@ -22,7 +22,7 @@ const VerifyForm = ({ email }: { email: string }) => {
     push(`/`);
   };
   return (
-    <div className="flex flex-col justify-center gap-2 m-auto w-[80%] md:w-[35%] h-fit">
+    <div className="flex flex-col justify-center gap-4 m-auto w-[80%] md:w-[35%] h-fit">
       <span className="ctm-header-4 text-ctm-darker-grey text-center">
         <p>
           A 5 digit code has been sent to <em className="text-ctm-primary-colour">{email}</em>.
@@ -33,7 +33,7 @@ const VerifyForm = ({ email }: { email: string }) => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="flex flex-col justify-center items-center gap-2 m-auto h-fit"
+          className="flex flex-col justify-center items-center gap-4 m-auto h-fit w-full"
         >
           <FormField
             control={form.control}
@@ -84,8 +84,8 @@ const VerifyForm = ({ email }: { email: string }) => {
           </Button>
         </form>
       </Form>
-      <span>
-        If you don’t receive a message within 5 mins.
+      <span className="flex gap-1 items-center">
+        <p>If you don’t receive a message within 5 mins.</p>
         <Button variant={"ctm-ghost"}>Click to resend mail</Button>
       </span>
     </div>
