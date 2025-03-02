@@ -16,7 +16,8 @@ const config: Config = {
   //   "**/node_modules/(?!lucide-react|@some-other-esm-lib)", // Allow Jest to transform ESM modules
   // ],
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1", // Fixes Jest's handling of .js imports in ESM
+    "^@/(.*)$": "<rootDir>/src/$1", // Resolves @/ to src/
+    "^@root/(.*)$": "<rootDir>/$1", // Resolves @root/ to project root
   },
   // transform: {
   //   "^.+\\.(ts|tsx)$": ["@swc/jest"], // Use SWC for faster TypeScript support
