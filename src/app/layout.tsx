@@ -3,6 +3,7 @@ import { Inter, Istok_Web } from "next/font/google";
 import { ToastProvider } from "@/providers/ToastContext";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import ProgressProvider from "@/providers/ProgressProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,10 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${istok_web.variable}  antialiased`}>
-        <ToastProvider>
-          {children}
-          <ToastContainer />
-        </ToastProvider>
+        <ProgressProvider>
+          <ToastProvider>
+            {children}
+            <ToastContainer />
+          </ToastProvider>
+        </ProgressProvider>
       </body>
     </html>
   );

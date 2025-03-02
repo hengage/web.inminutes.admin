@@ -15,6 +15,12 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        sans: "var(--font-sans)",
+        serif: "var(--font-serif)",
+        mono: "var(--font-mono)",
+        istok_web: ["Istok Web", "sans-serif"],
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
@@ -58,6 +64,7 @@ export default {
         },
         ctm: {
           "primary-colour": "var(--ctm-primary-colour)",
+          "primary-colour-light": "var(--ctm-primary-colour-light)",
           "secondary-colour": "var(--ctm-secondary-colour)",
           "normal-grey": "var(--ctm-normal-grey)",
           "light-grey": "var(--ctm-light-grey)",
@@ -67,6 +74,7 @@ export default {
           white: "var(--ctm-white)",
           "success-green": "var(--ctm-success-green)",
           "error-red": "var(--ctm-error-red)",
+          shadow: "var(--ctm-shadow)",
         },
       },
     },

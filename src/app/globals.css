@@ -11,6 +11,7 @@ body {
 :root {
   --ctm-primary-colour: #3f2bc3;
   --ctm-secondary-colour: #160a62;
+  --ctm-primary-colour-light: #f7f6ff;
   --ctm-black: #000000;
   --ctm-normal-grey: #98a2b3;
   --ctm-light-grey: #ebebeb;
@@ -19,6 +20,7 @@ body {
   --ctm-white: #ffffff;
   --ctm-success-green: #0f973d;
   --ctm-error-red: #d42620;
+  --ctm-shadow: 0px 2px 2px 0px #0d3f6a0f;
 }
 /* #f7f6ff */
 @layer base {
