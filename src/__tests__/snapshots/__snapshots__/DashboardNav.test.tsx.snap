@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard Nav Layout matches snapshot 1`] = `
+<DocumentFragment>
+  <nav
+    class="w-full h-[80px] md:p-[12px] shadow-[0px_2px_2px_0px_#0d3f6a0f] flex justify-between items-center"
+  >
+    <label
+      class="flex lg:hidden text-blue-800 px-3"
+      for="my-drawer"
+    >
+      <img
+        alt="hamburger icon"
+        class="inline-block cursor-pointer"
+        data-nimg="1"
+        decoding="async"
+        height="24"
+        loading="lazy"
+        src="/icons/svg/hamburger.svg"
+        style="color: transparent;"
+        width="24"
+      />
+    </label>
+    <div
+      class="relative"
+    >
+      <div
+        class="absolute inset-y-0 left-0 flex items-center pl-3"
+      >
+        <img
+          alt="search icon"
+          class="inline-block ml-2"
+          data-nimg="1"
+          decoding="async"
+          height="20"
+          loading="lazy"
+          src="/icons/svg/search.svg"
+          style="color: transparent;"
+          width="20"
+        />
+      </div>
+      <input
+        class="flex h-9 border border-input py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm rounded-full bg-ctm-primary-colour-light w-[300px] px-10"
+        placeholder="Search"
+      />
+    </div>
+    <div
+      class="flex items-center gap-4"
+    >
+      <img
+        alt="bell icon"
+        class="inline-block"
+        data-nimg="1"
+        decoding="async"
+        height="30"
+        loading="lazy"
+        src="/icons/svg/bell.svg"
+        style="color: transparent;"
+        width="30"
+      />
+      <img
+        alt="profile icon"
+        class="inline-block rounded-full"
+        data-nimg="1"
+        decoding="async"
+        height="40"
+        loading="lazy"
+        src="/icons/svg/user.svg"
+        style="color: transparent;"
+        width="40"
+      />
+    </div>
+  </nav>
+</DocumentFragment>
+`;
