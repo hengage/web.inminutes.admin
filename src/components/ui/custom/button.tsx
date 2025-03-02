@@ -10,7 +10,7 @@ const buttonVariants = cva(
         "ctm-primary":
           "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
         "ctm-outline":
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
         "ctm-ghost":
           "bg-transparent text-accent-foreground hover:bg-transparent hover:text-ctm-primary-colour",
       },
@@ -38,7 +38,7 @@ const spinVariants = cva("loading loading-spinner", {
   },
 });
 
-const filterSpinVariants = (variant: VariantProps<typeof buttonVariants>["variant"]) => {
+const selectSpinVariants = (variant: VariantProps<typeof buttonVariants>["variant"]) => {
   switch (variant) {
     case "ctm-outline":
       return "ctm-outline";
@@ -51,6 +51,8 @@ interface CustomButtonProps
   extends Omit<ButtonProps, "variant">,
     VariantProps<typeof buttonVariants> {
   loading?: boolean;
+  slotAfter?: React.ReactNode;
+  slotBefore?: React.ReactNode;
 }
 
 export function CustomButton({
@@ -59,16 +61,30 @@ export function CustomButton({
   variant,
   children,
   loading = false,
+  slotBefore,
+  slotAfter,
   ...props
 }: CustomButtonProps) {
   const render = loading ? (
-    <span className={cn(spinVariants({ variant: filterSpinVariants(variant), size }))}></span>
+    <span className={cn(spinVariants({ variant: selectSpinVariants(variant), size }))}></span>
   ) : (
     children
   );
   return (
-    <Button className={cn(buttonVariants({ variant, size, className }))} {...props}>
-      {render}
-    </Button>
+    <div className="relative w-full">
+      {slotBefore && !loading && (
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3">{slotBefore}</div>
+      )}
+      <Button
+        className={cn(buttonVariants({ variant, size, className }))}
+        {...props}
+        variant={"child"}
+      >
+        {render}
+      </Button>
+      {slotAfter && !loading && (
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3">{slotAfter}</div>
+      )}
+    </div>
   );
 }

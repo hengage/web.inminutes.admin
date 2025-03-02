@@ -84,9 +84,15 @@ const VerifyForm = ({ email }: { email: string }) => {
           </Button>
         </form>
       </Form>
-      <span className="flex gap-1 items-center">
-        <p>If you don’t receive a message within 5 mins.</p>
-        <Button variant={"ctm-ghost"}>Click to resend mail</Button>
+      <span className="text-center">
+        <p>If you don&apos;t receive a message within 5 mins.</p>
+        <Button
+          className="text-[16px] font-[600] text-ctm-primary-colour px-1"
+          size={"sm"}
+          variant={"ctm-ghost"}
+        >
+          Click to resend mail
+        </Button>
       </span>
     </div>
   );
