@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom"; // Provides better assertions for React components
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 jest.mock("lucide-react", () => ({
   X: () => "MockedXIcon",
@@ -8,6 +8,7 @@ jest.mock("lucide-react", () => ({
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(),
 }));
 
 // Mock implementation for test cases
@@ -16,3 +17,5 @@ jest.mock("next/navigation", () => ({
   replace: jest.fn(),
   prefetch: jest.fn(),
 });
+
+(usePathname as jest.Mock).mockReturnValue("/dashboard");

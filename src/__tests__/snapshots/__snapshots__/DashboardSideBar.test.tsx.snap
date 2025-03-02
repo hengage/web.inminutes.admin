@@ -1,0 +1,322 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="drawer-side bg-ctm-primary-colour-light"
+  >
+    <label
+      aria-label="close sidebar"
+      class="drawer-overlay"
+      for="my-drawer"
+    />
+    <div
+      class="text-[23px] text-center font-[400] p-[12px] shadow-[0px_2px_2px_0px_#0d3f6a0f] w-full h-[80px] p4"
+    >
+      <span>
+        <em
+          class="font-istok_web font-[700] text-ctm-primary-colour"
+        >
+          00:00
+        </em>
+         In Minutes
+      </span>
+    </div>
+    <div>
+      <ul
+        class="min-h-full w-55 p-4"
+      >
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.dashboard.active icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/home-active.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed bg-ctm-primary-colour hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey border-none shadow-none hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] text-white text-left"
+              href="dashboard"
+            >
+              Dashboard
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.vendor.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/vendor.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="vendor"
+            >
+              Vendors
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.rider.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/rider.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="rider"
+            >
+              Riders
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.product.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/product.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="product"
+            >
+              Products
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.customer.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/customer.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="customer"
+            >
+              Customers
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.order.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/order.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="order"
+            >
+              Orders
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.errand.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/errand.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="errand"
+            >
+              Errands
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.transaction.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/transaction.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="transaction"
+            >
+              Transactions
+            </a>
+          </div>
+        </li>
+        <li
+          class="my-2"
+        >
+          <div
+            class="relative w-full"
+          >
+            <div
+              class="absolute inset-y-0 left-0 flex items-center pl-3"
+            >
+              <img
+                alt="sidebar.metrics.base icon"
+                class="inline-block"
+                data-nimg="1"
+                decoding="async"
+                height="24"
+                loading="lazy"
+                src="/icons/svg/sidebar/metrics.svg"
+                style="color: transparent;"
+                width="24"
+              />
+            </div>
+            <a
+              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
+              href="metrics"
+            >
+              Metrics
+            </a>
+          </div>
+        </li>
+      </ul>
+      <span
+        class="absolute bottom-[-55%] pl-4"
+      >
+        <div
+          class="relative w-full"
+        >
+          <div
+            class="absolute inset-y-0 left-0 flex items-center pl-3"
+          >
+            <img
+              alt="logout icon"
+              class="inline-block"
+              data-nimg="1"
+              decoding="async"
+              height="24"
+              loading="lazy"
+              src="/icons/svg/logout.svg"
+              style="color: transparent;"
+              width="24"
+            />
+          </div>
+          <button
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed hover:bg-transparent hover:text-ctm-primary-colour border-none shadow-none text-[#484D57] hover:textwhite text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light"
+          >
+            Logout
+          </button>
+        </div>
+      </span>
+    </div>
+  </div>
+</DocumentFragment>
+`;
