@@ -10,7 +10,7 @@ const buttonVariants = cva(
         "ctm-primary":
           "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
         "ctm-outline":
-          "border border-input bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
+          "border border-input border-ctm-primary-colour bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
         "ctm-ghost":
           "bg-transparent text-accent-foreground hover:bg-transparent hover:text-ctm-primary-colour",
       },

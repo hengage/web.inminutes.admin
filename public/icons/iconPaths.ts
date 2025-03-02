@@ -4,6 +4,7 @@ export const iconPaths = {
   profile: "/icons/svg/user.svg",
   search: "/icons/svg/search.svg",
   logout: "/icons/svg/logout.svg",
+  add: "/icons/svg/add.svg",
   "sidebar.dashboard.base": "/icons/svg/sidebar/home.svg",
   "sidebar.dashboard.active": "/icons/svg/sidebar/home-active.svg",
   "sidebar.vendor.base": "/icons/svg/sidebar/vendor.svg",
