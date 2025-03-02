@@ -19,3 +19,20 @@ jest.mock("next/navigation", () => ({
 });
 
 (usePathname as jest.Mock).mockReturnValue("/dashboard");
+
+export const silentError = (
+  searchMessage: Array<string>,
+  consoleType: "warn" | "error" = "error"
+) => {
+  const originalConsole = console[consoleType];
+
+  console[consoleType] = (consoleMessage, ...args) => {
+    // Check if the warning message contains the desired string
+    if (searchMessage.every((message) => !consoleMessage.includes(message))) {
+      // Log the warning only if it contains the desired string
+      originalConsole(consoleMessage, ...args);
+    }
+  };
+
+  return originalConsole;
+};
