@@ -29,8 +29,9 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed bg-ctm-primary-colour hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey border-none shadow-none hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] text-white relative"
+            href="dashboard"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -47,19 +48,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed bg-ctm-primary-colour hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey border-none shadow-none hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] text-white text-left"
-              href="dashboard"
-            >
-              Dashboard
-            </a>
-          </div>
+            Dashboard
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="vendor"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -76,19 +73,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="vendor"
-            >
-              Vendors
-            </a>
-          </div>
+            Vendors
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="rider"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -105,19 +98,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="rider"
-            >
-              Riders
-            </a>
-          </div>
+            Riders
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="product"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -134,19 +123,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="product"
-            >
-              Products
-            </a>
-          </div>
+            Products
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="customer"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -163,19 +148,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="customer"
-            >
-              Customers
-            </a>
-          </div>
+            Customers
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="order"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -192,19 +173,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="order"
-            >
-              Orders
-            </a>
-          </div>
+            Orders
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="errand"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -221,19 +198,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="errand"
-            >
-              Errands
-            </a>
-          </div>
+            Errands
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="transaction"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -250,19 +223,15 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="transaction"
-            >
-              Transactions
-            </a>
-          </div>
+            Transactions
+          </a>
         </li>
         <li
           class="my-2"
         >
-          <div
-            class="relative w-full"
+          <a
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light relative"
+            href="metrics"
           >
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3"
@@ -279,42 +248,18 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
                 width="24"
               />
             </div>
-            <a
-              class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed border border-input hover:bg-ctm-primary-colour border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light text-left"
-              href="metrics"
-            >
-              Metrics
-            </a>
-          </div>
+            Metrics
+          </a>
         </li>
       </ul>
       <span
         class="absolute bottom-[-55%] pl-4"
       >
-        <div
-          class="relative w-full"
+        <button
+          class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed hover:bg-transparent hover:text-ctm-primary-colour border-none shadow-none text-[#484D57] hover:textwhite text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light"
         >
-          <div
-            class="absolute inset-y-0 left-0 flex items-center pl-3"
-          >
-            <img
-              alt="logout icon"
-              class="inline-block"
-              data-nimg="1"
-              decoding="async"
-              height="24"
-              loading="lazy"
-              src="/icons/svg/logout.svg"
-              style="color: transparent;"
-              width="24"
-            />
-          </div>
-          <button
-            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed hover:bg-transparent hover:text-ctm-primary-colour border-none shadow-none text-[#484D57] hover:textwhite text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light"
-          >
-            Logout
-          </button>
-        </div>
+          Logout
+        </button>
       </span>
     </div>
   </div>
