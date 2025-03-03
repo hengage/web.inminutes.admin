@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
@@ -65,26 +66,40 @@ export function CustomButton({
   slotAfter,
   ...props
 }: CustomButtonProps) {
-  const render = loading ? (
-    <span className={cn(spinVariants({ variant: selectSpinVariants(variant), size }))}></span>
-  ) : (
-    children
-  );
+  const render = React.isValidElement(children)
+    ? React.cloneElement(
+        children as React.ReactElement<HTMLElement>,
+        {
+          className: cn("relative"),
+        },
+        <>
+          {/* Predefined Children */}
+          {loading ? (
+            <span
+              className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
+            ></span>
+          ) : (
+            slotBefore
+          )}
+          {React.Children.map(children, (child) =>
+            typeof child === "string"
+              ? child
+              : React.isValidElement(child)
+                ? ((child.props as { children?: React.ReactNode }).children ?? "")
+                : ""
+          )?.join("") ?? ""}
+          {slotAfter}
+        </>
+      )
+    : children;
   return (
-    <div className="relative w-full">
-      {slotBefore && !loading && (
-        <div className="absolute inset-y-0 left-0 flex items-center pl-3">{slotBefore}</div>
-      )}
-      <Button
-        className={cn(buttonVariants({ variant, size, className }))}
-        {...props}
-        variant={"child"}
-      >
-        {render}
-      </Button>
-      {slotAfter && !loading && (
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3">{slotAfter}</div>
-      )}
-    </div>
+    <Button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+      disabled={props.disabled || loading}
+      variant={"child"}
+    >
+      {render}
+    </Button>
   );
 }
