@@ -1,7 +1,7 @@
+import React from "react";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
-import React from "react";
 
 const buttonVariants = cva(
   "px-4 py-2 font-normal !pointer-events-auto  hover:disabled:cursor-not-allowed",
@@ -11,7 +11,7 @@ const buttonVariants = cva(
         "ctm-primary":
           "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
         "ctm-outline":
-          "border border-input bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
+          "border border-input border-ctm-primary-colour bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
         "ctm-ghost":
           "bg-transparent text-accent-foreground hover:bg-transparent hover:text-ctm-primary-colour",
       },
@@ -66,38 +66,37 @@ export function CustomButton({
   slotAfter,
   ...props
 }: CustomButtonProps) {
-  const render = loading ? (
-    <span className={cn(spinVariants({ variant: selectSpinVariants(variant), size }))}></span>
-  ) : React.isValidElement(children) ? (
-    React.cloneElement(
-      children as React.ReactElement<HTMLElement>,
-      {
-        className: cn("relative"),
-      },
-      <>
-        {/* Predefined Children */}
-        {slotBefore && !loading && (
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3">{slotBefore}</div>
-        )}
-        {React.Children.map(children, (child) =>
-          typeof child === "string"
-            ? child
-            : React.isValidElement(child)
-              ? ((child.props as { children?: React.ReactNode }).children ?? "")
-              : ""
-        )?.join("") ?? ""}
-        {slotAfter && !loading && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">{slotAfter}</div>
-        )}
-      </>
-    )
-  ) : (
-    children
-  );
+  const render = React.isValidElement(children)
+    ? React.cloneElement(
+        children as React.ReactElement<HTMLElement>,
+        {
+          className: cn("relative"),
+        },
+        <>
+          {/* Predefined Children */}
+          {loading ? (
+            <span
+              className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
+            ></span>
+          ) : (
+            slotBefore
+          )}
+          {React.Children.map(children, (child) =>
+            typeof child === "string"
+              ? child
+              : React.isValidElement(child)
+                ? ((child.props as { children?: React.ReactNode }).children ?? "")
+                : ""
+          )?.join("") ?? ""}
+          {slotAfter}
+        </>
+      )
+    : children;
   return (
     <Button
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
+      disabled={props.disabled || loading}
       variant={"child"}
     >
       {render}

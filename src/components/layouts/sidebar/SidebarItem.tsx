@@ -27,7 +27,7 @@ const SidebarItem = ({ href, label }: SidebarItemProps) => {
       variant={pathname.includes(href) ? "ctm-primary" : "ctm-outline"}
       slotBefore={<Icon text-id="sidebar-icon" name={iconMatch as keyof typeof iconPaths} />}
       className={cn(
-        "border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400]",
+        "border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400]",
         {
           "bg-ctm-primary-colour-light": !pathname.includes(href),
           "text-white": pathname.includes(href),
