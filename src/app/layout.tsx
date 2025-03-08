@@ -4,6 +4,7 @@ import { ToastProvider } from "@/providers/ToastContext";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import ProgressProvider from "@/providers/ProgressProvider";
+import QueryProvider from "@/providers/QueryProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,10 +31,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${istok_web.variable}  antialiased`}>
         <ProgressProvider>
-          <ToastProvider>
-            {children}
-            <ToastContainer />
-          </ToastProvider>
+          <QueryProvider>
+            <ToastProvider>
+              {children}
+              <ToastContainer />
+            </ToastProvider>
+          </QueryProvider>
         </ProgressProvider>
       </body>
     </html>
