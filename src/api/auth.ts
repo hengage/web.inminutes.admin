@@ -3,23 +3,30 @@ import { useMutation } from "@tanstack/react-query";
 import https from "@/lib/axios";
 
 export const useLoginMutation = () => {
-  const { isPending, mutate: loginMutation } = useMutation({
-    mutationFn: async () => {
-      const response = await https.post<LoginCredentials>("/auth/login/request");
+  const {
+    isPending: isLoading,
+    mutate: loginMutation,
+    data,
+  } = useMutation({
+    mutationFn: async (data: LoginCredentials) => {
+      const response = await https.post("/auth/login/request", data);
       return response.data;
     },
   });
-  return { loginMutation, isPending };
+  return { loginMutation, isLoading, data };
 };
 
 export const useVerifyOtpMutation = () => {
-  const { isPending, mutate: verifyOtpMutation } = useMutation({
-    mutationFn: async () => {
-      const response = await https.post<OtpCredentials>("/auth/login/confirm");
+  const { isPending: isLoading, mutate: verifyOtpMutation } = useMutation({
+    mutationFn: async (data: OtpCredentials) => {
+      const response = await https.post("/auth/login/confirm", data);
       return response.data;
     },
+    onSuccess: (data) => {
+      sessionStorage.setItem("token", data.token);
+    },
   });
-  return { verifyOtpMutation, isPending };
+  return { verifyOtpMutation, isLoading };
 };
 
 interface LoginCredentials {

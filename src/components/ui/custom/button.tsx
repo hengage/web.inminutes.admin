@@ -66,32 +66,44 @@ export function CustomButton({
   slotAfter,
   ...props
 }: CustomButtonProps) {
-  const render = React.isValidElement(children)
-    ? React.cloneElement(
-        children as React.ReactElement<HTMLElement>,
-        {
-          className: cn("relative"),
-        },
-        <>
-          {/* Predefined Children */}
-          {loading ? (
-            <span
-              className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
-            ></span>
-          ) : (
-            slotBefore
-          )}
-          {React.Children.map(children, (child) =>
-            typeof child === "string"
-              ? child
-              : React.isValidElement(child)
-                ? ((child.props as { children?: React.ReactNode }).children ?? "")
-                : ""
-          )?.join("") ?? ""}
-          {slotAfter}
-        </>
-      )
-    : children;
+  const render = React.isValidElement(children) ? (
+    React.cloneElement(
+      children as React.ReactElement<HTMLElement>,
+      {
+        className: cn("relative"),
+      },
+      <>
+        {/* Predefined Children */}
+        {loading ? (
+          <span
+            className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
+          ></span>
+        ) : (
+          slotBefore
+        )}
+        {React.Children.map(children, (child) =>
+          typeof child === "string"
+            ? child
+            : React.isValidElement(child)
+              ? ((child.props as { children?: React.ReactNode }).children ?? "")
+              : ""
+        )?.join("") ?? ""}
+        {slotAfter}
+      </>
+    )
+  ) : (
+    <>
+      {loading ? (
+        <span
+          className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
+        ></span>
+      ) : (
+        slotBefore
+      )}
+      {children}
+      {slotAfter}
+    </>
+  );
   return (
     <Button
       className={cn(buttonVariants({ variant, size, className }))}
