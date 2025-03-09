@@ -8,9 +8,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 import { encodeData } from "@/lib/utils";
+import { useLoginMutation } from "@/api/auth";
+import { useToast } from "@/providers/ToastContext";
 
 const LoginForm = () => {
   const { push } = useRouter();
+  const { showError, showSuccess } = useToast();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -18,8 +21,17 @@ const LoginForm = () => {
     },
     mode: "onTouched",
   });
+  const { loginMutation, isLoading } = useLoginMutation();
   const handleSubmit = (data: z.infer<typeof loginSchema>) => {
-    push(`/verify/${encodeData(data.email)}`);
+    loginMutation(data, {
+      onSuccess: () => {
+        showSuccess("A 5 digit code has been sent to your email.");
+        push(`/verify/${encodeData(data.email)}`);
+      },
+      onError: (error) => {
+        showError(error.message);
+      },
+    });
   };
   return (
     <Form {...form}>
@@ -38,6 +50,7 @@ const LoginForm = () => {
           type="submit"
           className="w-full"
           disabled={!form.formState.isValid}
+          loading={isLoading}
         >
           Log In
         </Button>

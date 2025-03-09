@@ -4,12 +4,18 @@ import { otpSchema } from "@/lib/validators/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/providers/ToastContext";
 import { useRouter } from "next/navigation";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useLoginMutation, useVerifyOtpMutation } from "@/api/auth";
+import { useState } from "react";
+import CountdownTimer from "@/components/ui/custom/CountdownTimer";
 
 const VerifyForm = ({ email }: { email: string }) => {
   const { push } = useRouter();
+  const [canResend, setCanResend] = useState(false);
+  const { showError, showSuccess } = useToast();
   const form = useForm<z.infer<typeof otpSchema>>({
     resolver: zodResolver(otpSchema),
     defaultValues: {
@@ -17,9 +23,36 @@ const VerifyForm = ({ email }: { email: string }) => {
     },
     mode: "onTouched",
   });
+  const { verifyOtpMutation, isLoading } = useVerifyOtpMutation();
+  const { loginMutation, isLoading: loginLoading } = useLoginMutation();
   const handleSubmit = (data: z.infer<typeof otpSchema>) => {
-    console.log(data);
-    push(`/`);
+    verifyOtpMutation(
+      { ...data, email },
+      {
+        onSuccess: () => {
+          showSuccess("success");
+          push("/dashboard");
+        },
+        onError: (error) => {
+          showError(error.message);
+        },
+      }
+    );
+  };
+
+  const resendOtp = () => {
+    loginMutation(
+      { email },
+      {
+        onSuccess: () => {
+          showSuccess("A 5 digit code has been sent to your email.");
+          setCanResend(false);
+        },
+        onError: (error) => {
+          showError(error.message);
+        },
+      }
+    );
   };
   return (
     <div className="flex flex-col justify-center gap-4 m-auto w-[80%] md:w-[35%] h-fit">
@@ -79,20 +112,39 @@ const VerifyForm = ({ email }: { email: string }) => {
             type="submit"
             className="w-full"
             disabled={!form.formState.isValid}
+            loading={isLoading}
           >
             Continue to dashboard
           </Button>
         </form>
       </Form>
       <span className="text-center">
-        <p>If you don&apos;t receive a message within 5 mins.</p>
-        <Button
-          className="text-[16px] font-[600] text-ctm-primary-colour px-1"
-          size={"sm"}
-          variant={"ctm-ghost"}
-        >
-          Click to resend mail
-        </Button>
+        <span>
+          resend otp If you don&apos;t receive a message{" "}
+          {canResend ? (
+            <Button
+              className="text-[16px] font-[600] text-ctm-primary-colour px-1"
+              size={"sm"}
+              variant={"ctm-ghost"}
+              type="button"
+              onClick={resendOtp}
+              loading={loginLoading}
+            >
+              Click to resend mail
+            </Button>
+          ) : (
+            <>
+              in{" "}
+              <CountdownTimer
+                initialSeconds={60}
+                onComplete={() => {
+                  setCanResend(true);
+                }}
+              />
+            </>
+          )}
+          .
+        </span>
       </span>
     </div>
   );
