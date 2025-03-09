@@ -1,10 +1,14 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import LoginForm from "./LoginForm";
-import { describe } from "node:test";
+import { GeneralAppSetup } from "@/test/setup";
 
 describe("Login Form", () => {
   beforeEach(() => {
-    render(<LoginForm />);
+    render(
+      <GeneralAppSetup>
+        <LoginForm />
+      </GeneralAppSetup>
+    );
   });
 
   it("should render the form", () => {
