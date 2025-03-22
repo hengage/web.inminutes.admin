@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const loginSchema = z.object({
-  email: z.string().email("Invalid email, phone number or account number format"),
+  email: z.string().email("Invalid email"),
 });
 
 export const otpSchema = z.object({
