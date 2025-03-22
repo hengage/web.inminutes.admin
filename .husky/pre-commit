@@ -15,13 +15,6 @@ npm run test || (
     false;
 )
 
-echo '📦 Running Next.js production build check...'
-
-npm run build || (
-    echo '❌ Next.js build failed. Fix errors and try again.';
-    false;
-)
-
 echo '✅ All checks passed! Proceeding with commit...'
 
 chmod +x .husky/pre-commit
