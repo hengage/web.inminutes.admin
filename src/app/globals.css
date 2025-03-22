@@ -22,7 +22,7 @@ body {
   --ctm-error-red: #d42620;
   --ctm-shadow: 0px 2px 2px 0px #0d3f6a0f;
 }
-/* #f7f6ff */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -85,5 +85,12 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .ctm-tab-trigger {
+    @apply relative flex h-[40px] cursor-pointer select-none items-center justify-center px-1 text-[15px] leading-none text-[#656667] outline-none hover:text-ctm-primary-colour data-[state=active]:text-ctm-primary-colour font-[400] data-[state=active]:font-[600] data-[state=active]:shadow-current data-[state=active]:focus:relative 
+    data-[state=active]:before:absolute data-[state=active]:before:bottom-0 data-[state=active]:before:left-0 data-[state=active]:before:w-full data-[state=active]:before:h-[3px] data-[state=active]:before:bg-ctm-primary-colour data-[state=active]:before:rounded-b-[4px];
   }
 }
