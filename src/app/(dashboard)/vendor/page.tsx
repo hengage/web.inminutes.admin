@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { Icon } from "@/components";
 import { CustomButton as Button } from "@/components/ui/custom/button";
-import Link from "next/link";
+import * as Tabs from "@radix-ui/react-tabs";
 
 const page = () => {
   return (
@@ -21,6 +22,22 @@ const page = () => {
           </Button>
         </span>
       </div>
+      <Tabs.Root className="flex flex-col" defaultValue="tab1">
+        <Tabs.List className="flex shrink-0 w-fit bg-transparent gap-4" aria-label="Vendors Data">
+          <Tabs.Trigger className="ctm-tab-trigger" value="tab1">
+            All Vendors
+          </Tabs.Trigger>
+          <Tabs.Trigger className="ctm-tab-trigger" value="tab2">
+            Vendor Categories
+          </Tabs.Trigger>
+          <Tabs.Trigger className="ctm-tab-trigger" value="tab3">
+            Vendor Applications
+          </Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="tab1">Tab one content</Tabs.Content>
+        <Tabs.Content value="tab2">Tab two content</Tabs.Content>
+        <Tabs.Content value="tab3">Tab three content</Tabs.Content>
+      </Tabs.Root>
     </main>
   );
 };
