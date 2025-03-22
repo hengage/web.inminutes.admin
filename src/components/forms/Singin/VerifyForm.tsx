@@ -11,6 +11,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { useLoginMutation, useVerifyOtpMutation } from "@/api/auth";
 import { useState } from "react";
 import CountdownTimer from "@/components/ui/custom/CountdownTimer";
+import { cn } from "@/lib/utils";
 
 const VerifyForm = ({ email }: { email: string }) => {
   const { push } = useRouter();
@@ -58,7 +59,7 @@ const VerifyForm = ({ email }: { email: string }) => {
     <div className="flex flex-col justify-center gap-4 m-auto w-[80%] md:w-[35%] h-fit">
       <span className="ctm-header-4 text-ctm-darker-grey text-center">
         <p>
-          A 5 digit code has been sent to <em className="text-ctm-primary-colour">{email}</em>.
+          A 5 digit code has been sent to <em className="text-ctm-primary-500">{email}</em>.
         </p>{" "}
         <p>Enter code below to continue your registration process.</p>
       </span>
@@ -71,7 +72,7 @@ const VerifyForm = ({ email }: { email: string }) => {
           <FormField
             control={form.control}
             name="otp"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
                 <FormControl>
                   <InputOTP
@@ -81,23 +82,38 @@ const VerifyForm = ({ email }: { email: string }) => {
                   >
                     <InputOTPGroup className="gap-4">
                       <InputOTPSlot
-                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        className={cn(
+                          "ring-ctm-primary-400 bg-ctm-foreground-muted focus:border-ctm-primary-500 border rounded-md",
+                          { "border-ctm-error-default ring-ctm-error-default": fieldState.error }
+                        )}
                         index={0}
                       />
                       <InputOTPSlot
-                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        className={cn(
+                          "ring-ctm-primary-400 bg-ctm-foreground-muted focus:border-ctm-primary-500 border rounded-md",
+                          { "border-ctm-error-default ring-ctm-error-default": fieldState.error }
+                        )}
                         index={1}
                       />
                       <InputOTPSlot
-                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        className={cn(
+                          "ring-ctm-primary-400 bg-ctm-foreground-muted focus:border-ctm-primary-500 border rounded-md",
+                          { "border-ctm-error-default ring-ctm-error-default": fieldState.error }
+                        )}
                         index={2}
                       />
                       <InputOTPSlot
-                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        className={cn(
+                          "ring-ctm-primary-400 bg-ctm-foreground-muted focus:border-ctm-primary-500 border rounded-md",
+                          { "border-ctm-error-default ring-ctm-error-default": fieldState.error }
+                        )}
                         index={3}
                       />
                       <InputOTPSlot
-                        className="ring-ctm-primary-colour border-ctm-primary-colour border rounded-md"
+                        className={cn(
+                          "ring-ctm-primary-400 bg-ctm-foreground-muted focus:border-ctm-primary-500 border rounded-md",
+                          { "border-ctm-error-default ring-ctm-error-default": fieldState.error }
+                        )}
                         index={4}
                       />
                     </InputOTPGroup>
@@ -120,10 +136,10 @@ const VerifyForm = ({ email }: { email: string }) => {
       </Form>
       <span className="text-center">
         <span>
-          resend otp If you don&apos;t receive a message{" "}
+          resend otp If you didn&apos;t receive a message{" "}
           {canResend ? (
             <Button
-              className="text-[16px] font-[600] text-ctm-primary-colour px-1"
+              className="text-[16px] font-[600] text-ctm-primary-500 px-1"
               size={"sm"}
               variant={"ctm-ghost"}
               type="button"

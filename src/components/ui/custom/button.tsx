@@ -9,11 +9,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         "ctm-primary":
-          "bg-ctm-primary-colour text-ctm-white hover:bg-ctm-primary-colour disabled:bg-ctm-normal-grey",
+          "bg-ctm-primary-500 text-ctm-white hover:bg-ctm-primary-400 disabled:bg-ctm-secondary-100 focus:bg-ctm-primary-600 active:bg-ctm-primary-700",
         "ctm-outline":
-          "border border-input border-ctm-primary-colour bg-background shadow-sm hover:bg-ctm-primary-colour hover:text-ctm-white",
+          "border border-ctm-primary-500 disabled:border-ctm-secondary-100 bg-background shadow-sm hover:bg-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 text-ctm-primary-500 disabled:text-ctm-secondary-100",
         "ctm-ghost":
-          "bg-transparent text-accent-foreground hover:bg-transparent hover:text-ctm-primary-colour",
+          "bg-transparent text-ctm-primary-500 disabled:text-ctm-secondary-100 hover:bg-transparent hover:text-ctm-primary-400",
       },
       size: {
         default: "h-9 px-4 py-2",

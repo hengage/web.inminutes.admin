@@ -63,7 +63,39 @@ export default {
           5: "hsl(var(--chart-5))",
         },
         ctm: {
-          "primary-colour": "var(--ctm-primary-colour)",
+          background:"var(--ctm-background)",
+          "background-muted":"var(--ctm-background-muted)",
+          foreground:"var(--ctm-foreground)",
+          "foreground-muted":"var(--ctm-foreground-muted)",
+          primary:{
+            "50": "var(--ctm-primary-50)",
+          "100": "var(--ctm-primary-100)",
+          "200": "var(--ctm-primary-200)",
+          "300": "var(--ctm-primary-300)",
+          "400": "var(--ctm-primary-400)",
+          "500": "var(--ctm-primary-500)",
+          "600": "var(--ctm-primary-600)",
+          "700": "var(--ctm-primary-700)",
+          },
+          secondary:{
+            "50": "var(--ctm-secondary-50)",
+          "100": "var(--ctm-secondary-100)",
+          "200": "var(--ctm-secondary-200)",
+          "300": "var(--ctm-secondary-300)",
+          "400": "var(--ctm-secondary-400)",
+          "500": "var(--ctm-secondary-500)",
+          },
+          error:{
+            default:"var(--ctm-error)",
+            light:"var(--ctm-error-light)"
+          },
+          warning:{
+            default:"var(--ctm-warning)",
+            light:"var(--ctm-warning-light)"
+          },
+          success:{
+            "":"var(--ctm-success)"
+          },
           "primary-colour-light": "var(--ctm-primary-colour-light)",
           "secondary-colour": "var(--ctm-secondary-colour)",
           "normal-grey": "var(--ctm-normal-grey)",
