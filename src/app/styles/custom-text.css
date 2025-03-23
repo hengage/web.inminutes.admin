@@ -47,8 +47,8 @@
 }
 
 .ctm-link-500 {
-  @apply text-ctm-primary-colour text-sm font-medium;
+  @apply text-ctm-primary-500 text-sm font-medium;
 }
 .ctm-link-600 {
-  @apply text-ctm-primary-colour text-sm font-semibold;
+  @apply text-ctm-primary-500 text-sm font-semibold;
 }
