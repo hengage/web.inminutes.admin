@@ -47,10 +47,11 @@ const indicatorVariants = cva("w-[8px] h-[8px] rounded-full", {
 });
 
 const checkTag = (tag: tag): tagTypes | "default" => {
+  let key: tagTypes | "default" = "default";
   Object.entries(Variants).forEach(([Key, value]) => {
-    if (value.includes(tag)) return Key;
+    if (value.includes(tag)) key = Key as tagTypes | "default";
   });
-  return "default";
+  return key;
 };
 
 const Tag = ({ tag }: ITagProps) => {
