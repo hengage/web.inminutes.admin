@@ -94,7 +94,8 @@ export default {
             light:"var(--ctm-warning-light)"
           },
           success:{
-            "":"var(--ctm-success)"
+            default:"var(--ctm-success)",
+            light:"var(--ctm-success-light)"
           },
           "primary-colour-light": "var(--ctm-primary-colour-light)",
           "secondary-colour": "var(--ctm-secondary-colour)",

@@ -8,3 +8,22 @@ export interface IPagination {
   pageSize: number;
   total: number;
 }
+
+export type tag =
+  | "pending"
+  | "ready"
+  | "active"
+  | "in-transit"
+  | "nearby"
+  | "picked-up"
+  | "cancelled"
+  | "abandoned"
+  | "failed"
+  | "inactive"
+  | "delivered"
+  | "successful"
+  | "arrived"
+  | "approved"
+  | "rejected";
+
+export type tagTypes = "primary" | "error" | "success" | "warning";
