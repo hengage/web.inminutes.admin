@@ -17,7 +17,7 @@ const page = () => {
             <Link href={"#"}>Create Vendor</Link>
           </Button>
 
-          <Button variant="ctm-outline" asChild className="border-2 text-ctm-primary-colour">
+          <Button variant="ctm-outline" asChild className="border-2">
             <Link href={"#"}>Update</Link>
           </Button>
         </span>
