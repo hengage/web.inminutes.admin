@@ -9,6 +9,7 @@ export const iconPaths = {
   edit: "/icons/svg/edit.svg",
   restrict: "/icons/svg/restrict.svg",
   trash: "/icons/svg/trash.svg",
+  close: "/icons/svg/close.svg",
   "see-more": "/icons/svg/see-more.svg",
   "sidebar.dashboard.base": "/icons/svg/sidebar/home.svg",
   "sidebar.dashboard.active": "/icons/svg/sidebar/home-active.svg",
