@@ -20,7 +20,7 @@ const page = async ({
             slotBefore={<Icon name="add" height={16} width={16} />}
             asChild
           >
-            <Link href={"#"}>Create Vendor</Link>
+            <Link href={"./vendor/create"}>Create Vendor</Link>
           </Button>
 
           <Button variant="ctm-outline" asChild className="border-2">
