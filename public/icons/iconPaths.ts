@@ -11,6 +11,7 @@ export const iconPaths = {
   restrict: "/icons/svg/restrict.svg",
   trash: "/icons/svg/trash.svg",
   close: "/icons/svg/close.svg",
+  "arrow-down": "/icons/svg/arrow-down.svg",
   "see-more": "/icons/svg/see-more.svg",
   "sidebar.dashboard.base": "/icons/svg/sidebar/home.svg",
   "sidebar.dashboard.active": "/icons/svg/sidebar/home-active.svg",

@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import qs from "query-string";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,3 +13,44 @@ export function encodeData(data: string) {
 export function decodeData(data: string) {
   return Buffer.from(data, "base64").toString("utf-8");
 }
+
+interface UrlParams {
+  params: Record<string, string | number | string[]>;
+  query: Record<string, string | string[] | number>;
+}
+
+interface UrlQueryParams {
+  params: Record<string, string | number>;
+  key: string;
+  value: string | string[] | null;
+}
+
+export function formUrlQuery({ params, key, value }: UrlQueryParams) {
+  return qs.stringifyUrl(
+    {
+      url: window.location.href,
+      query: {
+        ...params,
+        [key]: value,
+      },
+    },
+    { skipNull: true }
+  );
+}
+
+export function stringifyUrl({ params, query }: UrlParams) {
+  return qs.stringifyUrl(
+    {
+      url: window.location.href,
+      query: {
+        ...params,
+        ...query,
+      },
+    },
+    { skipNull: true }
+  );
+}
+
+export const stringContains = (value: string, secondValue: string) => {
+  return value?.toLowerCase().includes(secondValue?.toLowerCase());
+};

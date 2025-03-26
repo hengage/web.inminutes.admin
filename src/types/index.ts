@@ -1,3 +1,12 @@
+export interface IListItem {
+  label: string;
+  value: string;
+}
+
+export interface ICheckboxListItem extends IListItem {
+  checked: boolean;
+}
+
 export interface pageProps {
   params: { slug: string };
   searchParams: { [key: string]: string | string[] | undefined };
