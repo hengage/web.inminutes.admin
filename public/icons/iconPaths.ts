@@ -5,6 +5,7 @@ export const iconPaths = {
   search: "/icons/svg/search.svg",
   logout: "/icons/svg/logout.svg",
   add: "/icons/svg/add.svg",
+  arrowback: "/icons/svg/arrow-left.svg",
   eye: "/icons/svg/eye.svg",
   edit: "/icons/svg/edit.svg",
   restrict: "/icons/svg/restrict.svg",
