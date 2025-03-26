@@ -32,25 +32,21 @@ const page = async ({
         items={[
           {
             trigger: (
-              <Link href={{ pathname: "/vendor", query: { ...params, page: 1, tab: 0 } }}>
-                All Vendors
-              </Link>
+              <Link href={{ pathname: "/vendor", query: { page: 1, tab: 0 } }}>All Vendors</Link>
             ),
             content: <VendorsTable />,
             key: "0",
           },
           {
             trigger: (
-              <Link href={{ pathname: "/vendor", query: { ...params, page: 1, tab: 1 } }}>
-                All Categories
-              </Link>
+              <Link href={{ pathname: "/vendor", query: { page: 1, tab: 1 } }}>All Categories</Link>
             ),
             content: <></>,
             key: "1",
           },
           {
             trigger: (
-              <Link href={{ pathname: "/vendor", query: { ...params, page: 1, tab: 2 } }}>
+              <Link href={{ pathname: "/vendor", query: { page: 1, tab: 2 } }}>
                 All Applications
               </Link>
             ),

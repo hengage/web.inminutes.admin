@@ -3,15 +3,15 @@ import { Button, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 
-const buttonVariants = cva(
-  "px-4 py-2 font-normal !pointer-events-auto  hover:disabled:cursor-not-allowed",
+export const buttonVariants = cva(
+  "px-4 py-2 font-normal !pointer-events-auto disabled:bg-ctm-secondary-100  hover:disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
         "ctm-primary":
           "bg-ctm-primary-500 text-ctm-white hover:bg-ctm-primary-400 disabled:bg-ctm-secondary-100 focus:bg-ctm-primary-600 active:bg-ctm-primary-700",
         "ctm-outline":
-          "border border-ctm-primary-500 disabled:border-ctm-secondary-100 bg-background shadow-sm hover:bg-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 text-ctm-primary-500 disabled:text-ctm-secondary-100",
+          "border border-ctm-primary-500 disabled:border-ctm-secondary-100 bg-background shadow-sm hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 text-ctm-primary-500 disabled:text-ctm-secondary-100",
         "ctm-ghost":
           "bg-transparent text-ctm-primary-500 disabled:text-ctm-secondary-100 hover:bg-transparent hover:text-ctm-primary-400",
       },

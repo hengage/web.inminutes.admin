@@ -55,7 +55,7 @@ export function Pagination({
           <PaginationPrevious
             href={getPageLink(currentPage - 1)}
             disabled={currentPage === 1}
-            className="border border-default-border"
+            className="border"
           />
         </PaginationItem>
         <div className="hidden md:flex">
@@ -78,7 +78,7 @@ export function Pagination({
           <PaginationNext
             href={getPageLink(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="border border-default-border"
+            className="border"
           />
         </PaginationItem>
       </PaginationContent>
