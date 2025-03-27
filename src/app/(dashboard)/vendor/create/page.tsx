@@ -4,6 +4,7 @@ import { Icon } from "@/components";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { TextAreaInput, TextArea, TextAreaCount } from "@/components/ui/custom/TextArea";
 
 const CreateVendor = () => {
   const router = useRouter();
@@ -60,7 +61,12 @@ const CreateVendor = () => {
           <Input className="w-[306px] h-[56px]" placeholder="Phone Number" />
         </div>
 
-        <div></div>
+        <div>
+          <TextArea maxLength={100}>
+            <TextAreaInput placeholder="Business Address" />
+            <TextAreaCount />
+          </TextArea>
+        </div>
       </main>
     </>
   );
