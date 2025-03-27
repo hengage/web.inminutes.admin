@@ -4,6 +4,14 @@ import { Icon } from "@/components";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { TextAreaInput, TextArea, TextAreaCount } from "@/components/ui/custom/TextArea";
+import PopOver from "@/components/ui/custom/PopOver";
+import RadioItems from "@/components/ui/custom/radio/RadioItems";
+
+const categories = [
+  { label: "Food & Beverage", value: "food" },
+  { label: "Fashion", value: "fashion" },
+];
 
 const CreateVendor = () => {
   const router = useRouter();
@@ -60,7 +68,40 @@ const CreateVendor = () => {
           <Input className="w-[306px] h-[56px]" placeholder="Phone Number" />
         </div>
 
-        <div></div>
+        <div>
+          <TextArea maxLength={100}>
+            <TextAreaInput placeholder="Business Address" />
+            <TextAreaCount />
+          </TextArea>
+        </div>
+        <div className="relative w-full">
+          <PopOver
+            trigger={
+              <Button
+                className="stroke-ctm-secondary-300 border w-full justify-between border-ctm-secondary-100 text-ctm-secondary-300"
+                variant={"ctm-ghost"}
+              >
+                Category
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
+          >
+            <RadioItems
+              onSubmit={() => {
+                // handleQueryChange(
+                //   "category",
+                //   params.map((item) => item.value)
+                // );
+              }}
+              selectedItem={""}
+              // showSearchBox
+              // searchPlaceholder="Categories"
+              items={categories}
+              className="w-full"
+            />
+          </PopOver>
+        </div>
       </main>
     </>
   );
