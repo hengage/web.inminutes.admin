@@ -13,6 +13,16 @@ const categories = [
   { label: "Fashion", value: "fashion" },
 ];
 
+const paymentOptions = [
+  { label: "Paystack", value: "Paystack" },
+  { label: "Bank transfer", value: "Bank transfer" },
+];
+
+const subCategories = [
+  { label: "Genesis Foods", value: "Genesis Foods" },
+  { label: "Exodus Foods", value: "Exodus Foods" },
+];
+
 const CreateVendor = () => {
   const router = useRouter();
 
@@ -43,7 +53,7 @@ const CreateVendor = () => {
         </div>
       </section>
 
-      <main className="w-[750px] h-[1022px] rounded-xl mx-auto pt-[40px] bg-white px-[65px]">
+      <main className="w-[750px] h-[1022px] rounded-xl mx-auto pt-[40px] bg-white px-[65px] mb-[56px]">
         <div className="flex justify-center items-center border-[2px] border-ctm-primary-500 mx-auto border-dotted rounded-[50%] w-[150px] h-[150px] mb-[16px] bg-[#eeebff]">
           <Icon name="add" width={30} className="text-ctm-primary-500" height={30} />
         </div>
@@ -68,20 +78,43 @@ const CreateVendor = () => {
           <Input className="w-[306px] h-[56px]" placeholder="Phone Number" />
         </div>
 
-        <div>
-          <TextArea maxLength={100}>
-            <TextAreaInput placeholder="Business Address" />
-            <TextAreaCount />
-          </TextArea>
-        </div>
-        <div className="relative w-full">
+        <div className="relative w-full mb-[24px]">
           <PopOver
             trigger={
               <Button
-                className="stroke-ctm-secondary-300 border w-full justify-between border-ctm-secondary-100 text-ctm-secondary-300"
+                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
-                Category
+                Payment option
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
+          >
+            <RadioItems
+              onSubmit={() => {
+                // handleQueryChange(
+                //   "category",
+                //   params.map((item) => item.value)
+                // );
+              }}
+              selectedItem={""}
+              // showSearchBox
+              // searchPlaceholder="Categories"
+              items={paymentOptions}
+              className="w-full"
+            />
+          </PopOver>
+        </div>
+
+        <div className="relative w-full mb-[24px]">
+          <PopOver
+            trigger={
+              <Button
+                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
+                variant={"ctm-ghost"}
+              >
+                Categories
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -101,6 +134,49 @@ const CreateVendor = () => {
               className="w-full"
             />
           </PopOver>
+        </div>
+
+        <div className="relative w-full mb-[24px]">
+          <PopOver
+            trigger={
+              <Button
+                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
+                variant={"ctm-ghost"}
+              >
+                Sub-categories
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
+          >
+            <RadioItems
+              onSubmit={() => {
+                // handleQueryChange(
+                //   "category",
+                //   params.map((item) => item.value)
+                // );
+              }}
+              selectedItem={""}
+              // showSearchBox
+              // searchPlaceholder="Categories"
+              items={subCategories}
+              className="w-full"
+            />
+          </PopOver>
+        </div>
+
+        <div className="mb-[24px]">
+          <TextArea maxLength={100}>
+            <TextAreaInput className="h-[116px]" placeholder="Business Address" />
+            <TextAreaCount className="flex justify-end" />
+          </TextArea>
+        </div>
+
+        <div>
+          <TextArea maxLength={100}>
+            <TextAreaInput className="h-[116px]" placeholder="Resident Address" />
+            <TextAreaCount className="flex justify-end" />
+          </TextArea>
         </div>
       </main>
     </>
