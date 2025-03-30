@@ -24,7 +24,7 @@ const page = async ({
           </Button>
 
           <Button variant="ctm-outline" asChild className="border-2">
-            <Link href={"#"}>Update</Link>
+            <Link href={"./vendor/update"}>Update</Link>
           </Button>
         </span>
       </div>
