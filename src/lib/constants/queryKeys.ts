@@ -1,5 +1,6 @@
 export const QUERY_KEYS = {
   VENDORS: "vendors",
+  ROLES: "roles",
 } as const;
 
 // Function to check for duplicate values

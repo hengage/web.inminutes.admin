@@ -3,6 +3,7 @@ import { FormControl, FormField, FormLabel, FormMessage, Input } from "@/compone
 import { Control, FieldPath } from "react-hook-form";
 import { z } from "zod";
 import { Eye, EyeOff } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FormFieldProps<T extends z.ZodType> {
   control: Control<z.infer<T>>;
@@ -12,6 +13,7 @@ interface FormFieldProps<T extends z.ZodType> {
   type?: string;
   formId?: string;
   showError?: boolean;
+  className?: string;
 }
 
 const ControlledFormInput = <T extends z.ZodType>({
@@ -22,6 +24,7 @@ const ControlledFormInput = <T extends z.ZodType>({
   type = "text",
   formId,
   showError = true,
+  className,
 }: FormFieldProps<T>) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = showPassword ? "text" : "password";
@@ -32,7 +35,7 @@ const ControlledFormInput = <T extends z.ZodType>({
       control={control}
       name={name}
       render={({ field }) => (
-        <div className="my-[29px] relative">
+        <div className={cn("my-[29px] relative", className)}>
           <div className="form-item bg-ctm-foreground-muted">
             <div className="flex w-full flex-col justify-center my-auto">
               {label && (

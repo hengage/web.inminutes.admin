@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { useEffect, useId, useState } from "react";
 
-export interface SelectProps {
+export interface SelectProps extends SelectPrimitive.SelectProps {
   options?: { value: string; label: string }[];
   value?: string;
   defaultValue?: string;
@@ -38,9 +38,13 @@ export function Select(props: SelectProps) {
         props.onValueChange?.(value);
       }}
       value={value}
+      {...props}
     >
       {props.label && (
-        <Label className="label" htmlFor={props.id ?? id}>
+        <Label
+          className="ctm-paragraph-1 mb-2 text-ctm-secondary-300 py-0"
+          htmlFor={props.id ?? id}
+        >
           {props.label}
         </Label>
       )}
