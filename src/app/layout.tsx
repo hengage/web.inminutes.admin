@@ -5,6 +5,9 @@ import { ToastContainer } from "react-toastify";
 import "./globals.css";
 import ProgressProvider from "@/providers/ProgressProvider";
 import QueryProvider from "@/providers/QueryProvider";
+import { validateEnvs } from "@/lib/env-checks";
+
+validateEnvs();
 
 const inter = Inter({
   variable: "--font-inter",

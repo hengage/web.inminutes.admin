@@ -12,6 +12,7 @@ import { useLoginMutation, useVerifyOtpMutation } from "@/api/auth";
 import { useState } from "react";
 import CountdownTimer from "@/components/ui/custom/CountdownTimer";
 import { cn } from "@/lib/utils";
+import { setCookie } from "@/lib/cookies";
 
 const VerifyForm = ({ email }: { email: string }) => {
   const { push } = useRouter();
@@ -30,8 +31,9 @@ const VerifyForm = ({ email }: { email: string }) => {
     verifyOtpMutation(
       { ...data, email },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           showSuccess("success");
+          setCookie(process.env.NEXT_PUBLIC_SESSION_KEY!, data.token);
           push("/dashboard");
         },
         onError: (error) => {
