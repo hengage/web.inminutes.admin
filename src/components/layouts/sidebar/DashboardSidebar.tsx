@@ -1,9 +1,20 @@
+"use client";
 import data from "@/constants/sidebar.json";
 import SidebarItem from "./SidebarItem";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 import { Icon } from "@/components/ui/Icon";
+import { signOut } from "@/lib/actions/auth.actions";
 
 const DashboardSidebar = () => {
+  const handleLogout = async () => {
+    try {
+      await signOut().then(() => {
+        window.location.href = "/sign-in";
+      });
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
   return (
     <div className="drawer-side bg-ctm-primary-colour-light">
       <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
@@ -27,6 +38,9 @@ const DashboardSidebar = () => {
             className={
               "border-none shadow-none text-[#484D57] hover:textwhite text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light"
             }
+            onClick={() => {
+              handleLogout();
+            }}
           >
             Logout
           </Button>
