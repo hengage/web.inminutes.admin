@@ -50,7 +50,7 @@ async function logoutUser() {
     toastId: "session-expired",
   });
 
-  redirect("/");
+  redirect("/sign-in");
 }
 
 // Create a base Axios instance
