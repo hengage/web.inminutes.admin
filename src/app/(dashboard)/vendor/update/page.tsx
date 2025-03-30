@@ -23,7 +23,7 @@ const subCategories = [
   { label: "Exodus Foods", value: "Exodus Foods" },
 ];
 
-const CreateVendor = () => {
+const UpdateVendor = () => {
   const router = useRouter();
 
   return (
@@ -34,9 +34,7 @@ const CreateVendor = () => {
             <Icon name="arrowback" />
           </Button>
 
-          <h2 className="ctm-header-2 text-[32px] text-ctm-primary-700 ml-[32px]">
-            Create New Vendor
-          </h2>
+          <h2 className="ctm-header-2 text-[32px] text-ctm-primary-700 ml-[32px]">Edit Vendor</h2>
         </div>
 
         <div>
@@ -44,11 +42,12 @@ const CreateVendor = () => {
             variant="ctm-primary"
             className="text-[16px] py-[12px] px-[24px] rounded-[8px] mr-[16px] text-white"
           >
-            <Link href={"#"}>Save</Link>
+            <Link href={"#"}>Save changes</Link>
           </Button>
 
-          <Button className="text-[16px] border-2 border-ctm-primary-500 py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-primary-700">
-            <Link href={"#"}>Cancel</Link>
+          <Button className="text-[16px] border-2 border-ctm-error-default py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-error-default">
+            <Link href={"#"}>Delete vendor </Link>
+            <Icon name="trash" width={16} height={16} />
           </Button>
         </div>
       </section>
@@ -71,7 +70,7 @@ const CreateVendor = () => {
         <div className="flex mb-[24px]">
           <Input
             className="w-[306px] h-[56px] mr-[24px]
-        outline-none "
+      outline-none "
             placeholder="Vendor Name"
           />
           <Input className="w-[306px] h-[56px]" placeholder="Business Name" />
@@ -187,4 +186,4 @@ const CreateVendor = () => {
   );
 };
 
-export default CreateVendor;
+export default UpdateVendor;
