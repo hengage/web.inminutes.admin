@@ -12,6 +12,10 @@ const VehicleType = [
   { label: "Bicycle", value: "Bicycle" },
   { label: "Motorcycle", value: "Motorcycle" },
 ];
+const DateOfBirth = [
+  { label: "Bicycle", value: "Bicycle" },
+  { label: "Motorcycle", value: "Motorcycle" },
+];
 
 const CreateRider = () => {
   const router = useRouter();
@@ -124,7 +128,7 @@ const CreateRider = () => {
               selectedItem={""}
               // showSearchBox
               // searchPlaceholder="Categories"
-              // items={DateOfBirth}
+              items={DateOfBirth}
               className="w-full"
             />
           </PopOver>
