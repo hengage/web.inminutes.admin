@@ -61,7 +61,7 @@ const UpdateVendor = () => {
 
             <div className="mb-[32px]">
               <Button className="text-[16px] py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-primary-500 border-2 border-ctm-primary-500">
-                Upload Image
+                Change Image
               </Button>
             </div>
           </div>
@@ -177,7 +177,7 @@ const UpdateVendor = () => {
 
         <div>
           <TextArea maxLength={100}>
-            <TextAreaInput className="h-[116px]" placeholder="Resident Address" />
+            <TextAreaInput className="h-[116px]" placeholder="Residential Address" />
             <TextAreaCount className="flex justify-end" />
           </TextArea>
         </div>

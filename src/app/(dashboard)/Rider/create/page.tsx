@@ -8,22 +8,12 @@ import { TextAreaInput, TextArea, TextAreaCount } from "@/components/ui/custom/T
 import PopOver from "@/components/ui/custom/PopOver";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 
-const categories = [
-  { label: "Food & Beverage", value: "food" },
-  { label: "Fashion", value: "fashion" },
+const VehicleType = [
+  { label: "Bicycle", value: "Bicycle" },
+  { label: "Motorcycle", value: "Motorcycle" },
 ];
 
-const paymentOptions = [
-  { label: "Paystack", value: "Paystack" },
-  { label: "Bank transfer", value: "Bank transfer" },
-];
-
-const subCategories = [
-  { label: "Genesis Foods", value: "Genesis Foods" },
-  { label: "Exodus Foods", value: "Exodus Foods" },
-];
-
-const CreateVendor = () => {
+const CreateRider = () => {
   const router = useRouter();
 
   return (
@@ -35,7 +25,7 @@ const CreateVendor = () => {
           </Button>
 
           <h2 className="ctm-header-2 text-[32px] text-ctm-primary-700 ml-[32px]">
-            Create New Vendor
+            Create New Rider
           </h2>
         </div>
 
@@ -72,9 +62,9 @@ const CreateVendor = () => {
           <Input
             className="w-[306px] h-[56px] mr-[24px]
         outline-none "
-            placeholder="Vendor Name"
+            placeholder="Rider Name"
           />
-          <Input className="w-[306px] h-[56px]" placeholder="Business Name" />
+          <Input className="w-[306px] h-[56px]" placeholder="Display Name" />
         </div>
 
         <div className="flex mb-[24px]">
@@ -89,7 +79,7 @@ const CreateVendor = () => {
                 className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
-                Payment option
+                Vehicle type
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -105,7 +95,7 @@ const CreateVendor = () => {
               selectedItem={""}
               // showSearchBox
               // searchPlaceholder="Categories"
-              items={paymentOptions}
+              items={VehicleType}
               className="w-full"
             />
           </PopOver>
@@ -118,7 +108,7 @@ const CreateVendor = () => {
                 className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
-                Categories
+                Date of birth
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -134,36 +124,7 @@ const CreateVendor = () => {
               selectedItem={""}
               // showSearchBox
               // searchPlaceholder="Categories"
-              items={categories}
-              className="w-full"
-            />
-          </PopOver>
-        </div>
-
-        <div className="relative w-full mb-[24px]">
-          <PopOver
-            trigger={
-              <Button
-                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
-                variant={"ctm-ghost"}
-              >
-                Sub-categories
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
-          >
-            <RadioItems
-              onSubmit={() => {
-                // handleQueryChange(
-                //   "category",
-                //   params.map((item) => item.value)
-                // );
-              }}
-              selectedItem={""}
-              // showSearchBox
-              // searchPlaceholder="Categories"
-              items={subCategories}
+              // items={DateOfBirth}
               className="w-full"
             />
           </PopOver>
@@ -187,4 +148,4 @@ const CreateVendor = () => {
   );
 };
 
-export default CreateVendor;
+export default CreateRider;
