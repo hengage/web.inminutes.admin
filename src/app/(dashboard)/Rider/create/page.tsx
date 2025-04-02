@@ -7,12 +7,9 @@ import Link from "next/link";
 import { TextAreaInput, TextArea, TextAreaCount } from "@/components/ui/custom/TextArea";
 import PopOver from "@/components/ui/custom/PopOver";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
+import { DatePicker } from "@/components/ui/custom/date/DatePicker";
 
 const VehicleType = [
-  { label: "Bicycle", value: "Bicycle" },
-  { label: "Motorcycle", value: "Motorcycle" },
-];
-const DateOfBirth = [
   { label: "Bicycle", value: "Bicycle" },
   { label: "Motorcycle", value: "Motorcycle" },
 ];
@@ -76,18 +73,18 @@ const CreateRider = () => {
           <Input className="w-[306px] h-[56px]" placeholder="Phone Number" />
         </div>
 
-        <div className="relative w-full mb-[24px]">
+        <div className="relative w-full mb-[24px] flex items-stretch gap-6">
           <PopOver
             trigger={
               <Button
-                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
+                className="stroke-ctm-secondary-300 border w-full h-[50px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
                 Vehicle type
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 max-w-full"
           >
             <RadioItems
               onSubmit={() => {
@@ -100,38 +97,9 @@ const CreateRider = () => {
               // showSearchBox
               // searchPlaceholder="Categories"
               items={VehicleType}
-              className="w-full"
             />
           </PopOver>
-        </div>
-
-        <div className="relative w-full mb-[24px]">
-          <PopOver
-            trigger={
-              <Button
-                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
-                variant={"ctm-ghost"}
-              >
-                Date of birth
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
-          >
-            <RadioItems
-              onSubmit={() => {
-                // handleQueryChange(
-                //   "category",
-                //   params.map((item) => item.value)
-                // );
-              }}
-              selectedItem={""}
-              // showSearchBox
-              // searchPlaceholder="Categories"
-              items={DateOfBirth}
-              className="w-full"
-            />
-          </PopOver>
+          <DatePicker placeholder="Date of birth" triggerclassName="w-full py-6" />
         </div>
 
         <div className="mb-[24px]">
