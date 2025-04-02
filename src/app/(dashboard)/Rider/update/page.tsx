@@ -8,22 +8,15 @@ import { TextAreaInput, TextArea, TextAreaCount } from "@/components/ui/custom/T
 import PopOver from "@/components/ui/custom/PopOver";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 
-const categories = [
-  { label: "Food & Beverage", value: "food" },
-  { label: "Fashion", value: "fashion" },
+const VehicleType = [
+  { label: "Bicycle", value: "Bicycle" },
+  { label: "Motorcycle", value: "Motorcycle" },
 ];
-
-const paymentOptions = [
-  { label: "Paystack", value: "Paystack" },
-  { label: "Bank transfer", value: "Bank transfer" },
+const DateOfBirth = [
+  { label: "Bicycle", value: "Bicycle" },
+  { label: "Motorcycle", value: "Motorcycle" },
 ];
-
-const subCategories = [
-  { label: "Genesis Foods", value: "Genesis Foods" },
-  { label: "Exodus Foods", value: "Exodus Foods" },
-];
-
-const CreateVendor = () => {
+const UpdateRider = () => {
   const router = useRouter();
 
   return (
@@ -34,9 +27,7 @@ const CreateVendor = () => {
             <Icon name="arrowback" />
           </Button>
 
-          <h2 className="ctm-header-2 text-[32px] text-ctm-primary-700 ml-[32px]">
-            Create New Vendor
-          </h2>
+          <h2 className="ctm-header-2 text-[32px] text-ctm-primary-700 ml-[32px]">Edit Rider</h2>
         </div>
 
         <div>
@@ -44,11 +35,12 @@ const CreateVendor = () => {
             variant="ctm-primary"
             className="text-[16px] py-[12px] px-[24px] rounded-[8px] mr-[16px] text-white"
           >
-            <Link href={"#"}>Save</Link>
+            <Link href={"#"}>Save changes</Link>
           </Button>
 
-          <Button className="text-[16px] border-2 border-ctm-primary-500 py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-primary-700">
-            <Link href={"#"}>Cancel</Link>
+          <Button className="text-[16px] border-2 border-ctm-error-default py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-error-default">
+            <Link href={"#"}>Delete vendor</Link>
+            <Icon width={16} height={16} name="trash" />
           </Button>
         </div>
       </section>
@@ -62,7 +54,7 @@ const CreateVendor = () => {
 
             <div className="mb-[32px]">
               <Button className="text-[16px] py-[12px] px-[24px] rounded-[8px] mr-[16px] text-ctm-primary-500 border-2 border-ctm-primary-500">
-                Upload Image
+                Change Image
               </Button>
             </div>
           </div>
@@ -72,9 +64,9 @@ const CreateVendor = () => {
           <Input
             className="w-[306px] h-[56px] mr-[24px]
         outline-none "
-            placeholder="Vendor Name"
+            placeholder="Rider Name"
           />
-          <Input className="w-[306px] h-[56px]" placeholder="Business Name" />
+          <Input className="w-[306px] h-[56px]" placeholder="Display Name" />
         </div>
 
         <div className="flex mb-[24px]">
@@ -89,7 +81,7 @@ const CreateVendor = () => {
                 className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
-                Payment option
+                Vehicle type
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -105,7 +97,7 @@ const CreateVendor = () => {
               selectedItem={""}
               // showSearchBox
               // searchPlaceholder="Categories"
-              items={paymentOptions}
+              items={VehicleType}
               className="w-full"
             />
           </PopOver>
@@ -118,7 +110,7 @@ const CreateVendor = () => {
                 className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
                 variant={"ctm-ghost"}
               >
-                Categories
+                Date of birth
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -134,36 +126,7 @@ const CreateVendor = () => {
               selectedItem={""}
               // showSearchBox
               // searchPlaceholder="Categories"
-              items={categories}
-              className="w-full"
-            />
-          </PopOver>
-        </div>
-
-        <div className="relative w-full mb-[24px]">
-          <PopOver
-            trigger={
-              <Button
-                className="stroke-ctm-secondary-300 border w-full h-[56px] justify-between border-ctm-secondary-100 text-ctm-secondary-300"
-                variant={"ctm-ghost"}
-              >
-                Sub-categories
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1 w-[38.8rem] max-w-full"
-          >
-            <RadioItems
-              onSubmit={() => {
-                // handleQueryChange(
-                //   "category",
-                //   params.map((item) => item.value)
-                // );
-              }}
-              selectedItem={""}
-              // showSearchBox
-              // searchPlaceholder="Categories"
-              items={subCategories}
+              items={DateOfBirth}
               className="w-full"
             />
           </PopOver>
@@ -187,4 +150,4 @@ const CreateVendor = () => {
   );
 };
 
-export default CreateVendor;
+export default UpdateRider;
