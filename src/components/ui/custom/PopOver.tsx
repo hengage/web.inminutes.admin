@@ -3,7 +3,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "../button";
 import { cn } from "@/lib/utils";
 
-interface PopOverProps {
+export interface PopOverProps {
   children: React.ReactNode;
   trigger?: React.ReactNode;
   className?: string;
