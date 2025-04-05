@@ -2,7 +2,6 @@
 
 import axios, { AxiosInstance } from "axios";
 import { getCookie, setCookie } from "./cookies";
-import { redirect } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 
@@ -50,7 +49,7 @@ async function logoutUser() {
     toastId: "session-expired",
   });
 
-  redirect("/sign-in");
+  window.location.href = "/sign-in";
 }
 
 // Create a base Axios instance
@@ -128,4 +127,5 @@ const createBaseAxiosInstance = (baseURL: string): AxiosInstance => {
   return instance;
 };
 const https = createBaseAxiosInstance(process.env.NEXT_PUBLIC_API_URL!);
+
 export default https;

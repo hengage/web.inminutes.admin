@@ -169,15 +169,19 @@ const UpdateVendor = () => {
         </div>
 
         <div className="mb-[24px]">
-          <TextArea maxLength={100}>
-            <TextAreaInput className="h-[116px]" placeholder="Business Address" />
+          <TextArea>
+            <TextAreaInput maxLength={100} className="h-[116px]" placeholder="Business Address" />
             <TextAreaCount className="flex justify-end" />
           </TextArea>
         </div>
 
         <div>
-          <TextArea maxLength={100}>
-            <TextAreaInput className="h-[116px]" placeholder="Residential Address" />
+          <TextArea>
+            <TextAreaInput
+              maxLength={100}
+              className="h-[116px]"
+              placeholder="Residential Address"
+            />
             <TextAreaCount className="flex justify-end" />
           </TextArea>
         </div>

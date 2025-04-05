@@ -13,9 +13,24 @@ export interface pageProps {
 }
 
 export interface IPagination {
-  currentPage: number;
-  pageSize: number;
+  page: number;
+  limit: number;
   total: number;
+  totalPages: number;
+}
+
+export interface IPaginationData<T> extends IPagination {
+  data: T[];
+}
+
+export interface IFilter {
+  search?: string;
+  category?: string;
+  subCategory?: string;
+  page: number;
+  limit: number;
+  startDate?: string;
+  endDate?: string;
 }
 
 export type tag =
@@ -36,3 +51,14 @@ export type tag =
   | "rejected";
 
 export type tagTypes = "primary" | "error" | "success" | "warning";
+
+export interface ILocation {
+  coordinates: number[];
+  type: "Point";
+}
+
+export interface IRating {
+  totalRatingSum: number;
+  ratingCount: number;
+  averageRating: number;
+}

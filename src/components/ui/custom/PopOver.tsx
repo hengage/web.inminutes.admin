@@ -2,17 +2,19 @@ import { Icon } from "../Icon";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Button } from "../button";
 import { cn } from "@/lib/utils";
+import { PopoverTriggerProps } from "@radix-ui/react-popover";
 
 export interface PopOverProps {
   children: React.ReactNode;
   trigger?: React.ReactNode;
+  triggerProps?: PopoverTriggerProps;
   className?: string;
 }
 
-const PopOver = ({ children, trigger, className }: PopOverProps) => {
+const PopOver = ({ children, trigger, className, triggerProps }: PopOverProps) => {
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild {...triggerProps}>
         {trigger ? (
           trigger
         ) : (

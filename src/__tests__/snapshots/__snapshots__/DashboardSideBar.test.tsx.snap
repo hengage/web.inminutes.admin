@@ -32,6 +32,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto hover:disabled:cursor-not-allowed bg-ctm-primary-500 hover:bg-ctm-primary-400 disabled:bg-ctm-secondary-100 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 border-none shadow-none hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] text-white relative"
             href="dashboard"
+            type="button"
           >
             <img
               alt="sidebar.dashboard.active icon"
@@ -53,6 +54,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="vendor"
+            type="button"
           >
             <img
               alt="sidebar.vendor.base icon"
@@ -74,6 +76,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="rider"
+            type="button"
           >
             <img
               alt="sidebar.rider.base icon"
@@ -95,6 +98,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="product"
+            type="button"
           >
             <img
               alt="sidebar.product.base icon"
@@ -116,6 +120,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="customer"
+            type="button"
           >
             <img
               alt="sidebar.customer.base icon"
@@ -137,6 +142,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="order"
+            type="button"
           >
             <img
               alt="sidebar.order.base icon"
@@ -158,6 +164,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="errand"
+            type="button"
           >
             <img
               alt="sidebar.errand.base icon"
@@ -179,6 +186,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="transaction"
+            type="button"
           >
             <img
               alt="sidebar.transaction.base icon"
@@ -200,6 +208,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
             href="metrics"
+            type="button"
           >
             <img
               alt="sidebar.metrics.base icon"
@@ -221,6 +230,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
       >
         <button
           class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed disabled:text-ctm-secondary-100 hover:bg-transparent hover:text-ctm-primary-400 border-none shadow-none text-[#484D57] hover:textwhite text-left w-[12rem] justify-start pl-[3rem] text-[16px] font-[400] bg-ctm-primary-colour-light"
+          type="button"
         >
           <img
             alt="logout icon"

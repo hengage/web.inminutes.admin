@@ -7,6 +7,7 @@ interface TextAreaContextType {
   value?: string;
   maxLength?: number;
   updateValue?: (value: string) => void;
+  updateLength?: (value?: number) => void;
 }
 
 const TextAreaContext = React.createContext<TextAreaContextType | undefined>(undefined);
@@ -41,6 +42,9 @@ const TextAreaInput = React.forwardRef<
   React.ComponentProps<"textarea"> & Omit<React.ComponentPropsWithRef<"textarea">, "id">
 >(({ className, ...props }, ref) => {
   const context = useTextAreaContext();
+  React.useEffect(() => {
+    context.updateLength?.(props.maxLength);
+  }, [props.maxLength]);
   return (
     <>
       <textarea
@@ -49,7 +53,6 @@ const TextAreaInput = React.forwardRef<
           className
         )}
         ref={ref}
-        id={context.id}
         {...props}
         onChange={(e) => {
           context.updateValue?.(e.target.value);
@@ -61,22 +64,19 @@ const TextAreaInput = React.forwardRef<
 });
 TextAreaInput.displayName = "TextareaInput";
 
-const TextArea = ({
-  children,
-  ...props
-}: Omit<TextAreaContextType, "updateValue"> & {
-  children: React.ReactNode;
-}) => {
-  const id = React.useId();
-  const [value, setValue] = React.useState(props.value?.toString());
+const TextArea = ({ children }: { children: React.ReactNode }) => {
+  const [value, setValue] = React.useState("");
+  const [maxLength, setMaxLength] = React.useState<number | undefined>();
   return (
     <TextAreaContext.Provider
       value={{
-        id: props.id ?? id,
         value,
-        maxLength: props.maxLength,
+        maxLength: maxLength,
         updateValue: (value: string) => {
           setValue(value);
+        },
+        updateLength: (value?: number) => {
+          setMaxLength(value);
         },
       }}
     >

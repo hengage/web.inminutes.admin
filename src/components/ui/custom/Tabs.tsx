@@ -16,6 +16,7 @@ export interface TabItem {
   trigger: React.ReactNode;
   key: string;
   content: React.ReactNode;
+  controlled?: boolean;
 }
 
 const Tab = React.forwardRef<HTMLDivElement, TabProps>(
