@@ -4,15 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 const useUrlHash = () => {
-  const [hash, setHash] = useState(() =>
-    typeof window !== undefined ? window.location.hash.substring(1) : ""
-  );
+  const [hash, setHash] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.location.hash.substring(1);
+    } else return "";
+  });
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const handleHashChange = () => {
-      setHash(typeof window !== undefined ? window.location.hash.substring(1) : "");
+      setHash(window.location.hash.substring(1));
     };
 
     window.addEventListener("hashchange", handleHashChange);
