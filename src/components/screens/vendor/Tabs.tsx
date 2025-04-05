@@ -3,7 +3,7 @@ import VendorsTable from "@/components/screens/vendor/VendorsTable";
 import Tab from "@/components/ui/custom/Tabs";
 import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 
 const Tabs = () => {
   const { hash } = useUrlHash();
@@ -44,4 +44,10 @@ const Tabs = () => {
   );
 };
 
-export default Tabs;
+const TabExport = () => (
+  <Suspense>
+    <Tabs />
+  </Suspense>
+);
+
+export default TabExport;

@@ -9,7 +9,7 @@ import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
 import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
@@ -233,4 +233,11 @@ const VendorsTable = () => {
     </div>
   );
 };
-export default VendorsTable;
+
+const Vendors = () => (
+  <Suspense>
+    <VendorsTable />
+  </Suspense>
+);
+
+export default Vendors;
