@@ -56,14 +56,14 @@ const CreateAdminForm = () => {
             name="firstName"
             control={form.control}
             placeholder="first name"
-            className="w-full my-2"
+            className="w-full my-2 bg-ctm-foreground-muted"
           />
           <Input<typeof adminSchema>
             formId={"admin-form-email"}
             name="lastName"
             control={form.control}
             placeholder="last name"
-            className="w-full my-2"
+            className="w-full my-2 bg-ctm-foreground-muted"
           />
         </div>
         <Input<typeof adminSchema>
@@ -71,7 +71,7 @@ const CreateAdminForm = () => {
           name="email"
           control={form.control}
           placeholder="work email"
-          className="my-2"
+          className="my-2 bg-ctm-foreground-muted"
         />
         <FormField
           control={form.control}

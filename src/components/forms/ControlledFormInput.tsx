@@ -36,7 +36,7 @@ const ControlledFormInput = <T extends z.ZodType>({
       name={name}
       render={({ field }) => (
         <div className={cn("my-[29px] relative", className)}>
-          <div className="form-item bg-ctm-foreground-muted">
+          <div className="form-item">
             <div className="flex w-full flex-col justify-center my-auto">
               {label && (
                 <FormLabel className="ctm-paragraph-1 mb-2 text-base-content">{label}</FormLabel>

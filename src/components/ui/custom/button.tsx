@@ -28,7 +28,7 @@ export const buttonVariants = cva(
 const spinVariants = cva("loading loading-spinner", {
   variants: {
     variant: {
-      "ctm-outline": "text-ctm-primary-colour",
+      "ctm-outline": "text-ctm-primary-400",
     },
     size: {
       default: "loading-xs",
@@ -64,6 +64,7 @@ export function CustomButton({
   loading = false,
   slotBefore,
   slotAfter,
+  type = "button",
   ...props
 }: CustomButtonProps) {
   const render = React.isValidElement(children) ? (
@@ -110,6 +111,7 @@ export function CustomButton({
       {...props}
       disabled={props.disabled || loading}
       variant={"child"}
+      type={type}
     >
       {render}
     </Button>

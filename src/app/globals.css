@@ -116,3 +116,16 @@ body {
     data-[state=active]:before:absolute data-[state=active]:before:bottom-0 data-[state=active]:before:left-0 data-[state=active]:before:w-full data-[state=active]:before:h-[3px] data-[state=active]:before:bg-ctm-primary-500 data-[state=active]:before:rounded-b-[4px];
   }
 }
+
+@keyframes spin-dotted {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-dotted {
+  animation: spin-dotted 1s linear infinite;
+}

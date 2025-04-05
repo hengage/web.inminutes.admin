@@ -14,11 +14,11 @@ import { UrlObject } from "url";
 
 export function Pagination({
   total,
-  pageSize,
-  currentPage,
+  limit,
+  page,
   classname,
-}: IPagination & { classname?: string }) {
-  const totalPages = Math.ceil(total / pageSize);
+}: Omit<Omit<IPagination, "data">, "totalPages"> & { classname?: string }) {
+  const totalPages = Math.ceil(total / limit);
   const pages: (number | "...")[] = [];
 
   if (totalPages <= 7) {
@@ -27,18 +27,14 @@ export function Pagination({
   } else {
     pages.push(1, 2); // Always include first two pages
 
-    if (currentPage > 4) pages.push("..."); // Left ellipsis if needed
+    if (page > 4) pages.push("..."); // Left ellipsis if needed
 
     // Middle pages (2 before and 2 after the current page)
-    for (
-      let i = Math.max(3, currentPage - 1);
-      i <= Math.min(totalPages - 2, currentPage + 1);
-      i++
-    ) {
+    for (let i = Math.max(3, page - 1); i <= Math.min(totalPages - 2, page + 1); i++) {
       pages.push(i);
     }
 
-    if (currentPage < totalPages - 3) pages.push("..."); // Right ellipsis if needed
+    if (page < totalPages - 3) pages.push("..."); // Right ellipsis if needed
 
     pages.push(totalPages - 1, totalPages); // Always include last two pages
   }
@@ -53,31 +49,31 @@ export function Pagination({
       <PaginationContent className={cn("flex justify-center w-full", classname)}>
         <PaginationItem className="">
           <PaginationPrevious
-            href={getPageLink(currentPage - 1)}
-            disabled={currentPage === 1}
+            href={getPageLink(page - 1)}
+            disabled={page === 1}
             className="border"
           />
         </PaginationItem>
         <div className="hidden md:flex">
-          {pages.map((page, index) => (
+          {pages.map((currentPage, index) => (
             <PaginationItem key={index}>
-              {page === "..." ? (
+              {currentPage === "..." ? (
                 <PaginationEllipsis />
               ) : (
-                <PaginationLink href={getPageLink(page)} isActive={currentPage === page}>
-                  {page}
+                <PaginationLink href={getPageLink(currentPage)} isActive={currentPage === page}>
+                  {currentPage}
                 </PaginationLink>
               )}
             </PaginationItem>
           ))}
         </div>
         <div className="md:hidden">
-          Page {currentPage} of {totalPages}
+          Page {page} of {totalPages}
         </div>
         <PaginationItem>
           <PaginationNext
-            href={getPageLink(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            href={getPageLink(page + 1)}
+            disabled={page === totalPages}
             className="border"
           />
         </PaginationItem>

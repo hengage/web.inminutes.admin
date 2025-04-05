@@ -6,46 +6,140 @@ import { Pagination } from "@/components/ui/custom/Pagination";
 import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import useUrlState from "@/hooks/useUrlState";
-import { stringifyUrl } from "@/lib/utils";
+import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 import { useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
+import { IVendor, useGetCategoriesQuery, useGetVendorsQuery } from "@/api/vendors";
+import DataTable from "@/components/ui/data-table";
+import { ColumnDef } from "@tanstack/react-table";
+import Image from "next/image";
+import { tag } from "@/types";
 
-const arr = new Array(10).fill(1);
-const categories = [
-  { label: "Food & Beverage", value: "food" },
-  { label: "Fashion", value: "fashion" },
-];
 const status = [
   { label: "Active", value: "active" },
-  { label: "In Active", value: "in-active" },
+  { label: "In Active", value: "inactive" },
 ];
 
 const VendorsTable = () => {
   const router = useRouter();
+  const categriesResult = useGetCategoriesQuery();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const handleQueryChange = (key: string, selectedOptions: string | string[] | number) => {
-    setQueryValues((prevqueryValues) => ({
-      ...prevqueryValues,
-      ...{ [key]: selectedOptions },
-    }));
+  const { result } = useGetVendorsQuery(queryValues);
+  const columns: ColumnDef<
+    Pick<IVendor, "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus">
+  >[] = [
+    {
+      accessorKey: "index",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">S/N</span>,
+      cell: ({ row }) => <span>{row.index + 1}</span>,
+    },
+    {
+      accessorKey: "businessName",
+      header: () => (
+        <span className="whitespace-nowrap font-semibold text-base">Business name</span>
+      ),
+      cell: ({ row }) => {
+        const item = row.original;
+        return (
+          <div className="flex items-center gap-1">
+            <Image
+              src={
+                "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
+              }
+              alt={item.businessName}
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+              {item.businessName}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "_id",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">ID Number</span>,
+      cell: ({ row }) => (
+        <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: () => (
+        <span className="whitespace-nowrap font-semibold text-base">Email Address</span>
+      ),
+      cell: ({ row }) => {
+        return (
+          <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
+        );
+      },
+    },
+    {
+      accessorKey: "category",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Category</span>,
+      cell: ({ row }) => {
+        return <span className="">{row.original.category.name}</span>;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
+      cell: ({ row }) => {
+        return <Tag tag={row.original.accountStatus.toLowerCase() as tag} />;
+      },
+    },
+    {
+      accessorKey: "actions",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
+      cell: () => (
+        <PopOver className="max-w-[110px]">
+          <div className="flex flex-col justify-center items-center">
+            <Button className="w-[100px] justify-start" variant={"ghost"}>
+              <Icon width={15} height={15} name="eye" />
+              View
+            </Button>
+            <Button className="w-[100px] justify-start" variant={"ghost"}>
+              <Icon width={15} height={15} name="restrict" />
+              Restrict
+            </Button>
+            <Button className="w-[100px] justify-start" variant={"ghost"}>
+              <Icon width={15} height={15} name="edit" />
+              Edit
+            </Button>
+            <Button className="w-[100px] justify-start" variant={"ghost"}>
+              <Icon width={15} height={15} name="trash" />
+              Delete
+            </Button>
+          </div>
+        </PopOver>
+      ),
+    },
+  ];
+  // const handleQueryChange = (key: string, selectedOptions: string | string[] | number) => {
+  //   setQueryValues((prevqueryValues) => ({
+  //     ...prevqueryValues,
+  //     ...{ [key]: selectedOptions },
+  //   }));
+  // };
+  const handleRefresh = (value: typeof queryValues) => {
+    router.push(stringifyUrl(value));
+    result.refetch();
   };
-  const { getParam, allParams } = useUrlState();
+  const { allParams } = useUrlState();
   useEffect(() => {
-    setQueryValues({ ...allParams });
+    setQueryValues({
+      ...allParams,
+      page: Number(allParams.page ?? 1),
+      limit: Number(allParams.limit ?? 10),
+    });
   }, [allParams]);
   return (
     <div className="my-4">
@@ -56,12 +150,27 @@ const VendorsTable = () => {
             variant={"secondary"}
             size="icon"
             onClick={() => {
-              router.push(stringifyUrl({ params: allParams, query: queryValues }));
+              handleRefresh(queryValues);
             }}
+            disabled={result.isRefetching}
           >
-            <Refresh2 />
+            <Refresh2
+              className={cn("transition-transform", {
+                "animate-spin text-ctm-primary-400": result.isRefetching,
+              })}
+            />
           </Button>
-          <Button variant={"secondary"} className="text-ctm-secondary-300">
+          <Button
+            onClick={() => {
+              setQueryValues((prev) => {
+                router.push(`vendor/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                return { page: prev.page, limit: prev.limit };
+              });
+              result.refetch();
+            }}
+            variant={"secondary"}
+            className="text-ctm-secondary-300"
+          >
             Clear Filter
           </Button>
           <PopOver
@@ -75,17 +184,14 @@ const VendorsTable = () => {
           >
             <CheckboxItems
               onSubmit={(params) => {
-                handleQueryChange(
-                  "category",
-                  params.map((item) => item.value)
-                );
+                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
               }}
-              selectedItems={categories.filter((item) =>
+              selectedItems={categriesResult.item.filter((item) =>
                 (queryValues.category as string[])?.includes(item.value)
               )}
               showSearchBox
               searchPlaceholder="Categories"
-              items={categories}
+              items={categriesResult.item}
             />
           </PopOver>
           <PopOver
@@ -99,9 +205,9 @@ const VendorsTable = () => {
           >
             <RadioItems
               onSubmit={(params) => {
-                handleQueryChange("status", params ?? "");
+                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
               }}
-              selectedItem={getParam("status") ?? ""}
+              selectedItem={(queryValues.status as string) ?? ""}
               items={status}
             />
           </PopOver>
@@ -110,72 +216,21 @@ const VendorsTable = () => {
               className="w-fit bg-ctm-secondary-100"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
+              value={queryValues.search}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
             />
           </div>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="font-semibold text-base">S/N</TableHead>
-              <TableHead className="font-semibold text-base">Business Name</TableHead>
-              <TableHead className="font-semibold text-base">ID Number</TableHead>
-              <TableHead className="font-semibold text-base">Email Address</TableHead>
-              <TableHead className="font-semibold text-base">Category</TableHead>
-              <TableHead className="font-semibold text-base">Status</TableHead>
-              <TableHead className="font-semibold text-base">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {arr.map((_, i) => (
-              <TableRow key={i}>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  {i + 1}
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  Genesis Foods
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  ID: #32678FGBDF
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  Johndoe85@gmail.com
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  Food & Beverage
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  <Tag tag="pending" />
-                </TableCell>
-                <TableCell className="font-normal text-base text-ctm-secondary-200">
-                  <PopOver className="max-w-[110px]">
-                    <div className="flex flex-col justify-center items-center">
-                      <Button className="w-[100px] justify-start" variant={"ghost"}>
-                        <Icon width={15} height={15} name="eye" />
-                        View
-                      </Button>
-                      <Button className="w-[100px] justify-start" variant={"ghost"}>
-                        <Icon width={15} height={15} name="restrict" />
-                        Restrict
-                      </Button>
-                      <Button className="w-[100px] justify-start" variant={"ghost"}>
-                        <Icon width={15} height={15} name="edit" />
-                        Edit
-                      </Button>
-                      <Button className="w-[100px] justify-start" variant={"ghost"}>
-                        <Icon width={15} height={15} name="trash" />
-                        Delete
-                      </Button>
-                    </div>
-                  </PopOver>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable dataQuery={result} columns={columns} />
+        {result.data?.data.length && result.data?.data.length > 0 ? (
+          <Pagination
+            total={result.data?.total ?? 10}
+            page={Number(queryValues.page)}
+            limit={Number(queryValues.limit)}
+          />
+        ) : null}
       </div>
-      <Pagination total={100} currentPage={Number(getParam("page") ?? 1)} pageSize={10} />
     </div>
   );
 };
-
 export default VendorsTable;
