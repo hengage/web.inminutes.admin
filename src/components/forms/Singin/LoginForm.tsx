@@ -44,6 +44,7 @@ const LoginForm = () => {
           name="email"
           control={form.control}
           placeholder="work email"
+          className="bg-ctm-foreground-muted"
         />
         <Button
           variant={"ctm-primary"}

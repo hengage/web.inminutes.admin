@@ -38,12 +38,23 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   );
 }
 
-export function stringifyUrl({ params, query }: UrlParams) {
+export function stringifyUrl(query: UrlParams["query"]) {
   return qs.stringifyUrl(
     {
-      url: window.location.href,
+      url: `${window.location.host}/${window.location.pathname}`,
       query: {
-        ...params,
+        ...query,
+      },
+    },
+    { skipNull: true }
+  );
+}
+
+export function stringifyQuery(query: UrlParams["query"]) {
+  return qs.stringifyUrl(
+    {
+      url: "",
+      query: {
         ...query,
       },
     },

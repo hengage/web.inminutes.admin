@@ -17,7 +17,7 @@ const useUrlState = () => {
         params[key] = value;
       }
     }
-    return params;
+    return { ...params };
   }, [searchParams]);
   const allKeys = useMemo(() => searchParams.keys(), [searchParams]);
   const getParam = useCallback((key: string) => searchParams.get(key), [searchParams]);
