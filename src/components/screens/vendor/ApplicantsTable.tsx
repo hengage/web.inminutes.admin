@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import Tag from "@/components/general/Tag";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/custom/Pagination";
 import PopOver from "@/components/ui/custom/PopOver";
@@ -8,31 +7,29 @@ import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
 import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
-import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 import { Suspense, useEffect, useState } from "react";
-import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
-import { Search } from "lucide-react";
-import { IVendor, useGetCategoriesQuery, useGetVendorsQuery } from "@/api/vendors";
+import { ChevronDown, Search } from "lucide-react";
+import { IVendor, useGetVendorsQuery } from "@/api/vendors";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { tag } from "@/types";
-
-const status = [
-  { label: "Active", value: "active" },
-  { label: "In Active", value: "inactive" },
-];
+import { DatePicker } from "@/components/ui/custom/date/DatePicker";
+import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 
 const VendorsTable = () => {
   const router = useRouter();
-  const categriesResult = useGetCategoriesQuery();
-  const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
-    {}
-  );
+  const queryClient = useQueryClient();
+  const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
+    approvalStatus: "pending",
+  });
   const { result } = useGetVendorsQuery(queryValues);
   const columns: ColumnDef<
-    Pick<IVendor, "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus">
+    Pick<
+      IVendor,
+      "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus" | "createdAt"
+    >
   >[] = [
     {
       accessorKey: "index",
@@ -40,10 +37,8 @@ const VendorsTable = () => {
       cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
-      accessorKey: "businessName",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Business name</span>
-      ),
+      accessorKey: "applications",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Applications</span>,
       cell: ({ row }) => {
         const item = row.original;
         return (
@@ -65,39 +60,14 @@ const VendorsTable = () => {
       },
     },
     {
-      accessorKey: "_id",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">ID Number</span>,
-      cell: ({ row }) => (
-        <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
-      ),
-    },
-    {
-      accessorKey: "email",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Email Address</span>
-      ),
+      accessorKey: "date",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Date Applied</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
-        );
-      },
-    },
-    {
-      accessorKey: "category",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Category</span>,
-      cell: ({ row }) => {
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.category.name}
+          <span className="font-normal text-base text-ctm-secondary-200">
+            {row.original.createdAt}
           </span>
         );
-      },
-    },
-    {
-      accessorKey: "status",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
-      cell: ({ row }) => {
-        return <Tag tag={row.original.accountStatus.toLowerCase() as tag} />;
       },
     },
     {
@@ -112,11 +82,11 @@ const VendorsTable = () => {
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="restrict" />
-              Restrict
+              Approve
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="edit" />
-              Edit
+              Reject
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="trash" />
@@ -127,20 +97,16 @@ const VendorsTable = () => {
       ),
     },
   ];
-  // const handleQueryChange = (key: string, selectedOptions: string | string[] | number) => {
-  //   setQueryValues((prevqueryValues) => ({
-  //     ...prevqueryValues,
-  //     ...{ [key]: selectedOptions },
-  //   }));
-  // };
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VENDORS] });
     result.refetch();
   };
   const { allParams } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
+      approvalStatus: "pending",
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 10),
     });
@@ -177,44 +143,18 @@ const VendorsTable = () => {
           >
             Clear Filter
           </Button>
-          <PopOver
+          <DatePicker
             trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Category
-                <Icon name="arrow-down" height={16} width={16} />
+              <Button variant={"secondary"}>
+                Date Applied
+                <ChevronDown />
               </Button>
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <CheckboxItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
-              }}
-              selectedItems={categriesResult.item.filter((item) =>
-                (queryValues.category as string[])?.includes(item.value)
-              )}
-              showSearchBox
-              searchPlaceholder="Categories"
-              items={categriesResult.item}
-            />
-          </PopOver>
-          <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Status
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
+            value={queryValues.date ? new Date(queryValues.date as string) : undefined}
+            onSelect={(date) =>
+              setQueryValues((prev) => ({ ...prev, date: date?.toISOString() ?? "" }))
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <RadioItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
-              selectedItem={(queryValues.status as string) ?? ""}
-              items={status}
-            />
-          </PopOver>
+          />
           <div className="w-full flex justify-end justify-self-end">
             <Input
               className="w-fit bg-ctm-secondary-100"
@@ -238,10 +178,10 @@ const VendorsTable = () => {
   );
 };
 
-const Vendors = () => (
+const Applicants = () => (
   <Suspense>
     <VendorsTable />
   </Suspense>
 );
 
-export default Vendors;
+export default Applicants;

@@ -4,6 +4,8 @@ import Tab from "@/components/ui/custom/Tabs";
 import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
 import React, { Suspense } from "react";
+import Categories from "./CategoriesTable";
+import Applicants from "./ApplicantsTable";
 
 const Tabs = () => {
   const { hash } = useUrlHash();
@@ -26,7 +28,7 @@ const Tabs = () => {
               All Categories
             </Link>
           ),
-          content: <></>,
+          content: <Categories />,
           key: "1",
         },
         {
@@ -35,7 +37,7 @@ const Tabs = () => {
               All Applications
             </Link>
           ),
-          content: <></>,
+          content: <Applicants />,
           key: "2",
         },
       ]}

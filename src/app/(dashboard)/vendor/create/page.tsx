@@ -136,13 +136,6 @@ const CreateVendor = () => {
           <div className="flex mb-[24px]">
             <Input<typeof FormMeta.vendorSchema>
               formId={"vendor-name"}
-              name="vendorName"
-              control={form.control}
-              className="w-full mr-[24px] py-0 my-4 flex gap-0"
-              placeholder="Vendor Name"
-            />
-            <Input<typeof FormMeta.vendorSchema>
-              formId={"vendor-name"}
               name="businessName"
               control={form.control}
               className="w-full py-0 my-4 flex gap-0"
