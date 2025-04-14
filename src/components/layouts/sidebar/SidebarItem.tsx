@@ -14,12 +14,13 @@ interface SidebarItemProps {
 
 const SidebarItem = ({ href, label }: SidebarItemProps) => {
   const pathname = usePathname();
+  console.log(pathname.includes(href), pathname, href.substring(1));
   const iconMatch = useMemo(() => {
     const iconKeys = Object.keys(iconPaths);
     if (pathname.includes(href)) {
-      return iconKeys.filter((k) => k.includes(href) && k.includes("active"))[0];
+      return iconKeys.filter((k) => k.includes(href.substring(1)) && k.includes("active"))[0];
     } else {
-      return iconKeys.filter((k) => k.includes(href) && k.includes("base"))[0];
+      return iconKeys.filter((k) => k.includes(href.substring(1)) && k.includes("base"))[0];
     }
   }, [href, pathname]);
   return (
