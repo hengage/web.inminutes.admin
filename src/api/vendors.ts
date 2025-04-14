@@ -9,7 +9,13 @@ export const useGetVendorsQuery = (filter: unknown) => {
     IPaginationData<
       Pick<
         IVendor,
-        "_id" | "businessName" | "businessLogo" | "category" | "email" | "accountStatus"
+        | "_id"
+        | "businessName"
+        | "businessLogo"
+        | "category"
+        | "email"
+        | "accountStatus"
+        | "createdAt"
       >
     >,
     Error
@@ -35,7 +41,7 @@ export const useGetVendorsQuery = (filter: unknown) => {
 };
 
 export const useGetCategoriesQuery = (filter?: unknown) => {
-  const result = useQuery<ICategory[], Error>({
+  const result = useQuery<IPaginationData<ICategory>, Error>({
     queryKey: [QUERY_KEYS.Categories],
     queryFn: async () => {
       const response = await https.get(
@@ -47,8 +53,19 @@ export const useGetCategoriesQuery = (filter?: unknown) => {
     enabled: filter
       ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
       : true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.categories,
+      total: data.total,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pages,
+    }),
   });
-  const item: IListItem[] = (result.data ?? [])?.map((e) => ({ label: e.name, value: e._id }));
+  const item: IListItem[] = (result.data?.data ?? [])?.map((e) => ({
+    label: e.name,
+    value: e._id,
+  }));
   return { ...result, item };
 };
 
@@ -75,6 +92,16 @@ export const useCreateVendorMutation = () => {
   return result;
 };
 
+export const useUpdateVendorMutation = (vendorId: string) => {
+  const result = useMutation<unknown, Error, IVendorCredentials>({
+    mutationFn: async (data) => {
+      const response = await https.post(`/vendor/update/${vendorId}`, data);
+      return response.data.data;
+    },
+  });
+  return result;
+};
+
 export interface IVendorCredentials {
   businessName: string;
   businessLogo: string;
@@ -85,7 +112,6 @@ export interface IVendorCredentials {
   residentialAddress: string;
   category: string;
   subCategory?: string;
-  vendorName: string;
 }
 
 export interface IVendor {
@@ -111,4 +137,6 @@ export interface ICategory {
   _id: string;
   name: string;
   image: string;
+  subcategoryCount?: string;
+  vendorCount?: string;
 }

@@ -11,15 +11,10 @@ export const initialValue: IVendorCredentials = {
   residentialAddress: "",
   category: "",
   subCategory: "",
-  vendorName: "",
 };
 
 export const vendorSchema: z.ZodType<IVendorCredentials> = z.object({
   businessName: z
-    .string()
-    .min(2, "Business name must be at least 2 characters")
-    .max(50, "Business name must be less than 50 characters"),
-  vendorName: z
     .string()
     .min(2, "Business name must be at least 2 characters")
     .max(50, "Business name must be less than 50 characters"),
