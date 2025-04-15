@@ -1,10 +1,9 @@
 "use client";
-import VendorsTable from "@/components/screens/vendor/VendorsTable";
+import RidersTable from "@/components/screens/rider/RidersTable";
 import Tab from "@/components/ui/custom/Tabs";
 import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import Categories from "./CategoriesTable";
 import Applicants from "./ApplicantsTable";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 import { Icon } from "@/components/ui/Icon";
@@ -15,7 +14,7 @@ const Tabs = () => {
   return (
     <main className="w-[98%] py-[2%] mx-auto">
       <div className="flex justify-between items-center">
-        <h2 className="ctm-header-1 text-ctm-primary-700">Vendors</h2>
+        <h2 className="ctm-header-1 text-ctm-primary-700">Riders</h2>
         <span className="flex gap-2 items-center justify-end">
           {hashParams.tab === "0" && (
             <>
@@ -24,11 +23,11 @@ const Tabs = () => {
                 slotBefore={<Icon name="add" height={16} width={16} />}
                 asChild
               >
-                <Link href={"/vendor/create"}>Create Vendor</Link>
+                <Link href={"/rider/create"}>Create Rider</Link>
               </Button>
 
               <Button variant="ctm-outline" asChild className="border-2">
-                <Link href={"/vendor/update"}>Update</Link>
+                <Link href={"/rider/update"}>Update</Link>
               </Button>
             </>
           )}
@@ -39,18 +38,18 @@ const Tabs = () => {
                 slotBefore={<Icon name="add" height={16} width={16} />}
                 asChild
               >
-                <Link href={"/vendor/create"}>New Category</Link>
+                <Link href={"/rider/create"}>New Category</Link>
               </Button>
 
               <Button variant="ctm-outline" asChild className="border-2">
-                <Link href={"/vendor/update"}>Update</Link>
+                <Link href={"/rider/update"}>Update</Link>
               </Button>
             </>
           )}
           {hashParams.tab === "2" && (
             <>
               <Button variant="ctm-outline" asChild className="border-2">
-                <Link href={"/vendor/update"}>Update</Link>
+                <Link href={"/rider/update"}>Update</Link>
               </Button>
             </>
           )}
@@ -62,42 +61,42 @@ const Tabs = () => {
             trigger: (
               <Link
                 href={{
-                  pathname: "/vendor",
+                  pathname: "/rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "0" }).substring(1),
                 }}
               >
-                All Vendors
+                All Riders
               </Link>
             ),
-            content: <VendorsTable />,
+            content: <RidersTable />,
             key: "0",
           },
           {
             trigger: (
               <Link
                 href={{
-                  pathname: "/vendor",
+                  pathname: "/rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "1" }).substring(1),
                 }}
               >
-                All Categories
+                Work Slots
               </Link>
             ),
-            content: <Categories />,
+            content: <></>,
             key: "1",
           },
           {
             trigger: (
               <Link
                 href={{
-                  pathname: "/vendor",
+                  pathname: "/rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "2" }).substring(1),
                 }}
               >
-                All Applications
+                Rider Applications
               </Link>
             ),
             content: <Applicants />,

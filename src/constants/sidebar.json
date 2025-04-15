@@ -1,11 +1,11 @@
 {
-  "dashboard": { "name": "Dashboard", "key": "dashboard" },
-  "vendor": { "name": "Vendors", "key": "vendor" },
-  "rider": { "name": "Riders", "key": "rider" },
-  "product": { "name": "Products", "key": "product" },
-  "customer": { "name": "Customers", "key": "customer" },
-  "order": { "name": "Orders", "key": "order" },
-  "errand": { "name": "Errands", "key": "errand" },
-  "transaction": { "name": "Transactions", "key": "transaction" },
-  "metrics": { "name": "Metrics", "key": "metrics" }
+  "dashboard": { "name": "Dashboard", "key": "/dashboard" },
+  "vendor": { "name": "Vendors", "key": "/vendor" },
+  "rider": { "name": "Riders", "key": "/rider" },
+  "product": { "name": "Products", "key": "/product" },
+  "customer": { "name": "Customers", "key": "/customer" },
+  "order": { "name": "Orders", "key": "/order" },
+  "errand": { "name": "Errands", "key": "/errand" },
+  "transaction": { "name": "Transactions", "key": "/transaction" },
+  "metrics": { "name": "Metrics", "key": "/metrics" }
 }
