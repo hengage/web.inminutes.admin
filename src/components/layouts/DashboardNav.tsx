@@ -3,7 +3,7 @@ import { CustomInput as Input } from "../ui/custom/input";
 
 const DashboardNav = () => {
   return (
-    <nav className="w-full h-[80px] md:p-[12px] shadow-[0px_2px_2px_0px_#0d3f6a0f] flex justify-between items-center">
+    <nav className="w-full h-[80px] md:p-[12px] shadow-[0px_2px_2px_0px_#0d3f6a0f] flex justify-between items-center sticky top-0 left-0 bg-background z-50">
       <label htmlFor="my-drawer" className="flex lg:hidden text-blue-800 px-3">
         <Icon name="hamburger" className="cursor-pointer" />
       </label>

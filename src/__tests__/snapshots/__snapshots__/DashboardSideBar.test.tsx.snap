@@ -163,7 +163,7 @@ exports[`Dashboard Sidebar Layout matches snapshot 1`] = `
         >
           <a
             class="inline-flex items-center gap-2 whitespace-nowrap rounded-md transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-9 px-4 py-2 !pointer-events-auto disabled:bg-ctm-secondary-100 hover:disabled:cursor-not-allowed border border-ctm-primary-500 disabled:border-ctm-secondary-100 hover:border-ctm-primary-400 focus:bg-ctm-primary-600 active:bg-ctm-primary-700 disabled:text-ctm-secondary-100 border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400] bg-ctm-primary-colour-light relative"
-            href="/rrand"
+            href="/errand"
             type="button"
           >
             <img
