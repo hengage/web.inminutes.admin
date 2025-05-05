@@ -1,4 +1,5 @@
 import Tag from "@/components/general/Tag";
+import { tag } from "@/types";
 import Link from "next/link";
 
 const recentTransactionsData = [
@@ -70,7 +71,7 @@ export default function RecentTransactions({ data = recentTransactionsData }) {
               >
                 {transaction.amount}
               </p>
-              <Tag tag={transaction.status.toLowerCase()} />
+              <Tag tag={transaction.status.toLowerCase() as tag} />
             </div>
           </div>
         ))}

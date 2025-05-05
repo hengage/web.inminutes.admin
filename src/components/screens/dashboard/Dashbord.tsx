@@ -5,6 +5,7 @@ import RecentTransactions from "./RecentTransac";
 import Tag from "@/components/general/Tag";
 import Link from "next/link";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
+import { tag } from "@/types";
 const ongoingOrdersData = [
   {
     id: "#5567BER042",
@@ -174,7 +175,7 @@ const Dashbord = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <h2 className="font-semibold text-sm mb-2">{order.additionalStatus}</h2>
-                    <Tag tag={order.accountStatus.toLowerCase()} />
+                    <Tag tag={order.accountStatus.toLowerCase() as tag} />
                   </div>
                 </div>
               ))}
@@ -204,7 +205,7 @@ const Dashbord = () => {
                   </div>
                   <div className="flex flex-col items-end">
                     <h2 className="font-semibold text-sm mb-2">{order.additionalStatus}</h2>
-                    <Tag tag={order.accountStatus.toLowerCase()} />
+                    <Tag tag={order.accountStatus.toLowerCase() as tag} />
                   </div>
                 </div>
               ))}
