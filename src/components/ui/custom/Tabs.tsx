@@ -32,7 +32,7 @@ const Tab = React.forwardRef<HTMLDivElement, TabProps>(
       >
         <Tabs.List
           className={cn(
-            "flex shrink-0 w-full bg-transparent border-b border-default-border z-10 overflow-x-auto",
+            "flex space-x-5 shrink-0 w-full bg-transparent border-b border-default-border z-10 overflow-x-auto",
             className
           )}
           aria-label="Tab Items"
