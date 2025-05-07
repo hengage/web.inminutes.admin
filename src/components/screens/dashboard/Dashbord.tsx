@@ -6,60 +6,32 @@ import Tag from "@/components/general/Tag";
 import Link from "next/link";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
 import { tag } from "@/types";
-const ongoingOrdersData = [
-  {
-    id: "#5567BER042",
-    date: "18/09/2019",
-    time: "07:58 pm",
-    accountStatus: "picked-up",
-    additionalStatus: "Instant",
-  },
-  {
-    id: "#6437B9KVMD",
-    date: "28/10/2019",
-    time: "01:40 pm",
-    accountStatus: "in-transit",
-    additionalStatus: "Scheduled",
-  },
-  {
-    id: "#73219RV6FD",
-    date: "16/08/2019",
-    time: "06:41 pm",
-    accountStatus: "pending",
-    additionalStatus: "Instant",
-  },
-  {
-    id: "#73219RV6FD",
-    date: "16/08/2019",
-    time: "06:41 pm",
-    accountStatus: "ready",
-    additionalStatus: "Instant",
-  },
-];
-// const ongoingErrandsData = [
-//   {
-//     id: "#5567BER042",
-//     date: "18/09/2019",
-//     time: "07:58 pm",
-//     accountStatus: "scheduled",
-//     additionalStatus: "in-transit",
-//   },
-//   {
-//     id: "#6437B9KVMD",
-//     date: "18/09/2019",
-//     time: "07:59 pm",
-//     accountStatus: "instant",
-//     additionalStatus: "delivered",
-//   },
-//   {
-//     id: "#6437B9KVMD",
-//     date: "18/09/2019",
-//     time: "07:59 pm",
-//     accountStatus: "scheduled",
-//     additionalStatus: "pending",
-//   },
-// ];
+import { useGetErrandQuery } from "@/api/errand";
+import { useGetOrdersQuery } from "@/api/order";
+import { useGetTransactionQuery } from "@/api/transaction";
+
 const Dashbord = () => {
+  const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
+  const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
+  const { isLoading: isLoadingTransac, data: TransacData } = useGetTransactionQuery({});
+
+  const top10Errands = errandsData ? errandsData.slice(0, 10) : [];
+  const top10Orders = ordersData ? ordersData.slice(0, 10) : [];
+  const top10Transac = TransacData?.data ? TransacData?.data?.slice(0, 5) : [];
+
+  // const formatErrandForDisplay = (errand) => {
+  //   const date = new Date(errand.createdAt);
+  //   const formattedDate = date.toLocaleDateString("en-GB");
+  //   const formattedTime = date.toLocaleTimeString("en-GB", {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //   });
+  //   return {
+  //     ...errand,
+  //     date: formattedDate,
+  //     time: formattedTime,
+  //   };
+  // };
   return (
     <main className="flex flex-col  p-6">
       <div className="flex flex-row items-center justify-between w-full mb-5">
@@ -148,7 +120,7 @@ const Dashbord = () => {
             </div>
           </div>
           <MetricsTab />
-          <RecentTransactions />{" "}
+          <RecentTransactions data={top10Transac} loading={isLoadingTransac} />{" "}
         </section>
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="bg-white p-6 rounded-lg shadow h-full">
@@ -162,23 +134,34 @@ const Dashbord = () => {
               </Link>
             </div>
             <div className="space-y-1">
-              {ongoingOrdersData.map((order, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
-                >
-                  <div>
-                    <p className="font-medium text-gray-800 text-sm">ID:{order.id}</p>
-                    <p className="text-xs text-gray-500">
-                      {order.date} {order.time}
-                    </p>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <h2 className="font-semibold text-sm mb-2">{order.additionalStatus}</h2>
-                    <Tag tag={order.accountStatus.toLowerCase() as tag} />
-                  </div>
-                </div>
-              ))}
+              {isLoadingOrders ? (
+                <p className="text-sm text-gray-500">Loading orders...</p>
+              ) : top10Orders.length > 0 ? (
+                top10Orders.map((order, index) => {
+                  const formattedOrder = formatOrderForDisplay(order);
+                  return (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-800 text-sm">ID: {formattedOrder.id}</p>
+                        <p className="text-xs text-gray-500">
+                          {formattedOrder.date} {formattedOrder.time}
+                        </p>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <h2 className="font-semibold text-sm mb-2">
+                          {formattedOrder.additionalStatus}
+                        </h2>
+                        <Tag tag={formattedOrder.accountStatus as tag} />
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-sm text-gray-500">No ongoing orders available.</p>
+              )}
             </div>
           </div>
           <div className="bg-white p-6 rounded-lg shadow h-full">
@@ -191,25 +174,34 @@ const Dashbord = () => {
                 See all
               </Link>
             </div>
-            <div className="space-y-1">
-              {ongoingOrdersData.map((order, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
-                >
-                  <div>
-                    <p className="font-medium text-gray-800 text-sm">ID:{order.id}</p>
-                    <p className="text-xs text-gray-500">
-                      {order.date} {order.time}
-                    </p>
+            {isLoadingErrands ? (
+              <p className="text-sm text-gray-500">Loading errands...</p>
+            ) : top10Errands.length > 0 ? (
+              top10Errands.map((errand, index) => {
+                const formattedErrand = formatErrandForDisplay(errand);
+                return (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-800 text-sm">ID: {formattedErrand.id}</p>
+                      <p className="text-xs text-gray-500">
+                        {formattedErrand.date} {formattedErrand.time}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <h2 className="font-semibold text-sm mb-2">
+                        {formattedErrand.additionalStatus}
+                      </h2>
+                      <Tag tag={formattedErrand.accountStatus as tag} />
+                    </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <h2 className="font-semibold text-sm mb-2">{order.additionalStatus}</h2>
-                    <Tag tag={order.accountStatus.toLowerCase() as tag} />
-                  </div>
-                </div>
-              ))}
-            </div>
+                );
+              })
+            ) : (
+              <p className="text-sm text-gray-500">No ongoing errands available.</p>
+            )}
           </div>
         </section>
       </div>

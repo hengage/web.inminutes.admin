@@ -35,8 +35,8 @@ export const Vendors = () => {
           />
           <Tooltip />
           <Legend wrapperStyle={{ bottom: -10 }} />
-          <Bar dataKey="Vendors" fill="#605BFF" barSize={18} radius={[4, 4, 0, 0]} />
-          <Bar dataKey="ActiveVendors" fill="#FF8F6B" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Vendors" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="ActiveVendors" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -67,8 +67,8 @@ export const Riders = () => {
           />
           <Tooltip />
           <Legend wrapperStyle={{ bottom: -10 }} />
-          <Bar dataKey="Riders" fill="#605BFF" barSize={18} radius={[4, 4, 0, 0]} />
-          <Bar dataKey="ActiveRiders" fill="#FF8F6B" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Riders" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="ActiveRiders" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -99,8 +99,8 @@ export const Customers = () => {
           />
           <Tooltip />
           <Legend wrapperStyle={{ bottom: -10 }} />
-          <Bar dataKey="Customers" fill="#605BFF" barSize={18} radius={[4, 4, 0, 0]} />
-          <Bar dataKey="ActiveCustomers" fill="#FF8F6B" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Customers" ffill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="ActiveCustomers" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

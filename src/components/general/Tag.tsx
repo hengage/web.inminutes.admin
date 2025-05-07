@@ -9,7 +9,7 @@ interface ITagProps {
 const Variants: Record<tagTypes, tag[]> = {
   primary: ["ready", "active", "in-transit", "nearby", "arrived", "approved"],
   error: ["cancelled", "abandoned", "inactive", "rejected"],
-  success: ["delivered", "successful", "picked-up"],
+  success: ["delivered", "successful", "picked-up", "success"],
   warning: ["pending"],
 };
 

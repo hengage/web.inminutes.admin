@@ -1,81 +1,87 @@
+"use client";
+
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import Link from "next/link";
 
-const recentTransactionsData = [
-  {
-    id: "#43678THTS",
-    type: "Refund",
-    date: "15/04/2021",
-    time: "08:15 am",
-    amount: "+₦10,000",
-    status: "pending",
-  },
-  {
-    id: "#43678DBMFP",
-    type: "Cash out",
-    date: "20/04/2022",
-    time: "10:20 pm",
-    amount: "+₦10,000",
-    status: "successful",
-  },
-  //   {
-  //     id: "#43678THTS",
-  //     type: "Disbursement",
-  //     date: "16/03/2023",
-  //     time: "09:23 am",
-  //     amount: "-₦10,000",
-  //     status: "rejected",
-  //   },
-  {
-    id: "#43678THTS",
-    type: "Refund",
-    date: "15/06/2024",
-    time: "02:28 am",
-    amount: "+₦10,000",
-    status: "abandoned",
-  },
-];
+export default function RecentTransactions({ data, loading }) {
+  const formatTransactionForDisplay = (transaction) => {
+    const date = new Date(transaction.createdAt);
+    const formattedDate = date.toLocaleDateString("en-GB");
+    const formattedTime = date.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
-export default function RecentTransactions({ data = recentTransactionsData }) {
+    return {
+      id: transaction.reference || `#${transaction._id?.substring(0, 8)}`,
+      type: transaction.reason,
+      date: formattedDate,
+      time: formattedTime,
+      amount: transaction.amount,
+      status: transaction.status?.toLowerCase(),
+    };
+  };
+
+  const hasTransactions = data && data.length > 0;
+
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-gray-800">Recent Transactions</h3>
         <Link
-          href="/transaction "
+          href="/transaction"
           className="text-sm text-ctm-primary-500 hover:text-ctm-primary-500"
         >
           See all
         </Link>
       </div>
-      <div className="space-y-1">
-        {data.map((transaction, index) => (
-          <div
-            key={index}
-            className=" flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-          >
-            <div>
-              <p className="font-medium text-gray-800">{transaction.type}</p>
-              <p className="text-xs text-gray-500">{transaction.id}</p>
-            </div>
-            <div className="">
-              <p className="font-medium">Credit</p>
-              <p className="text-xs text-gray-500">
-                {transaction.date} {transaction.time}
-              </p>
-            </div>
-            <div className="">
-              <p
-                className={`font-medium ${transaction.amount.includes("+") ? "text-green-600" : "text-red-600"}`}
-              >
-                {transaction.amount}
-              </p>
-              <Tag tag={transaction.status.toLowerCase() as tag} />
-            </div>
+
+      {loading ? (
+        <p className="text-sm text-gray-500">Loading transactions...</p>
+      ) : hasTransactions ? (
+        <div className="space-y-1">
+          <div className="grid grid-cols-3 gap-4 py-2 border-b border-gray-200 font-medium text-gray-600 text-sm">
+            <div>Transaction</div>
+            <div>Type</div>
+            <div>Amount</div>
           </div>
-        ))}
-      </div>
+
+          {/* Transaction Items */}
+          {data.map((transaction, index) => {
+            const formattedTransaction = formatTransactionForDisplay(transaction);
+            return (
+              <div
+                key={index}
+                className="grid grid-cols-3 gap-4 py-3 border-b border-gray-100 last:border-b-0"
+              >
+                <div>
+                  <p className="font-medium text-gray-800">{formattedTransaction.type}</p>
+                  <p className="text-xs text-gray-500">{formattedTransaction.id}</p>
+                </div>
+                <div>
+                  <p className="font-medium">Credit</p>
+                  <p className="text-xs text-gray-500">
+                    {formattedTransaction.date} {formattedTransaction.time}
+                  </p>
+                </div>
+                <div>
+                  <p
+                    className={`font-medium ${
+                      formattedTransaction.isCredit ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    ₦{formattedTransaction.amount}
+                  </p>
+                  <Tag tag={formattedTransaction.status as tag} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <p>No transaction</p>
+      )}
     </div>
   );
 }
