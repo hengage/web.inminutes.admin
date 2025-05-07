@@ -72,18 +72,16 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
  * Hook to fetch a single product by ID
  */
 export const useGetProductByIdQuery = (productId: string) => {
-  return useQuery<IProduct, Error>({
+  return useQuery<IProductDetails, Error>({
     queryKey: [QUERY_KEYS.PRODUCTS, productId],
     queryFn: async () => {
       const response = await https.get(`/product/${productId}`);
-      return response.data.data;
+      return response.data.data.product;
     },
     enabled: Boolean(productId),
   });
 };
 
-/**
- * Hook to fetch product categories */
 export const useGetProductCategoriesQuery = (filter?: unknown) => {
   const result = useQuery<IPaginationData<ICategory>, Error>({
     queryKey: [QUERY_KEYS.Categories],
@@ -113,13 +111,35 @@ export const useGetProductCategoriesQuery = (filter?: unknown) => {
   return { ...result, item };
 };
 
-/**
- * Hook to create a new product
- */
-export const useCreateProductMutation = () => {
-  return useMutation<unknown, Error, Partial<IProduct>>({
+export const useGetCategoriesQuery = (filter?: unknown) => {
+  const result = useQuery<IPaginationData<ICategory>, Error>({
+    queryKey: [QUERY_KEYS.Categories],
+    queryFn: async () => {
+      const response = await https.get(
+        "/product/categories" +
+          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
+      );
+      return response.data.data.categories;
+    },
+    enabled: filter
+      ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
+      : true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.categories,
+      total: data.total,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pages,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
+};
+
+export const useCreateCategorytMutation = () => {
+  return useMutation<unknown, Error, Partial<ICategory>>({
     mutationFn: async (data) => {
-      const response = await https.post("/product", data);
+      const response = await https.post("/product/category", data);
       return response.data.data;
     },
   });
@@ -169,4 +189,20 @@ export interface ICategory {
   _id: string;
   name: string;
   image: string;
+}
+
+export interface IProductDetails {
+  _id: string;
+  name: string;
+  image: string;
+  description: string;
+  quantity: number;
+  cost: string | number;
+  tags: string[];
+  addOns: IAddOn[];
+  category: string | ICategory;
+  vendor: string | null;
+  status: "Approved" | "Pending" | "Rejected";
+  isDeleted: boolean;
+  createdAt: string;
 }
