@@ -31,10 +31,10 @@ const AllProductTable = () => {
   );
   const categriesResult = useGetProductCategoriesQuery();
 
-  const { data, isLoading, refetch } = useGetProductsQuery(queryValues);
+  const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
-    result.refetch();
+    refetch();
   };
   const { allParams } = useUrlState();
   useEffect(() => {
@@ -45,7 +45,7 @@ const AllProductTable = () => {
     });
   }, [allParams]);
   const columns: ColumnDef<
-    Pick<IProduct, "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus">
+    Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status">
   >[] = [
     {
       accessorKey: "index",
@@ -53,10 +53,8 @@ const AllProductTable = () => {
       cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
-      accessorKey: "businessName",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Business name</span>
-      ),
+      accessorKey: "name",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Product name</span>,
       cell: ({ row }) => {
         const item = row.original;
         return (
@@ -65,13 +63,13 @@ const AllProductTable = () => {
               src={
                 "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
               }
-              alt={item.businessName}
+              alt={item.name}
               width={40}
               height={40}
               className="rounded-full"
             />
             <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-              {item.businessName}
+              {item.name}
             </span>
           </div>
         );
@@ -85,13 +83,11 @@ const AllProductTable = () => {
       ),
     },
     {
-      accessorKey: "email",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Email Address</span>
-      ),
+      accessorKey: "cost",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Price </span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
+          <span className="font-normal text-base text-ctm-secondary-200">{row.original.cost}</span>
         );
       },
     },
@@ -107,37 +103,47 @@ const AllProductTable = () => {
       },
     },
     {
+      accessorKey: "vendor",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Vendor</span>,
+      cell: ({ row }) => {
+        return (
+          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+            {row.original.vendor}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "status",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
       cell: ({ row }) => {
-        return <Tag tag={row.original.accountStatus.toLowerCase() as tag} />;
+        return <Tag tag={row.original.status.toLowerCase() as tag} />;
       },
     },
     {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
-      cell: () => (
-        <PopOver className="max-w-[110px]">
-          <div className="flex flex-col justify-center items-center">
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
-              <Icon width={15} height={15} name="eye" />
-              View
-            </Button>
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
-              <Icon width={15} height={15} name="restrict" />
-              Restrict
-            </Button>
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
-              <Icon width={15} height={15} name="edit" />
-              Edit
-            </Button>
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
-              <Icon width={15} height={15} name="trash" />
-              Delete
-            </Button>
-          </div>
-        </PopOver>
-      ),
+      cell: ({ row }) => {
+        return (
+          <PopOver className="max-w-[110px]">
+            <div className="flex flex-col justify-center items-center">
+              <Button
+                className="w-[100px] justify-start"
+                variant={"ghost"}
+                onClick={() => router.push(`/product/${row.original._id}`)}
+              >
+                <Icon width={15} height={15} name="eye" />
+                View
+              </Button>
+
+              <Button className="w-[100px] justify-start" variant={"ghost"}>
+                <Icon width={15} height={15} name="trash" />
+                Delete
+              </Button>
+            </div>
+          </PopOver>
+        );
+      },
     },
   ];
 
@@ -221,10 +227,11 @@ const AllProductTable = () => {
             />
           </div>
         </div>
-        <DataTable dataQuery={data} columns={columns} />
-        {data.data?.data.length && data.data?.data.length > 0 ? (
+
+        <DataTable dataQuery={result} columns={columns} />
+        {result.data?.data.length && result.data?.data.length > 0 ? (
           <Pagination
-            total={data.data?.total ?? 10}
+            total={result.data?.total ?? 10}
             page={Number(queryValues.page)}
             limit={Number(queryValues.limit)}
           />

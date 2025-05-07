@@ -42,29 +42,30 @@ export interface ProductFilter {
  * Hook to fetch products with filtering and pagination
  */
 export const useGetProductsQuery = (filter: ProductFilter = {}) => {
-  const result = useQuery<IPaginationData<IProduct>, Error>({
-    queryKey: [QUERY_KEYS.PRODUCTS, filter],
+  const result = useQuery<
+    IPaginationData<
+      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS],
     queryFn: async () => {
       const response = await https.get(
-        "/products" + stringifyQuery(filter as Record<string, string | string[] | number>)
+        "/product/list" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
       );
-      return response.data.data;
+      return response.data.data.products;
     },
-    select: (data) => ({
-      data: data.products || [],
-      total: data.totalDocs || 0,
-      page: data.page || 1,
-      limit: data.limit || 10,
-      totalPages: data.totalPages || 1,
+    enabled: Object.entries(filter as Record<string, string | string[] | number>).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
     }),
   });
-
-  return {
-    isLoading: result.isPending,
-    data: result.data,
-    error: result.error,
-    refetch: result.refetch,
-  };
+  return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 
 /**
@@ -74,7 +75,7 @@ export const useGetProductByIdQuery = (productId: string) => {
   return useQuery<IProduct, Error>({
     queryKey: [QUERY_KEYS.PRODUCTS, productId],
     queryFn: async () => {
-      const response = await https.get(`/products/${productId}`);
+      const response = await https.get(`/product/${productId}`);
       return response.data.data;
     },
     enabled: Boolean(productId),
@@ -82,27 +83,34 @@ export const useGetProductByIdQuery = (productId: string) => {
 };
 
 /**
- * Hook to fetch product categories
- */
-export const useGetProductCategoriesQuery = () => {
-  const result = useQuery<ICategory[], Error>({
+ * Hook to fetch product categories */
+export const useGetProductCategoriesQuery = (filter?: unknown) => {
+  const result = useQuery<IPaginationData<ICategory>, Error>({
     queryKey: [QUERY_KEYS.Categories],
     queryFn: async () => {
-      const response = await https.get("/products/categories");
+      const response = await https.get(
+        "/product/categories" +
+          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
+      );
       return response.data.data.categories;
     },
+    enabled: filter
+      ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
+      : true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.categories,
+      total: data.total,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pages,
+    }),
   });
-  const categoryItems: IListItem[] = (result.data || []).map((category) => ({
-    label: category.name,
-    value: category._id,
+  const item: IListItem[] = (result.data?.data ?? [])?.map((e) => ({
+    label: e.name,
+    value: e._id,
   }));
-
-  return {
-    isLoading: result.isPending,
-    categories: result.data,
-    categoryItems,
-    error: result.error,
-  };
+  return { ...result, item };
 };
 
 /**
@@ -111,7 +119,7 @@ export const useGetProductCategoriesQuery = () => {
 export const useCreateProductMutation = () => {
   return useMutation<unknown, Error, Partial<IProduct>>({
     mutationFn: async (data) => {
-      const response = await https.post("/products", data);
+      const response = await https.post("/product", data);
       return response.data.data;
     },
   });
@@ -123,7 +131,7 @@ export const useCreateProductMutation = () => {
 export const useUpdateProductMutation = () => {
   return useMutation<unknown, Error, { productId: string; data: Partial<IProduct> }>({
     mutationFn: async ({ productId, data }) => {
-      const response = await https.put(`/products/${productId}`, data);
+      const response = await https.put(`/product/${productId}`, data);
       return response.data.data;
     },
   });
@@ -135,7 +143,7 @@ export const useUpdateProductMutation = () => {
 export const useDeleteProductMutation = () => {
   return useMutation<unknown, Error, string>({
     mutationFn: async (productId) => {
-      const response = await https.delete(`/products/${productId}`);
+      const response = await https.delete(`/product/${productId}`);
       return response.data.data;
     },
   });
