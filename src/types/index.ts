@@ -36,6 +36,7 @@ export interface IFilter {
 export type tag =
   | "pending"
   | "ready"
+  | "success"
   | "active"
   | "in-transit"
   | "nearby"
