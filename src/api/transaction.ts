@@ -1,6 +1,7 @@
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
+import { IPaginationData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
 // export const useGetTransactionQuery = (filter = {}) => {
