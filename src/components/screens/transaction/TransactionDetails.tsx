@@ -12,7 +12,13 @@ interface TransactionDetailsProps {
 
 const TransactionDetails = ({ transactionId, children }: TransactionDetailsProps) => {
   const { data: transaction, isLoading } = useGetTransactionByIdQuery(transactionId);
-  console.log(transaction);
+  console.log(transaction?.data);
+
+  // const { data, isLoading } = useGetProductByIdQuery(id);
+  // if (isLoading) return <div>Loading...</div>;
+  // const product = data;
+  // console.log(product);
+  // if (!product) return <div>No product found</div>;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
