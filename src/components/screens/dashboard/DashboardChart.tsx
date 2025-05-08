@@ -99,7 +99,7 @@ export const Customers = () => {
           />
           <Tooltip />
           <Legend wrapperStyle={{ bottom: -10 }} />
-          <Bar dataKey="Customers" ffill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Customers" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
           <Bar dataKey="ActiveCustomers" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
