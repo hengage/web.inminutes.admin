@@ -24,7 +24,6 @@ import axios from "axios";
 const fetchGraphData = async (
   filter: Record<string, string | number | null | Date | boolean | undefined>
 ) => {
-  // Convert all filter values to strings
   const queryString = new URLSearchParams(
     Object.entries(filter).reduce(
       (acc, [key, value]) => {
