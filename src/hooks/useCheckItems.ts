@@ -20,7 +20,7 @@ export const useCheckItems = <T>(
       ...item,
       checked: checkedKeys.includes((item as T)[(itemKey as keyof T) ?? "value"]),
     }));
-  }, [initialItems, checkedItems]);
+  }, [checkedItems, initialItems, itemKey]);
 
   const itemToggle = useCallback(
     (searchValue: unknown, checkState?: boolean) => {
