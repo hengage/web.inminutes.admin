@@ -4,25 +4,6 @@ import { stringifyQuery } from "@/lib/utils";
 import { IPaginationData } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
-// export const useGetTransactionQuery = (filter = {}) => {
-//   const result = useQuery({
-//     queryKey: [QUERY_KEYS.TRANSAC],
-//     queryFn: async () => {
-//       const response = await https.get(
-//         "/transaction/list" + `${stringifyQuery(filter)}`
-//       );
-//       return response.data.data.transactions.docs;
-//     },
-//   });
-
-//   return {
-//     isLoading: result.isPending,
-//     data: result.data,
-//     error: result.error ,
-//     result
-//   };
-// };
-
 export const useGetTransactionQuery = (filter: unknown) => {
   const result = useQuery<
     IPaginationData<
@@ -55,23 +36,6 @@ export const useGetTransactionQuery = (filter: unknown) => {
   };
 };
 
-// export const useGetTransactionByIdQuery = (transactionId: string) => {
-//   const result = useQuery<ITransaction, Error>({
-//     queryKey: [QUERY_KEYS.TRANSAC, transactionId],
-//     queryFn: async () => {
-//       const response = await https.get(`/transaction/${transactionId}`);
-//       return response.data.data.transaction;
-//     },
-//     enabled: !!transactionId,
-//   });
-
-//   return {
-//     isLoading: result.isLoading,
-//     data: result.data,
-//     error: result.error,
-//     result,
-//   };
-// };
 export const useGetTransactionByIdQuery = (transactionId: string) => {
   return useQuery<Error>({
     queryKey: [QUERY_KEYS.TRANSAC, transactionId],
