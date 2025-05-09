@@ -44,7 +44,7 @@ const TextAreaInput = React.forwardRef<
   const context = useTextAreaContext();
   React.useEffect(() => {
     context.updateLength?.(props.maxLength);
-  }, [props.maxLength]);
+  }, [context, props.maxLength]);
   return (
     <>
       <textarea
