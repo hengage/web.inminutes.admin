@@ -25,9 +25,9 @@ const MetricsTab = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-4 w-full flex flex-col">
+    <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
       <h3 className="text-lg font-bold mb-4">Metric Summary</h3>
-      <div className="flex flex-wrap gap-4 mb-4">
+      <div className="flex flex-wrap justify-between w-full mb-4 items-center">
         <Select value={timeFrame} onValueChange={handleTimeFrameChange}>
           <SelectTrigger className="border p-2 rounded w-40">
             <SelectValue placeholder="Select Timeframe" />
@@ -44,29 +44,29 @@ const MetricsTab = () => {
         </Select>
 
         {timeFrame === "custom" && (
-          <div className="flex gap-4">
+          <div className="flex items-center ">
             <div>
-              <label className="block text-sm mb-2">Start Date</label>
               <DatePicker
                 value={startDate}
+                placeholder="Start-date"
                 onSelect={(date: Date | null | undefined) => {
                   if (date !== undefined) {
                     setStartDate(date);
                   }
                 }}
-                className="border p-2 rounded w-40"
+                triggerclassName="border p-2 rounded w-40"
               />
             </div>
             <div>
-              <label className="block text-sm mb-2">End Date</label>
               <DatePicker
                 value={endDate}
+                placeholder="End-date"
                 onSelect={(date: Date | null | undefined) => {
                   if (date !== undefined) {
                     setEndDate(date);
                   }
                 }}
-                className="border p-2 rounded w-40"
+                triggerclassName="border p-2 rounded w-40"
               />
             </div>
           </div>
