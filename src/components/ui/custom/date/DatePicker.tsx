@@ -13,8 +13,8 @@ interface DatePickerProps extends Omit<PopOverProps, "children"> {
   header?: boolean;
   triggerclassName?: string;
   placeholder?: string;
-  onSelect?: (Date: Date | undefined) => void;
-  value?: Date;
+  onSelect?: (date: Date | null | undefined) => void;
+  value?: Date | null;
 }
 
 export function DatePicker({
@@ -27,8 +27,7 @@ export function DatePicker({
   value,
   ...props
 }: DatePickerProps & React.ComponentProps<typeof Calendar>) {
-  const [date, setDate] = React.useState<Date | undefined>(value);
-
+  const [date, setDate] = React.useState<Date | null>(value ?? null);
   return (
     <PopOver
       trigger={
@@ -62,10 +61,11 @@ export function DatePicker({
         }
         {...props}
         mode="single"
-        selected={date}
+        selected={date ?? undefined}
         onSelect={(selected) => {
-          setDate(selected);
-          onSelect?.(selected);
+          // If selected is undefined, set date to null
+          setDate(selected ?? null);
+          onSelect?.(selected ?? null); // Pass null if selected is undefined
         }}
         initialFocus
       />

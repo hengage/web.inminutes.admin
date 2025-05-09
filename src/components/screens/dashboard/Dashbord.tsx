@@ -5,48 +5,41 @@ import RecentTransactions from "./RecentTransac";
 import Tag from "@/components/general/Tag";
 import Link from "next/link";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
-import { tag } from "@/types";
+import { Errand, Order, tag } from "@/types";
 import { useGetErrandQuery } from "@/api/errand";
 import { useGetOrdersQuery } from "@/api/order";
 import { useGetTransactionQuery } from "@/api/transaction";
+import { useGetDashboardQuery } from "@/api/dashboard";
 
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
   const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
   const { isLoading: isLoadingTransac, data: TransacData } = useGetTransactionQuery({});
-
-  const top10Errands = errandsData ? errandsData.slice(0, 10) : [];
-  const top10Orders = ordersData ? ordersData.slice(0, 10) : [];
+  const { isLoading: isLoadingDashboard, data: dashboardData } = useGetDashboardQuery({});
+  const topErrands = errandsData ? errandsData.slice(0, 4) : [];
+  const topOrders = ordersData ? ordersData.slice(0, 3) : [];
   const top10Transac = TransacData?.data ? TransacData?.data?.slice(0, 5) : [];
-
-  // const formatErrandForDisplay = (errand) => {
-  //   const date = new Date(errand.createdAt);
-  //   const formattedDate = date.toLocaleDateString("en-GB");
-  //   const formattedTime = date.toLocaleTimeString("en-GB", {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //   });
-  //   return {
-  //     ...errand,
-  //     date: formattedDate,
-  //     time: formattedTime,
-  //   };
-  // };
+  const ridersCount = dashboardData?.data?.riders || 0;
+  const customersCount = dashboardData?.data?.customers || 0;
+  const ordersCount = dashboardData?.data?.orders || 0;
   return (
-    <main className="flex flex-col  p-6">
+    <main className="flex flex-col p-6">
       <div className="flex flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
         <div>
-          <DatePicker placeholder="26\10\2022" triggerclassName="" />
-        </div>{" "}
+          <DatePicker placeholder="26/10/2022" />
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4 ">
+
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="flex flex-row gap-4 justify-between items-center w-full">
-            <div className="rounded-lg bg-ctm-primary-50 p-4 w-full  flex flex-col">
+            <div className="rounded-lg bg-ctm-primary-50 p-4 w-full flex flex-col">
               <h2 className="text-[#818386] mb-4">All Riders</h2>
               <div className="flex flex-row gap-4 items-center">
-                <p className="text-2xl font-bold">200</p>
+                <p className="text-2xl font-bold">
+                  {isLoadingDashboard ? "Loading..." : ridersCount}
+                </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
                     width="18"
@@ -68,10 +61,13 @@ const Dashbord = () => {
                 </span>
               </div>
             </div>
-            <div className="rounded-lg bg-[#FFEDD9] p-4 w-full  flex flex-col">
-              <h2 className="text-[#818386] mb-4">All Riders</h2>
+
+            <div className="rounded-lg bg-[#FFEDD9] p-4 w-full flex flex-col">
+              <h2 className="text-[#818386] mb-4">All Orders</h2>
               <div className="flex flex-row gap-4 items-center">
-                <p className="text-2xl font-bold">200</p>
+                <p className="text-2xl font-bold">
+                  {isLoadingDashboard ? "Loading..." : ordersCount}
+                </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
                     width="18"
@@ -93,10 +89,13 @@ const Dashbord = () => {
                 </span>
               </div>
             </div>
-            <div className="rounded-lg bg-[#E6FFF4] p-4 w-full  flex flex-col">
+
+            <div className="rounded-lg bg-[#E6FFF4] p-4 w-full flex flex-col">
               <h2 className="text-[#818386] mb-4">All Customers</h2>
               <div className="flex flex-row gap-4 items-center">
-                <p className="text-2xl font-bold">200</p>
+                <p className="text-2xl font-bold">
+                  {isLoadingDashboard ? "Loading..." : customersCount}
+                </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
                     width="18"
@@ -133,34 +132,31 @@ const Dashbord = () => {
                 See all
               </Link>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-4">
               {isLoadingOrders ? (
                 <p className="text-sm text-gray-500">Loading orders...</p>
-              ) : top10Orders.length > 0 ? (
-                top10Orders.map((order, index) => {
-                  const formattedOrder = formatOrderForDisplay(order);
-                  return (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
-                    >
-                      <div>
-                        <p className="font-medium text-gray-800 text-sm">ID: {formattedOrder.id}</p>
-                        <p className="text-xs text-gray-500">
-                          {formattedOrder.date} {formattedOrder.time}
-                        </p>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <h2 className="font-semibold text-sm mb-2">
-                          {formattedOrder.additionalStatus}
-                        </h2>
-                        <Tag tag={formattedOrder.accountStatus as tag} />
-                      </div>
-                    </div>
-                  );
-                })
+              ) : topOrders.length === 0 ? (
+                <p className="text-sm text-gray-500">No ongoing orders</p>
               ) : (
-                <p className="text-sm text-gray-500">No ongoing orders available.</p>
+                topOrders.map((order: Order) => (
+                  <div key={order._id} className="flex justify-between items-center border-b pb-2">
+                    <div>
+                      <p className="font-medium text-gray-700">
+                        {order.customer?.fullName || "Unknown"}
+                      </p>
+                      <p className="text-sm text-gray-500 capitalize">{order.type} ·</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold text-gray-800">
+                        ₦{Number(order.totalCost).toFixed(2)}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </p>
+                      <Tag tag={order.status as tag} />
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
@@ -176,26 +172,60 @@ const Dashbord = () => {
             </div>
             {isLoadingErrands ? (
               <p className="text-sm text-gray-500">Loading errands...</p>
-            ) : top10Errands.length > 0 ? (
-              top10Errands.map((errand, index) => {
-                const formattedErrand = formatErrandForDisplay(errand);
+            ) : topErrands.length > 0 ? (
+              topErrands.map((errand: Errand) => {
+                const date = new Date(errand.createdAt);
+                const formattedDate = date.toLocaleDateString("en-GB");
+                const formattedTime = date.toLocaleTimeString("en-GB", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+
+                const packageType =
+                  errand.packageType[0].charAt(0).toUpperCase() + errand.packageType[0].slice(1);
+
                 return (
                   <div
-                    key={index}
-                    className="flex justify-between items-center p-2 border-b border-gray-100 last:border-b-0"
+                    key={errand._id}
+                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50"
                   >
-                    <div>
-                      <p className="font-medium text-gray-800 text-sm">ID: {formattedErrand.id}</p>
-                      <p className="text-xs text-gray-500">
-                        {formattedErrand.date} {formattedErrand.time}
-                      </p>
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <p className="font-medium text-gray-800 text-sm flex items-center gap-2">
+                          ID: {errand._id.substring(0, 8)}
+                          <span className="bg-gray-100 text-xs px-2 py-0.5 rounded">
+                            {packageType}
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {formattedDate} {formattedTime}
+                        </p>
+                      </div>
+                      <Tag tag={errand.status as tag} />
                     </div>
-                    <div className="flex flex-col items-end">
-                      <h2 className="font-semibold text-sm mb-2">
-                        {formattedErrand.additionalStatus}
-                      </h2>
-                      <Tag tag={formattedErrand.accountStatus as tag} />
+
+                    <div className="flex justify-between text-xs mt-2">
+                      <div>
+                        <p className="text-gray-500">Customer:</p>
+                        <p className="font-medium">{errand.customer.fullName}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-500">Receiver:</p>
+                        <p className="font-medium">{errand.receiver.name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-gray-500">Delivery:</p>
+                        <p className="font-medium capitalize">{errand.type}</p>
+                      </div>
                     </div>
+
+                    {errand.dispatchFee !== "0" && (
+                      <div className="mt-2 text-xs text-right">
+                        <span className="bg-ctm-primary-50 text-ctm-primary-700 px-2 py-1 rounded font-medium">
+                          Fee: ₦{errand.dispatchFee}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })
