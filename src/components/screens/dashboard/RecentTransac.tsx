@@ -1,11 +1,15 @@
 "use client";
 
+import { ITransaction } from "@/api/transaction";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import Link from "next/link";
-
-export default function RecentTransactions({ data, loading }) {
-  const formatTransactionForDisplay = (transaction) => {
+interface RecentTransactionsProps {
+  data: ITransaction[];
+  loading: boolean;
+}
+export default function RecentTransactions({ data, loading }: RecentTransactionsProps) {
+  const formatTransactionForDisplay = (transaction: ITransaction) => {
     const date = new Date(transaction.createdAt);
     const formattedDate = date.toLocaleDateString("en-GB");
     const formattedTime = date.toLocaleTimeString("en-GB", {
@@ -26,7 +30,7 @@ export default function RecentTransactions({ data, loading }) {
   const hasTransactions = data && data.length > 0;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-white p-6 rounded-lg shadow h-full">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-gray-800">Recent Transactions</h3>
         <Link
@@ -67,8 +71,7 @@ export default function RecentTransactions({ data, loading }) {
                 </div>
                 <div>
                   <p
-                    className={`font-medium ${
-                      formattedTransaction.isCredit ? "text-green-600" : "text-red-600"
+                    className={`font-medium text-green-600" 
                     }`}
                   >
                     ₦{formattedTransaction.amount}

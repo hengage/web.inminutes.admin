@@ -2,11 +2,19 @@ import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
 import { ILocation, IPaginationData, IRating } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useGetRidersQuery = (filter: unknown) => {
-  const result = useQuery<IPaginationData<Pick<IRider, "fullName" | "phoneNumber">>, Error>({
-    queryKey: [QUERY_KEYS.VENDORS],
+  const result = useQuery<
+    IPaginationData<
+      Pick<
+        IRider,
+        "_id" | "fullName" | "email" | "displayName" | "email" | "currentlyWorking" | "phoneNumber"
+      >
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.RIDERS],
     queryFn: async () => {
       const response = await https.get(
         "/rider/list" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
@@ -26,25 +34,25 @@ export const useGetRidersQuery = (filter: unknown) => {
   return { isLoading: result.isPending, data: result.data, result };
 };
 
-export const useCreateRiderMutation = () => {
-  const result = useMutation<unknown, Error, IRiderCredentials>({
-    mutationFn: async (data) => {
-      const response = await https.post("/vendor/register", data);
-      return response.data.data;
-    },
-  });
-  return result;
-};
+// export const useCreateRiderMutation = () => {
+//   const result = useMutation<unknown, Error, IRiderCredentials>({
+//     mutationFn: async (data) => {
+//       const response = await https.post("/vendor/register", data);
+//       return response.data.data;
+//     },
+//   });
+//   return result;
+// };
 
-export const useUpdateVendorMutation = (vendorId: string) => {
-  const result = useMutation<unknown, Error, IRiderCredentials>({
-    mutationFn: async (data) => {
-      const response = await https.post(`/vendor/update/${vendorId}`, data);
-      return response.data.data;
-    },
-  });
-  return result;
-};
+// export const useUpdateVendorMutation = (vendorId: string) => {
+//   const result = useMutation<unknown, Error, IRiderCredentials>({
+//     mutationFn: async (data) => {
+//       const response = await https.post(`/vendor/update/${vendorId}`, data);
+//       return response.data.data;
+//     },
+//   });
+//   return result;
+// };
 
 export interface IRiderCredentials {
   businessName: string;
@@ -72,12 +80,4 @@ export interface IRider {
   createdAt: string;
   approvalStatus: string;
   accountStatus: string;
-}
-
-export interface ICategory {
-  _id: string;
-  name: string;
-  image: string;
-  subcategoryCount?: string;
-  vendorCount?: string;
 }

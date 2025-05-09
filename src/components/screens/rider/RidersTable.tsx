@@ -8,16 +8,14 @@ import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
 import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
-import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
-import { IVendor, useGetCategoriesQuery, useGetVendorsQuery } from "@/api/vendors";
+import { IRider, useGetRidersQuery } from "@/api/rider";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { tag } from "@/types";
 
 const status = [
   { label: "Active", value: "active" },
@@ -26,13 +24,15 @@ const status = [
 
 const RidersTable = () => {
   const router = useRouter();
-  const categriesResult = useGetCategoriesQuery();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const { result } = useGetVendorsQuery(queryValues);
+  const { result } = useGetRidersQuery(queryValues);
   const columns: ColumnDef<
-    Pick<IVendor, "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus">
+    Pick<
+      IRider,
+      "_id" | "fullName" | "email" | "displayName" | "email" | "currentlyWorking" | "phoneNumber"
+    >
   >[] = [
     {
       accessorKey: "index",
@@ -40,10 +40,8 @@ const RidersTable = () => {
       cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
-      accessorKey: "businessName",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Business name</span>
-      ),
+      accessorKey: "riderName",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Rider Name</span>,
       cell: ({ row }) => {
         const item = row.original;
         return (
@@ -52,13 +50,13 @@ const RidersTable = () => {
               src={
                 "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
               }
-              alt={item.businessName}
+              alt={item.fullName}
               width={40}
               height={40}
               className="rounded-full"
             />
             <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-              {item.businessName}
+              {item.fullName}
             </span>
           </div>
         );
@@ -83,26 +81,26 @@ const RidersTable = () => {
       },
     },
     {
-      accessorKey: "category",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Category</span>,
+      accessorKey: "phone",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Phone Number</span>,
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.category.name}
+            {row.original.phoneNumber}
           </span>
         );
       },
     },
     {
       accessorKey: "status",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Work Status</span>,
       cell: ({ row }) => {
-        return <Tag tag={row.original.accountStatus.toLowerCase() as tag} />;
+        return <Tag tag={row.original.currentlyWorking ? "active" : "inactive"} />;
       },
     },
     {
       accessorKey: "actions",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Action</span>,
       cell: () => (
         <PopOver className="max-w-[110px]">
           <div className="flex flex-col justify-center items-center">
@@ -180,22 +178,18 @@ const RidersTable = () => {
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Category
+                Vehicle Type
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
             className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
           >
-            <CheckboxItems
+            <RadioItems
               onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
+                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
               }}
-              selectedItems={categriesResult.item.filter((item) =>
-                (queryValues.category as string[])?.includes(item.value)
-              )}
-              showSearchBox
-              searchPlaceholder="Categories"
-              items={categriesResult.item}
+              selectedItem={(queryValues.status as string) ?? ""}
+              items={status}
             />
           </PopOver>
           <PopOver
@@ -238,10 +232,10 @@ const RidersTable = () => {
   );
 };
 
-const Vendors = () => (
+const Riders = () => (
   <Suspense>
     <RidersTable />
   </Suspense>
 );
 
-export default Vendors;
+export default Riders;
