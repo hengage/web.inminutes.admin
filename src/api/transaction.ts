@@ -11,7 +11,7 @@ export const useGetTransactionQuery = (filter: unknown) => {
     >,
     Error
   >({
-    queryKey: [QUERY_KEYS.TRANSAC],
+    queryKey: [QUERY_KEYS.TRANSAC, filter],
     queryFn: async () => {
       const response = await https.get(
         "/transaction/list" +
