@@ -30,7 +30,7 @@ const TransactionTable = () => {
   );
   const { result } = useGetTransactionQuery(queryValues);
   const columns: ColumnDef<
-    Pick<ITransaction, "_id" | "reason" | "reference" | "amount" | "status" | "createdAt" | "type">
+    Pick<ITransaction, "_id" | "reason" | "reference" | "amount" | "status" | "createdAt">
   >[] = [
     {
       accessorKey: "index",
@@ -59,15 +59,6 @@ const TransactionTable = () => {
           {row.original.reference}
         </span>
       ),
-    },
-    {
-      accessorKey: "type",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Type</span>,
-      cell: ({ row }) => {
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.type}</span>
-        );
-      },
     },
     {
       accessorKey: "createdAt",
