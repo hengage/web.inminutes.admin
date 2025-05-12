@@ -19,8 +19,8 @@ import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import TransactionDetails from "./TransactionDetails";
 
 const status = [
-  { label: "Active", value: "active" },
-  { label: "In Active", value: "inactive" },
+  { label: "Success", value: "success" },
+  { label: "Pending", value: "pending" },
 ];
 
 const TransactionTable = () => {
@@ -201,7 +201,7 @@ const TransactionTable = () => {
             </PopOver>
             <div className="w-full flex justify-end justify-self-end">
               <Input
-                className="w-fit bg-ctm-secondary-100"
+                className="w-fit bg-ctm-secondary-50"
                 slotBefore={<Search className="text-ctm-secondary-300" />}
                 placeholder="Search"
                 value={queryValues.search}
