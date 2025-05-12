@@ -19,8 +19,6 @@ export const useGetDashboardQuery = ({}) => {
   };
 };
 
-import axios from "axios";
-
 const fetchGraphData = async (
   filter: Record<string, string | number | null | Date | boolean | undefined>
 ) => {
@@ -34,7 +32,7 @@ const fetchGraphData = async (
     )
   ).toString();
 
-  const response = await axios.get(`/api/dashboard/graph?${queryString}`);
+  const response = await https.get(`/dashboard/graph?${queryString}`);
   return response.data.data;
 };
 

@@ -4,7 +4,7 @@ import MetricsTab from "./MetricsTab";
 import RecentTransactions from "./RecentTransac";
 import Tag from "@/components/general/Tag";
 import Link from "next/link";
-import { DatePicker } from "@/components/ui/custom/date/DatePicker";
+// import { DatePicker } from "@/components/ui/custom/date/DatePicker";
 import { Errand, Order, tag } from "@/types";
 import { useGetErrandQuery } from "@/api/errand";
 import { useGetOrdersQuery } from "@/api/order";
@@ -26,9 +26,9 @@ const Dashbord = () => {
     <main className="flex flex-col p-6">
       <div className="flex flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
-        <div>
+        {/* <div>
           <DatePicker placeholder="26/10/2022" />
-        </div>
+        </div> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
