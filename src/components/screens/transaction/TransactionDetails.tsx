@@ -66,7 +66,7 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
                 ["Account Number", transactionData.accountNumber],
                 ["Currency", transactionData.currency],
               ].map(([label, value]) => (
-                <div key={label} className="flex justify-between items-center mb-3">
+                <div key={String(label)} className="flex justify-between items-center mb-3">
                   <h3 className="text-sm text-gray-500">{label}</h3>
                   <p className="font-medium capitalize">{value}</p>
                 </div>

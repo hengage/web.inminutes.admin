@@ -37,7 +37,7 @@ export const useGetTransactionQuery = (filter: unknown) => {
 };
 
 export const useGetTransactionByIdQuery = (transactionId: string) => {
-  return useQuery<Error>({
+  return useQuery<ITransaction, Error>({
     queryKey: [QUERY_KEYS.TRANSAC, transactionId],
     queryFn: async () => {
       const response = await https.get(`/transaction/${transactionId}`);
@@ -54,5 +54,6 @@ export interface ITransaction {
   reason: string;
   status: string;
   createdAt: string;
-  type: string;
+  type?: string;
+  [key: string]: string | number | boolean | null | undefined;
 }

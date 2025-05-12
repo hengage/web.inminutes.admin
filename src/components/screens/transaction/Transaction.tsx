@@ -60,6 +60,15 @@ const TransactionTable = () => {
         </span>
       ),
     },
+    // {
+    //   accessorKey: "type",
+    //   header: () => <span className="whitespace-nowrap font-semibold text-base">Type</span>,
+    //   cell: ({ row }) => {
+    //     return (
+    //       <span className="font-normal text-base text-ctm-secondary-200">{row.original.type}</span>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "createdAt",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Date/Time</span>,
@@ -201,7 +210,7 @@ const TransactionTable = () => {
             </div>
           </div>
           <DataTable dataQuery={result} columns={columns} />
-          {result.data?.length && result.data?.length > 0 ? (
+          {result.data?.data && result.data?.data?.length > 0 ? (
             <Pagination
               total={result.data?.total ?? 10}
               page={Number(queryValues.page)}
