@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Errand, Order, tag } from "@/types";
 import { useGetErrandQuery } from "@/api/errand";
 import { useGetOrdersQuery } from "@/api/order";
-import { useGetTransactionQuery } from "@/api/transaction";
+import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
 
 const Dashbord = () => {
@@ -18,7 +18,7 @@ const Dashbord = () => {
   const { isLoading: isLoadingDashboard, data: dashboardData } = useGetDashboardQuery({});
   const topErrands = errandsData ? errandsData.slice(0, 4) : [];
   const topOrders = ordersData ? ordersData.slice(0, 3) : [];
-  const top10Transac = TransacData?.data ? TransacData?.data?.slice(0, 5) : [];
+  const top10Transac = (TransacData?.data?.slice(0, 5) || []) as ITransaction[];
   const ridersCount = dashboardData?.data?.riders || 0;
   const customersCount = dashboardData?.data?.customers || 0;
   const ordersCount = dashboardData?.data?.orders || 0;
