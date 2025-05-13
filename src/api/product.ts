@@ -1,7 +1,7 @@
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
-import { IListItem, IPaginationData } from "@/types";
+import { IListItem, IPaginationData, tagTypes } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface IProduct {
@@ -199,7 +199,7 @@ export interface IProductDetails {
   description: string;
   quantity: number;
   cost: string | number;
-  tags: string[];
+  tags: tagTypes;
   addOns: string[];
   category: string | ICategory;
   vendor: string | null;
