@@ -32,19 +32,19 @@ export const Vendors = ({ timeFrame, startDate, endDate }: GraphProps) => {
   };
 
   const { data, isLoading, error } = useGetGraphDataQuery(filter);
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickLine={false}
+            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
             tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
           />
           <Tooltip />
@@ -72,7 +72,7 @@ export const Riders = ({ timeFrame, startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -106,7 +106,7 @@ export const Customers = ({ timeFrame, startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
