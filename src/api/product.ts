@@ -48,7 +48,7 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
     >,
     Error
   >({
-    queryKey: [QUERY_KEYS.PRODUCTS],
+    queryKey: [QUERY_KEYS.PRODUCTS, filter],
     queryFn: async () => {
       const response = await https.get(
         "/product/list" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
@@ -113,7 +113,7 @@ export const useGetProductCategoriesQuery = (filter?: unknown) => {
 
 export const useGetCategoriesQuery = (filter?: unknown) => {
   const result = useQuery<IPaginationData<ICategory>, Error>({
-    queryKey: [QUERY_KEYS.Categories],
+    queryKey: [QUERY_KEYS.Categories, filter],
     queryFn: async () => {
       const response = await https.get(
         "/product/categories" +

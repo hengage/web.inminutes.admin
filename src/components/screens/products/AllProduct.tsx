@@ -20,8 +20,8 @@ import { tag } from "@/types";
 import { IProduct, useGetProductCategoriesQuery, useGetProductsQuery } from "@/api/product";
 
 const status = [
-  { label: "Active", value: "active" },
-  { label: "In Active", value: "inactive" },
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
 ];
 
 const AllProductTable = () => {
@@ -29,7 +29,7 @@ const AllProductTable = () => {
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const categriesResult = useGetProductCategoriesQuery();
+  const categriesResult = useGetProductCategoriesQuery({});
 
   const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const handleRefresh = (value: typeof queryValues) => {

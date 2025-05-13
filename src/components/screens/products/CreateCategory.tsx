@@ -23,12 +23,11 @@ const CreateCategoryModal = ({ open, onOpenChange }) => {
   const handleChange = (e) => {
     setName(e.target.value);
   };
-
   const handleSubmit = async () => {
     if (!name.trim()) return;
     try {
-      await createCategory({ name }).unwrap();
-      showSuccess(" Category created successfully");
+      await createCategory({ name }).unwrap(); // 👈 this is essential
+      showSuccess("Category created successfully");
       setName("");
       onOpenChange(false);
       refetch();
