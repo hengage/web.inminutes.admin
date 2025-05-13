@@ -26,7 +26,7 @@ const CreateCategoryModal = ({ open, onOpenChange }) => {
   const handleSubmit = async () => {
     if (!name.trim()) return;
     try {
-      await createCategory({ name }).unwrap(); // 👈 this is essential
+      await createCategory({ name }).unwrap();
       showSuccess("Category created successfully");
       setName("");
       onOpenChange(false);
