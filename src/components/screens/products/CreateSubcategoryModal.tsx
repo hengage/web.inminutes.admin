@@ -9,21 +9,18 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { CreateCategoryModalProps } from "./CreateCategory";
 
-const CreateSubCategoryModal = ({ open, onOpenChange }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-  });
+const CreateSubCategoryModal = ({ open, onOpenChange }: CreateCategoryModalProps) => {
+  const [name, setName] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   };
 
   const handleSubmit = () => {
-    // onSubmit(formData);
-    setFormData({ name: "", description: "" });
+    // ser(formData);
+    setName("");
     onOpenChange(false);
   };
 
@@ -37,7 +34,7 @@ const CreateSubCategoryModal = ({ open, onOpenChange }) => {
         <Input
           id="name"
           name="name"
-          value={formData.name}
+          value={name}
           onChange={handleChange}
           placeholder="Sub-category name"
           className="col-span-3"

@@ -108,7 +108,7 @@ const AllProductTable = () => {
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.vendor}
+            {row.original.vendor || "N/A"}
           </span>
         );
       },

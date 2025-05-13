@@ -4,9 +4,9 @@ import Tab from "@/components/ui/custom/Tabs";
 import ProductCategory from "./ProductCategory";
 import AllProduct from "./AllProduct";
 import ReviewProduct from "./ReviewProduct";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/Icon";
 import CreateCategoryModal from "./CreateCategory";
+import { CustomButton as Button } from "@/components/ui/custom/button";
 
 const Product = () => {
   const [activeTab, setActiveTab] = useState<string>("0");
@@ -23,7 +23,7 @@ const Product = () => {
 
         {activeTab === "1" && (
           <Button
-            variant="outline"
+            variant="ctm-outline"
             slotBefore={<Icon name="add" height={16} width={16} />}
             onClick={() => setOpenCategoryModal(true)} // 🔥 open modal
           >

@@ -11,7 +11,7 @@ import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { IProduct, useGetCategoriesQuery } from "@/api/product";
+import { ICategory, useGetCategoriesQuery } from "@/api/product";
 import PopOver from "@/components/ui/custom/PopOver";
 
 const ProductCategoryTable = () => {
@@ -34,7 +34,7 @@ const ProductCategoryTable = () => {
     });
   }, [allParams]);
   const columns: ColumnDef<
-    Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status">
+    Pick<ICategory, "_id" | "name" | "productCount" | "subcategoryCount">
   >[] = [
     {
       accessorKey: "index",

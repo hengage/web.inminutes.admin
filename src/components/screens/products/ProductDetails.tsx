@@ -1,7 +1,7 @@
 "use client";
 import { useGetProductByIdQuery } from "@/api/product";
 import Tag from "@/components/general/Tag";
-import { Button } from "@/components/ui/button";
+import { CustomButton as Button } from "@/components/ui/custom/button";
 import { tag } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +10,7 @@ import React, { Suspense } from "react";
 const Details = () => {
   const router = useRouter();
   const { id } = useParams();
-  const { data, isLoading } = useGetProductByIdQuery(id);
+  const { data, isLoading } = useGetProductByIdQuery(Array.isArray(id) ? id[0] : (id ?? ""));
   if (isLoading) return <div>Loading...</div>;
   const product = data;
   console.log(product);
@@ -122,7 +122,9 @@ const Details = () => {
 
             <div className="grid grid-cols-2 border-b py-3">
               <h2 className="text-gray-500">Category</h2>
-              <p className="text-right text-blue-600 underline">{product.category.name}</p>
+              <p className="text-right text-blue-600 underline">
+                {typeof product.category === "string" ? product.category : product.category.name}
+              </p>
             </div>
 
             {/* <div className="grid grid-cols-2 border-b py-3">
@@ -147,8 +149,8 @@ const Details = () => {
                 {product.addOns?.length > 0 ? (
                   product.addOns.map((addon, index) => (
                     <div key={index} className="text-right">
-                      <p>Item: {addon.item}</p>
-                      <p>Cost: {addon.cost}</p>
+                      <p>Item: {addon?.item}</p>
+                      <p>Cost: {addon?.cost}</p>
                     </div>
                   ))
                 ) : (

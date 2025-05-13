@@ -1,7 +1,7 @@
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
-import { IListItem, IPaginationData, tagTypes } from "@/types";
+import { IListItem, IPaginationData } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export interface IProduct {
@@ -12,10 +12,7 @@ export interface IProduct {
   cost: string | number;
   category: ICategory;
   status: "Approved" | "Pending" | "Rejected";
-  vendor: {
-    _id: string;
-    businessName: string;
-  };
+  vendor: string | null;
   productCode: string;
   createdAt: string;
 }
@@ -72,7 +69,7 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
 /**
  * Hook to fetch a single product by ID
  */
-export const useGetProductByIdQuery = (productId: string) => {
+export const useGetProductByIdQuery = (productId: string | string[]) => {
   return useQuery<IProductDetails, Error>({
     queryKey: [QUERY_KEYS.PRODUCTS, productId],
     queryFn: async () => {
@@ -112,8 +109,11 @@ export const useGetProductCategoriesQuery = (filter?: unknown) => {
   return { ...result, item };
 };
 
-export const useGetCategoriesQuery = (filter?: unknown) => {
-  const result = useQuery<IPaginationData<ICategory>, Error>({
+export const useGetCategoriesQuery = (filter: unknown = {}) => {
+  const result = useQuery<
+    IPaginationData<Pick<ICategory, "_id" | "name" | "productCount" | "subcategoryCount">>,
+    Error
+  >({
     queryKey: [QUERY_KEYS.Categories, filter],
     queryFn: async () => {
       const response = await https.get(
@@ -189,7 +189,14 @@ export const useUpdateProductStatusMutation = () => {
 export interface ICategory {
   _id: string;
   name: string;
-  image: string;
+  image?: string;
+  subcategoryCount?: string;
+  productCount?: string;
+}
+
+export interface IAddOn {
+  item: string;
+  cost: string | number;
 }
 
 export interface IProductDetails {
@@ -199,9 +206,9 @@ export interface IProductDetails {
   description: string;
   quantity: number;
   cost: string | number;
-  tags: tagTypes;
-  addOns: string[];
-  category: string | ICategory;
+  tags: string[];
+  addOns: IAddOn[];
+  category: ICategory;
   vendor: string | null;
   status: "Approved" | "Pending" | "Rejected";
   isDeleted: boolean;

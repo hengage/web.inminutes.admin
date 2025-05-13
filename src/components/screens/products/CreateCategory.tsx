@@ -12,7 +12,12 @@ import { Input } from "@/components/ui/input";
 import { useCreateCategorytMutation, useGetCategoriesQuery } from "@/api/product";
 import { useToast } from "@/providers/ToastContext";
 
-const CreateCategoryModal = ({ open, onOpenChange }) => {
+export interface CreateCategoryModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const CreateCategoryModal = ({ open, onOpenChange }: CreateCategoryModalProps) => {
   const { showSuccess } = useToast();
 
   const [name, setName] = useState("");
@@ -20,20 +25,26 @@ const CreateCategoryModal = ({ open, onOpenChange }) => {
 
   const { isPending, error, mutate: createCategory } = useCreateCategorytMutation();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-  const handleSubmit = async () => {
+
+  const handleSubmit = () => {
     if (!name.trim()) return;
-    try {
-      await createCategory({ name }).unwrap();
-      showSuccess("Category created successfully");
-      setName("");
-      onOpenChange(false);
-      refetch();
-    } catch (err) {
-      console.error("Error creating category:", err);
-    }
+    createCategory(
+      { name },
+      {
+        onSuccess: () => {
+          showSuccess("Category created successfully");
+          setName("");
+          onOpenChange(false);
+          refetch();
+        },
+        onError: (err: unknown) => {
+          console.error("Error creating category:", err);
+        },
+      }
+    );
   };
 
   return (
@@ -51,11 +62,7 @@ const CreateCategoryModal = ({ open, onOpenChange }) => {
           placeholder="Category name"
         />
 
-        {error && (
-          <p className="text-sm text-red-500 mt-2">
-            {error?.data?.message || "Failed to create category."}
-          </p>
-        )}
+        {error && <p className="text-sm text-red-500 mt-2">{"Failed to create category."}</p>}
 
         <DialogFooter className="!flex !items-start !mt-3 !justify-start">
           <DialogClose asChild>
