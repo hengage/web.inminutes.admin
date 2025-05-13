@@ -17,7 +17,7 @@ const Tabs = () => {
       <div className="flex justify-between items-center">
         <h2 className="ctm-header-1 text-ctm-primary-700">Vendors</h2>
         <span className="flex gap-2 items-center justify-end">
-          {hashParams.tab === "0" && (
+          {(hashParams.tab === "0" || !hashParams.tab) && (
             <>
               <Button
                 variant="ctm-primary"
