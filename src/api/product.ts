@@ -9,6 +9,7 @@ export interface IProduct {
   name: string;
   image: string;
   price: number;
+  cost: string | number;
   category: ICategory;
   status: "Approved" | "Pending" | "Rejected";
   vendor: {
@@ -199,7 +200,7 @@ export interface IProductDetails {
   quantity: number;
   cost: string | number;
   tags: string[];
-  addOns: IAddOn[];
+  addOns: string[];
   category: string | ICategory;
   vendor: string | null;
   status: "Approved" | "Pending" | "Rejected";
