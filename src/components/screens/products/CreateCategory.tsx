@@ -23,17 +23,24 @@ const CreateCategoryModal = ({ open, onOpenChange }) => {
   const handleChange = (e) => {
     setName(e.target.value);
   };
-  const handleSubmit = async () => {
+
+  const handleSubmit = () => {
     if (!name.trim()) return;
-    try {
-      await createCategory({ name }).unwrap();
-      showSuccess("Category created successfully");
-      setName("");
-      onOpenChange(false);
-      refetch();
-    } catch (err) {
-      console.error("Error creating category:", err);
-    }
+
+    createCategory(
+      { name },
+      {
+        onSuccess: () => {
+          showSuccess("Category created successfully");
+          setName("");
+          onOpenChange(false);
+          refetch();
+        },
+        onError: (error) => {
+          showError(error.message);
+        },
+      }
+    );
   };
 
   return (
