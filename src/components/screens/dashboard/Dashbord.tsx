@@ -203,7 +203,6 @@ const Dashbord = () => {
                       </div>
                       <Tag tag={errand.status as tag} />
                     </div>
-
                     <div className="flex justify-between text-xs mt-2">
                       <div>
                         <p className="text-gray-500">Customer:</p>
