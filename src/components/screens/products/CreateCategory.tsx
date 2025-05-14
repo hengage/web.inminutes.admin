@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCreateCategorytMutation, useGetCategoriesQuery } from "@/api/product";
+import { useCreateCategorytMutation } from "@/api/product";
 import { useToast } from "@/providers/ToastContext";
 
 export interface CreateCategoryModalProps {
@@ -21,7 +21,6 @@ const CreateCategoryModal = ({ open, onOpenChange }: CreateCategoryModalProps) =
   const { showSuccess } = useToast();
 
   const [name, setName] = useState("");
-  const { refetch } = useGetCategoriesQuery();
 
   const { isPending, error, mutate: createCategory } = useCreateCategorytMutation();
 
@@ -38,7 +37,6 @@ const CreateCategoryModal = ({ open, onOpenChange }: CreateCategoryModalProps) =
           showSuccess("Category created successfully");
           setName("");
           onOpenChange(false);
-          refetch();
         },
         onError: (err: unknown) => {
           console.error("Error creating category:", err);

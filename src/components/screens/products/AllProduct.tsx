@@ -29,8 +29,7 @@ const AllProductTable = () => {
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const categriesResult = useGetProductCategoriesQuery({});
-
+  const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
   const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
@@ -181,9 +180,17 @@ const AllProductTable = () => {
           </Button>
           <PopOver
             trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+              <Button
+                className="stroke-ctm-secondary-300"
+                variant={"secondary"}
+                disabled={categoryItemsLoading}
+              >
                 Category
-                <Icon name="arrow-down" height={16} width={16} />
+                {categoryItemsLoading ? (
+                  <Refresh2 className="animate-spin ml-2" size={16} />
+                ) : (
+                  <Icon name="arrow-down" height={16} width={16} />
+                )}
               </Button>
             }
             className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
@@ -192,12 +199,14 @@ const AllProductTable = () => {
               onSubmit={(params) => {
                 setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
               }}
-              selectedItems={categriesResult.item.filter((item) =>
-                (queryValues.category as string[])?.includes(item.value)
-              )}
+              selectedItems={
+                categoryItems?.filter((item) =>
+                  (queryValues.category as string[])?.includes(item.value)
+                ) || []
+              }
               showSearchBox
               searchPlaceholder="Categories"
-              items={categriesResult.item}
+              items={categoryItems || []}
             />
           </PopOver>
           <PopOver

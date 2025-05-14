@@ -20,7 +20,6 @@ const ProductCategoryTable = () => {
     {}
   );
   const { result, isLoading, refetch } = useGetCategoriesQuery(queryValues);
-
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
@@ -135,44 +134,7 @@ const ProductCategoryTable = () => {
           >
             Clear Filter
           </Button>
-          {/* <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Category
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <CheckboxItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
-              }}
-              selectedItems={categriesResult.item.filter((item) =>
-                (queryValues.category as string[])?.includes(item.value)
-              )}
-              showSearchBox
-              searchPlaceholder="Categories"
-              items={categriesResult.item}
-            />
-          </PopOver>
-          <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Status
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <RadioItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
-              selectedItem={(queryValues.status as string) ?? ""}
-              items={status}
-            />
-          </PopOver> */}
+
           <div className="w-full flex justify-end justify-self-end">
             <Input
               className="w-fit bg-ctm-secondary-100"
@@ -185,7 +147,7 @@ const ProductCategoryTable = () => {
         </div>
 
         <DataTable dataQuery={result} columns={columns} />
-        {result.data?.data.length && result.data?.data.length > 0 ? (
+        {result.data?.data.length && result?.data.data.length > 0 ? (
           <Pagination
             total={result.data?.total ?? 10}
             page={Number(queryValues.page)}
