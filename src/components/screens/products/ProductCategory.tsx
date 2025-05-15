@@ -20,6 +20,7 @@ const ProductCategoryTable = () => {
     {}
   );
   const { result, isLoading, refetch } = useGetCategoriesQuery(queryValues);
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
@@ -32,9 +33,7 @@ const ProductCategoryTable = () => {
       limit: Number(allParams.limit ?? 10),
     });
   }, [allParams]);
-  const columns: ColumnDef<
-    Pick<ICategory, "_id" | "name" | "productCount" | "subcategoryCount">
-  >[] = [
+  const columns: ColumnDef<Pick<ICategory, "_id" | "name" | "totalProducts">>[] = [
     {
       accessorKey: "index",
       header: () => <span className="whitespace-nowrap font-semibold text-base">S/N</span>,
@@ -53,24 +52,12 @@ const ProductCategoryTable = () => {
       },
     },
     {
-      accessorKey: "subcategoryCount",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Sub-Category</span>,
-      cell: ({ row }) => {
-        const item = row.original;
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {item.subcategoryCount}
-          </span>
-        );
-      },
-    },
-    {
-      accessorKey: "productCount",
+      accessorKey: "totalProducts",
       header: () => <span className="whitespace-nowrap font-semibold text-base">No.products </span>,
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200">
-            {row.original.productCount}
+            {row.original.totalProducts}
           </span>
         );
       },
@@ -147,7 +134,7 @@ const ProductCategoryTable = () => {
         </div>
 
         <DataTable dataQuery={result} columns={columns} />
-        {result.data?.data.length && result?.data.data.length > 0 ? (
+        {result.data?.data?.length && result.data?.data?.length > 0 ? (
           <Pagination
             total={result.data?.total ?? 10}
             page={Number(queryValues.page)}
