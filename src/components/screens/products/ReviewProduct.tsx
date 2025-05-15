@@ -7,7 +7,7 @@ import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
-import { cn } from "@/lib/utils";
+import { cn, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 
 import DataTable from "@/components/ui/data-table";
