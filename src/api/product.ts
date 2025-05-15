@@ -80,11 +80,13 @@ export const useGetProductByIdQuery = (productId: string | string[]) => {
   });
 };
 
-export const useGetProductCategoriesQuery = (filter?: unknown) => {
+export const useGetProductCategoriesQuery = (
+  filter: Record<string, string | number | string[]> = {}
+) => {
   const query = filter && Object.keys(filter).length > 0 ? `?${stringifyQuery(filter)}` : "";
 
   const result = useQuery<ICategory[], Error>({
-    queryKey: [QUERY_KEYS.Categories],
+    queryKey: [QUERY_KEYS.Categories, filter],
     queryFn: async () => {
       const response = await https.get(`/product/categories${query}`);
       return response.data.data.data;
@@ -151,7 +153,6 @@ export const useGetReviewingProductsQuery = ({
       limit: data.limit,
       totalPages: data.totalPages,
     }),
-    keepPreviousData: true,
   });
 
   return {
@@ -215,8 +216,7 @@ export interface ICategory {
   _id: string;
   name: string;
   image?: string;
-  subcategoryCount?: string;
-  productCount?: string;
+  totalProducts?: string;
 }
 
 export interface IAddOn {
