@@ -44,6 +44,7 @@ export const Vendors = ({ timeFrame, startDate, endDate }: GraphProps) => {
           <YAxis
             axisLine={false}
             tickLine={false}
+            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
             tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
           />
           <Tooltip />
