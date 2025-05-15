@@ -20,7 +20,6 @@ const ProductCategoryTable = () => {
     {}
   );
   const { result, isLoading, refetch } = useGetCategoriesQuery(queryValues);
-
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
