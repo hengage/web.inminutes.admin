@@ -25,7 +25,7 @@ const Product = () => {
           <Button
             variant="ctm-outline"
             slotBefore={<Icon name="add" height={16} width={16} />}
-            onClick={() => setOpenCategoryModal(true)} // 🔥 open modal
+            onClick={() => setOpenCategoryModal(true)}
           >
             <p>New Category</p>
           </Button>

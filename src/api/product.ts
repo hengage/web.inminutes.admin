@@ -80,38 +80,31 @@ export const useGetProductByIdQuery = (productId: string | string[]) => {
   });
 };
 
-export const useGetProductCategoriesQuery = (filter?: unknown) => {
-  const result = useQuery<IPaginationData<ICategory>, Error>({
-    queryKey: [QUERY_KEYS.Categories],
+export const useGetProductCategoriesQuery = (
+  filter: Record<string, string | number | string[]> = {}
+) => {
+  const query = filter && Object.keys(filter).length > 0 ? `?${stringifyQuery(filter)}` : "";
+
+  const result = useQuery<ICategory[], Error>({
+    queryKey: [QUERY_KEYS.Categories, filter],
     queryFn: async () => {
-      const response = await https.get(
-        "/product/categories" +
-          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
-      );
-      return response.data.data.categories;
+      const response = await https.get(`/product/categories${query}`);
+      return response.data.data.data;
     },
-    enabled: filter
-      ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
-      : true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    select: (data: any) => ({
-      data: data.categories,
-      total: data.total,
-      page: data.page,
-      limit: data.limit,
-      totalPages: data.pages,
-    }),
+    enabled: true,
   });
-  const item: IListItem[] = (result.data?.data ?? [])?.map((e) => ({
+
+  const item: IListItem[] = (result.data ?? []).map((e) => ({
     label: e.name,
     value: e._id,
   }));
+
   return { ...result, item };
 };
 
 export const useGetCategoriesQuery = (filter: unknown = {}) => {
   const result = useQuery<
-    IPaginationData<Pick<ICategory, "_id" | "name" | "productCount" | "subcategoryCount">>,
+    IPaginationData<Pick<ICategory, "_id" | "name" | "totalProducts">>,
     Error
   >({
     queryKey: [QUERY_KEYS.Categories, filter],
@@ -120,14 +113,14 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
         "/product/categories" +
           `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
       );
-      return response.data.data.categories;
+      return response.data.data;
     },
     enabled: filter
       ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
       : true,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     select: (data: any) => ({
-      data: data.categories,
+      data: data.data,
       total: data.total,
       page: data.page,
       limit: data.limit,
@@ -135,6 +128,39 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
     }),
   });
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
+};
+
+export const useGetReviewingProductsQuery = ({
+  page = 1,
+  limit = 10,
+}: { page?: number; limit?: number } = {}) => {
+  const result = useQuery<
+    IPaginationData<
+      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS, { status: "pending", page, limit }],
+    queryFn: async () => {
+      const response = await https.get(`/product/list?status=pending&page=${page}&limit=${limit}`);
+      return response.data.data.products;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.totalPages,
+    }),
+  });
+
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+    refetch: result.refetch,
+  };
 };
 
 export const useCreateCategorytMutation = () => {
@@ -190,8 +216,7 @@ export interface ICategory {
   _id: string;
   name: string;
   image?: string;
-  subcategoryCount?: string;
-  productCount?: string;
+  totalProducts?: string;
 }
 
 export interface IAddOn {
