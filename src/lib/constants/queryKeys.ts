@@ -1,5 +1,6 @@
 export const QUERY_KEYS = {
   VENDORS: "vendors",
+  PRODUCTS: "products",
   RIDERS: "riders",
   ROLES: "roles",
   ORDERS: "orders",
