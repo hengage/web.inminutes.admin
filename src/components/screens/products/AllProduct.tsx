@@ -228,7 +228,7 @@ const AllProductTable = () => {
           </PopOver>
           <div className="w-full flex justify-end justify-self-end">
             <Input
-              className="w-fit bg-ctm-secondary-100"
+              className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
               value={queryValues.search}
