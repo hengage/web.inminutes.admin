@@ -14,7 +14,6 @@ interface SidebarItemProps {
 
 const SidebarItem = ({ href, label }: SidebarItemProps) => {
   const pathname = usePathname();
-  console.log(pathname.includes(href), pathname, href.substring(1));
   const iconMatch = useMemo(() => {
     const iconKeys = Object.keys(iconPaths);
     if (pathname.includes(href)) {
