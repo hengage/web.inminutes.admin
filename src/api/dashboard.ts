@@ -2,7 +2,13 @@ import https from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetDashboardQuery = (filter = {}) => {
+export interface DashboardFilter {
+  startDate?: string;
+  endDate?: string;
+  [key: string]: string | number | boolean | undefined;
+}
+
+export const useGetDashboardQuery = (filter: DashboardFilter = {}) => {
   const result = useQuery({
     queryKey: ["dashboard", filter],
     queryFn: async () => {
