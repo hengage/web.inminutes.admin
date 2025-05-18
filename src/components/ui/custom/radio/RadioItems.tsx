@@ -1,5 +1,5 @@
 import { IListItem } from "@/types";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CustomInput as Input } from "../input";
 import { stringContains } from "@/lib/utils";
 import { CustomButton as Button } from "../button";
@@ -13,12 +13,8 @@ interface RadioItemOptionsProps {
   defaultSelectedItems?: IListItem;
   selectedItem?: string;
   onSubmit?: (value: string | null) => void;
-  /** Passing this, implies updating check items won't be handled by this component */
-  //   onCheckboxToggle?: (item: ILi, checkedItems: Array<CheckboxOptionsItemChildren>) => void;
   addButtonText?: string;
   searchPlaceholder?: string;
-  //   onAddNewValue?: (value: string) => void;
-  //   onRemoveItem?: (id: string, labelName: string) => void;
   showSearchBox?: boolean;
   showAddNewItemButton?: boolean;
   showAddCloseButton?: boolean;
@@ -29,11 +25,19 @@ const RadioItems = ({
   showSearchBox,
   searchPlaceholder,
   onSubmit,
+  addButtonText,
   ...props
 }: Omit<React.ComponentProps<typeof RadioGroup>, "onSubmit"> & RadioItemOptionsProps) => {
-  const [value, setValue] = useState(props.selectedItem);
+  // Track temporary selection until Apply is clicked
+  const [tempValue, setTempValue] = useState(props.selectedItem);
   const [searchValue, setSearchValue] = useState("");
   const [renderedItems, setRenderedItems] = useState(items);
+
+  // Update tempValue when selectedItem prop changes
+  useEffect(() => {
+    setTempValue(props.selectedItem);
+  }, [props.selectedItem]);
+
   const handleSearch = (searchBy: string) => {
     if (!searchBy) setRenderedItems(items);
     else {
@@ -42,12 +46,22 @@ const RadioItems = ({
     }
     setSearchValue(searchBy);
   };
+
+  const handleApply = () => {
+    onSubmit?.(tempValue ?? null);
+  };
+
+  const handleCancel = () => {
+    setTempValue(props.selectedItem); // Reset to original value
+    onSubmit?.(null);
+  };
+
   return (
     <RadioGroup
-      value={value}
+      value={tempValue}
       onValueChange={(value) => {
-        setValue(value);
-        onSubmit?.(value);
+        setTempValue(value);
+        // No longer calling onSubmit here, will wait for Apply button
       }}
       {...props}
     >
@@ -70,18 +84,12 @@ const RadioItems = ({
       </div>
       <div className="border-t border-ctm-secondary-50 p-2 flex justify-between items-center gap-2">
         <PopoverClose>
-          {/* <Button onClick={() => onSubmit?.(value ?? null)} variant={"ctm-primary"}>
+          <Button onClick={handleApply} variant={"ctm-primary"}>
             {addButtonText ?? "Apply"}
-          </Button> */}
+          </Button>
         </PopoverClose>
         <PopoverClose>
-          <Button
-            onClick={() => {
-              setValue(undefined);
-              onSubmit?.(null);
-            }}
-            variant={"ctm-outline"}
-          >
+          <Button onClick={handleCancel} variant={"ctm-outline"}>
             Cancel
           </Button>
         </PopoverClose>

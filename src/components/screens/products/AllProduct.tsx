@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useRouter } from "next/navigation";
 import Tag from "@/components/general/Tag";
@@ -25,6 +26,7 @@ import {
   useUpdateProductStatusMutation,
 } from "@/api/product";
 import { useToast } from "@/providers/ToastContext";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const status = [
   { label: "Pending", value: "pending" },
@@ -72,6 +74,19 @@ const AllProductTable = () => {
       },
     });
   };
+  const priceRangeOptions = [
+    { label: "₦50 - ₦100", value: "50-100" },
+    { label: "₦100 - ₦500", value: "100-500" },
+    { label: "₦500 - ₦1,000", value: "500-1000" },
+    { label: "₦1,000 - ₦5,000", value: "1000-5000" },
+    { label: "₦5,000 - ₦10,000", value: "5000-10000" },
+    { label: "₦10,000+", value: "10000-999999999" },
+    { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  ];
 
   const { allParams } = useUrlState();
   useEffect(() => {
@@ -124,8 +139,14 @@ const AllProductTable = () => {
       accessorKey: "cost",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Price </span>,
       cell: ({ row }) => {
+        const formattedAmount = Number(row.original.cost).toLocaleString("en-NG");
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.cost}</span>
+          <>
+            <span className="font-normal text-base text-ctm-secondary-200">
+              ₦{row.original.cost}
+            </span>
+            <span className="font-normal text-base text-ctm-secondary-200">₦{formattedAmount}</span>
+          </>
         );
       },
     },
@@ -177,7 +198,6 @@ const AllProductTable = () => {
                 View
               </Button>
 
-              {/* Status-dependent buttons */}
               {status === "pending" && (
                 <>
                   <Button
@@ -213,7 +233,6 @@ const AllProductTable = () => {
                 </Button>
               )}
 
-              {/* Delete button - always present */}
               <Button
                 className="w-[100px] justify-start"
                 variant={"ghost"}
@@ -267,6 +286,23 @@ const AllProductTable = () => {
           </Button>
           <PopOver
             trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Status
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              onSubmit={(params) => {
+                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
+              }}
+              selectedItem={(queryValues.status as string) ?? ""}
+              items={status}
+            />
+          </PopOver>
+          <PopOver
+            trigger={
               <Button
                 className="stroke-ctm-secondary-300"
                 variant={"secondary"}
@@ -296,10 +332,38 @@ const AllProductTable = () => {
               items={categoryItems || []}
             />
           </PopOver>
+
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            onApply={(fromDate, toDate) => {
+              setQueryValues((prev) => {
+                const newValues = { ...prev };
+
+                if (fromDate) {
+                  newValues.fromDate = fromDate.toISOString();
+                } else {
+                  delete newValues.fromDate;
+                }
+
+                if (toDate) {
+                  newValues.toDate = toDate.toISOString();
+                } else {
+                  delete newValues.toDate;
+                }
+                if (!fromDate && !toDate) {
+                  delete newValues.fromDate;
+                  delete newValues.toDate;
+                }
+
+                return newValues;
+              });
+            }}
+          />
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Status
+                Amount
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
@@ -307,12 +371,29 @@ const AllProductTable = () => {
           >
             <RadioItems
               onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
+                if (params) {
+                  const [min, max] = params.split("-");
+                  setQueryValues((prev) => ({
+                    ...prev,
+                    lowestAmount: min,
+                    highestAmount: max,
+                  }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { lowestAmount, highestAmount, ...rest } = prev;
+                    return rest;
+                  });
+                }
               }}
-              selectedItem={(queryValues.status as string) ?? ""}
-              items={status}
+              selectedItem={
+                queryValues.lowestAmount && queryValues.highestAmount
+                  ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
+                  : ""
+              }
+              items={priceRangeOptions}
             />
           </PopOver>
+
           <div className="w-full flex justify-end justify-self-end">
             <Input
               className="w-fit bg-transparent"
