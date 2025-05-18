@@ -14,7 +14,6 @@ interface SidebarItemProps {
 
 const SidebarItem = ({ href, label }: SidebarItemProps) => {
   const pathname = usePathname();
-  console.log(pathname.includes(href), pathname, href.substring(1));
   const iconMatch = useMemo(() => {
     const iconKeys = Object.keys(iconPaths);
     if (pathname.includes(href)) {
@@ -28,7 +27,7 @@ const SidebarItem = ({ href, label }: SidebarItemProps) => {
       variant={pathname.includes(href) ? "ctm-primary" : "ctm-outline"}
       slotBefore={<Icon text-id="sidebar-icon" name={iconMatch as keyof typeof iconPaths} />}
       className={cn(
-        "border-none shadow-none text-[#484D57] hover:text-white text-left w-[12rem] justify-start text-[16px] font-[400]",
+        "border-none shadow-none text-[#484D57] hover:text-white hover:bg-ctm-primary-500 text-left w-[12rem] justify-start text-[16px] font-[400]",
         {
           "bg-ctm-primary-colour-light": !pathname.includes(href),
           "text-white": pathname.includes(href),

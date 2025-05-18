@@ -67,14 +67,32 @@ export function CustomButton({
   type = "button",
   ...props
 }: CustomButtonProps) {
-  const render = React.isValidElement(children) ? (
-    React.cloneElement(
-      children as React.ReactElement<HTMLElement>,
-      {
-        className: cn("relative"),
-      },
+  const render =
+    React.isValidElement(children) && props.asChild ? (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      React.cloneElement(children as React.ReactElement<any>, {
+        className: cn(
+          "relative",
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (children as React.ReactElement<any>).props.className || ""
+        ),
+        children: (
+          <>
+            {loading ? (
+              <span className={cn(spinVariants({ variant: selectSpinVariants(variant), size }))} />
+            ) : (
+              slotBefore
+            )}
+            {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (children as React.ReactElement<any>).props.children
+            }
+            {slotAfter}
+          </>
+        ),
+      })
+    ) : (
       <>
-        {/* Predefined Children */}
         {loading ? (
           <span
             className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
@@ -82,29 +100,10 @@ export function CustomButton({
         ) : (
           slotBefore
         )}
-        {React.Children.map(children, (child) =>
-          typeof child === "string"
-            ? child
-            : React.isValidElement(child)
-              ? ((child.props as { children?: React.ReactNode }).children ?? "")
-              : ""
-        )?.join("") ?? ""}
+        {children}
         {slotAfter}
       </>
-    )
-  ) : (
-    <>
-      {loading ? (
-        <span
-          className={cn(spinVariants({ variant: selectSpinVariants(variant), size }), "")}
-        ></span>
-      ) : (
-        slotBefore
-      )}
-      {children}
-      {slotAfter}
-    </>
-  );
+    );
   return (
     <Button
       className={cn(buttonVariants({ variant, size, className }))}
