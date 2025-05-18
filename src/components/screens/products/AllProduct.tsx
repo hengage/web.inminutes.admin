@@ -29,15 +29,15 @@ import { useToast } from "@/providers/ToastContext";
 const status = [
   { label: "Pending", value: "pending" },
   { label: "Approved", value: "approved" },
+  { label: "Rejected", value: "rejected" },
 ];
 
 const AllProductTable = () => {
   const router = useRouter();
+  const { showSuccess } = useToast();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const { showSuccess } = useToast();
-
   const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
   const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const { mutate: deleteItem, isPending } = useDeleteProductMutation();
@@ -46,14 +46,11 @@ const AllProductTable = () => {
     router.push(stringifyUrl(value));
     refetch();
   };
-  const handleStatusUpdate = (
-    productId: string,
-    newStatus: "approved" | "rejected" | "pending"
-  ) => {
+  const handleStatusUpdate = (productId: string, newStatus: boolean) => {
     updateStatus(
       {
         productId,
-        status: newStatus,
+        approval: newStatus,
       },
       {
         onSuccess: () => {
@@ -186,8 +183,8 @@ const AllProductTable = () => {
                   <Button
                     className="w-[100px] justify-start text-green-600"
                     variant={"ghost"}
-                    onClick={() => handleStatusUpdate(productId, "approved")}
-                    // disabled={updateLoading}
+                    onClick={() => handleStatusUpdate(productId, true)}
+                    disabled={updateLoading}
                   >
                     <CheckSquare2 />
                     Approve
@@ -195,8 +192,8 @@ const AllProductTable = () => {
                   <Button
                     className="w-[100px] justify-start text-red-600"
                     variant={"ghost"}
-                    onClick={() => handleStatusUpdate(productId, "rejected")}
-                    // disabled={updateLoading}
+                    onClick={() => handleStatusUpdate(productId, false)}
+                    disabled={updateLoading}
                   >
                     <X />
                     Reject
@@ -208,7 +205,7 @@ const AllProductTable = () => {
                 <Button
                   className="w-[100px] justify-start text-green-600"
                   variant={"ghost"}
-                  onClick={() => handleStatusUpdate(productId, "approved")}
+                  onClick={() => handleStatusUpdate(productId, true)}
                   disabled={updateLoading}
                 >
                   <CheckSquare2 />

@@ -215,13 +215,9 @@ export const useDeleteProductMutation = () => {
 export const useUpdateProductStatusMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    unknown,
-    Error,
-    { productId: string; status: "approved" | "rejected" | "pending" }
-  >({
-    mutationFn: async ({ productId, status }) => {
-      const response = await https.patch(`/products/${productId}/status`, { status });
+  return useMutation<unknown, Error, { productId: string; approval: boolean }>({
+    mutationFn: async ({ productId, approval }) => {
+      const response = await https.put(`/product/${productId}/approval`, { approval });
       return response.data.data;
     },
     onSuccess: () => {

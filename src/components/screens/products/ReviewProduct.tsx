@@ -8,21 +8,45 @@ import { Suspense, useEffect, useState } from "react";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { IProduct, useGetReviewingProductsQuery } from "@/api/product";
+import {
+  IProduct,
+  useGetReviewingProductsQuery,
+  useUpdateProductStatusMutation,
+} from "@/api/product";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/providers/ToastContext";
 
 const ReviewProductTable = () => {
   const router = useRouter();
+  const { showSuccess } = useToast();
   const [queryValues, setQueryValues] = useState({
     page: 1,
     limit: 10,
   });
   const { result, isLoading, refetch } = useGetReviewingProductsQuery(queryValues);
+  const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
   };
   const { allParams } = useUrlState();
+  const handleStatusUpdate = (productId: string, newStatus: boolean) => {
+    updateStatus(
+      {
+        productId,
+        approval: newStatus,
+      },
+      {
+        onSuccess: () => {
+          showSuccess("Product status updated successfully");
+        },
+        onError: (err: unknown) => {
+          console.error("Error updating status:", err);
+        },
+      }
+    );
+  };
   useEffect(() => {
     setQueryValues({
       ...allParams,
@@ -83,7 +107,7 @@ const ReviewProductTable = () => {
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.category.name}
+            {row.original.category?.name || "Uncategorized"}{" "}
           </span>
         );
       },
@@ -103,10 +127,13 @@ const ReviewProductTable = () => {
     {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
-      cell: () => {
+      cell: ({ row }) => {
         return (
-          <Button className="border border-blue-700 bg-transparent hover:bg-transparent text-blue-700 rounded-md px-4 py-2">
-            Approve Product
+          <Button
+            onClick={() => handleStatusUpdate(row.original._id, true)}
+            className="border border-blue-700 bg-transparent hover:bg-transparent text-blue-700 rounded-md px-4 py-2"
+          >
+            {updateLoading ? <span className="animate-spin">...</span> : "Approve Product"}
           </Button>
         );
       },
@@ -148,7 +175,13 @@ const ReviewProductTable = () => {
 };
 
 const ReviewProduct = () => (
-  <Suspense>
+  <Suspense
+    fallback={
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ctm-primary-500"></div>
+      </div>
+    }
+  >
     <ReviewProductTable />
   </Suspense>
 );
