@@ -10,11 +10,7 @@ import { useGetOrdersQuery } from "@/api/order";
 import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
 import { format, subMonths } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
@@ -38,11 +34,6 @@ const Dashbord = () => {
     endDate: formattedEndDate,
   });
 
-  const handleApplyDateRange = () => {
-    if (startDate && endDate) {
-      refetch();
-    }
-  };
   const growthColor = (value?: string | number) => {
     if (typeof value === "string" && value.startsWith("-")) return "text-red-600";
     if (typeof value === "number" && value < 0) return "text-red-600";
@@ -53,60 +44,15 @@ const Dashbord = () => {
     <main className="flex flex-col p-6">
       <div className="flex md:flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
-        <div className="flex items-center gap-4">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-[150px] justify-start text-left font-normal",
-                  !startDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {startDate ? format(startDate, "PPP") : <span>Start date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
-                initialFocus
-                disabled={(date) => date > new Date() || (endDate ? date > endDate : false)}
-              />
-            </PopoverContent>
-          </Popover>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-[150px] justify-start text-left font-normal",
-                  !endDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {endDate ? format(endDate, "PPP") : <span>End date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
-                initialFocus
-                disabled={(date) => date > new Date() || (startDate ? date < startDate : false)}
-              />
-            </PopoverContent>
-          </Popover>
-          <Button
-            onClick={handleApplyDateRange}
-            className="bg-ctm-primary-500 text-white hover:bg-ctm-primary-600"
-          >
-            Apply
-          </Button>
-        </div>
+        <DateRangePicker
+          fromDate={startDate}
+          toDate={endDate}
+          onApply={(from, to) => {
+            setStartDate(from || undefined);
+            setEndDate(to || undefined);
+            refetch();
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
