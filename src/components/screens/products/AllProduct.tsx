@@ -75,12 +75,6 @@ const AllProductTable = () => {
     });
   };
   const priceRangeOptions = [
-    { label: "₦50 - ₦100", value: "50-100" },
-    { label: "₦100 - ₦500", value: "100-500" },
-    { label: "₦500 - ₦1,000", value: "500-1000" },
-    { label: "₦1,000 - ₦5,000", value: "1000-5000" },
-    { label: "₦5,000 - ₦10,000", value: "5000-10000" },
-    { label: "₦10,000+", value: "10000-999999999" },
     { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
     { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
     { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
@@ -142,9 +136,6 @@ const AllProductTable = () => {
         const formattedAmount = Number(row.original.cost).toLocaleString("en-NG");
         return (
           <>
-            <span className="font-normal text-base text-ctm-secondary-200">
-              ₦{row.original.cost}
-            </span>
             <span className="font-normal text-base text-ctm-secondary-200">₦{formattedAmount}</span>
           </>
         );

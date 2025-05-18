@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useRouter } from "next/navigation";
 import { Pagination } from "@/components/ui/custom/Pagination";
@@ -10,11 +11,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import {
   IProduct,
+  useGetProductCategoriesQuery,
   useGetReviewingProductsQuery,
   useUpdateProductStatusMutation,
 } from "@/api/product";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/providers/ToastContext";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import RadioItems from "@/components/ui/custom/radio/RadioItems";
+import { Icon } from "@/components/ui/Icon";
+import PopOver from "@/components/ui/custom/PopOver";
+import DateRangePicker from "@/components/ui/custom/Daterange";
+import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 
 const ReviewProductTable = () => {
   const router = useRouter();
@@ -25,7 +34,14 @@ const ReviewProductTable = () => {
   });
   const { result, isLoading, refetch } = useGetReviewingProductsQuery(queryValues);
   const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
-
+  const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
+  const priceRangeOptions = [
+    { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  ];
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
@@ -159,8 +175,122 @@ const ReviewProductTable = () => {
               })}
             />
           </Button>
-        </div>
+          <Button
+            onClick={() => {
+              setQueryValues((prev) => {
+                router.push(`product/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                return { page: prev.page, limit: prev.limit };
+              });
+              refetch();
+            }}
+            variant={"secondary"}
+            className="text-ctm-secondary-300"
+          >
+            Clear Filter
+          </Button>
 
+          <PopOver
+            trigger={
+              <Button
+                className="stroke-ctm-secondary-300"
+                variant={"secondary"}
+                disabled={categoryItemsLoading}
+              >
+                Category
+                {categoryItemsLoading ? (
+                  <Refresh2 className="animate-spin ml-2" size={16} />
+                ) : (
+                  <Icon name="arrow-down" height={16} width={16} />
+                )}
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <CheckboxItems
+              onSubmit={(params) => {
+                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
+              }}
+              selectedItems={
+                categoryItems?.filter((item) =>
+                  (queryValues.category as string[])?.includes(item.value)
+                ) || []
+              }
+              showSearchBox
+              searchPlaceholder="Categories"
+              items={categoryItems || []}
+            />
+          </PopOver>
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            onApply={(fromDate, toDate) => {
+              setQueryValues((prev) => {
+                const newValues = { ...prev };
+
+                if (fromDate) {
+                  newValues.fromDate = fromDate.toISOString();
+                } else {
+                  delete newValues.fromDate;
+                }
+
+                if (toDate) {
+                  newValues.toDate = toDate.toISOString();
+                } else {
+                  delete newValues.toDate;
+                }
+                if (!fromDate && !toDate) {
+                  delete newValues.fromDate;
+                  delete newValues.toDate;
+                }
+
+                return newValues;
+              });
+            }}
+          />
+          <PopOver
+            trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Price range
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              onSubmit={(params) => {
+                if (params) {
+                  const [min, max] = params.split("-");
+                  setQueryValues((prev) => ({
+                    ...prev,
+                    lowestAmount: min,
+                    highestAmount: max,
+                  }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { lowestAmount, highestAmount, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
+              selectedItem={
+                queryValues.lowestAmount && queryValues.highestAmount
+                  ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
+                  : ""
+              }
+              items={priceRangeOptions}
+            />
+          </PopOver>
+
+          <div className="w-full flex justify-end justify-self-end">
+            <Input
+              className="w-fit bg-transparent"
+              slotBefore={<Search className="text-ctm-secondary-300" />}
+              placeholder="Search"
+              value={queryValues.search}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+            />
+          </div>
+        </div>
         <DataTable dataQuery={result} columns={columns} />
         {result.data?.data.length && result.data?.data.length > 0 ? (
           <Pagination
