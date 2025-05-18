@@ -2,20 +2,27 @@ import https from "@/lib/axios";
 
 import { useQuery } from "@tanstack/react-query";
 
-export const useGetDashboardQuery = ({}) => {
+export const useGetDashboardQuery = (filter = {}) => {
   const result = useQuery({
-    queryKey: ["dashboard"],
+    queryKey: ["dashboard", filter],
     queryFn: async () => {
-      const response = await https.get("/dashboard");
-      return response.data.data;
+      const queryParams = new URLSearchParams();
+      if (filter.startDate) queryParams.append("startDate", filter.startDate);
+      if (filter.endDate) queryParams.append("endDate", filter.endDate);
+      const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+
+      const response = await https.get(`/dashboard${queryString}`);
+      return response.data.data.data;
     },
+    refetchOnWindowFocus: false,
+    enabled: false,
   });
 
   return {
     isLoading: result.isPending,
-    data: result.data,
+    data: result?.data,
     error: result.error,
-    result,
+    refetch: result.refetch,
   };
 };
 
