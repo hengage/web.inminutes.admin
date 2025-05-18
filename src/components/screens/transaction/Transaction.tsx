@@ -24,6 +24,15 @@ const status = [
   { label: "Pending", value: "pending" },
 ];
 
+const priceRangeOptions = [
+  { label: "₦50 - ₦100", value: "50-100" },
+  { label: "₦100 - ₦500", value: "100-500" },
+  { label: "₦500 - ₦1,000", value: "500-1000" },
+  { label: "₦1,000 - ₦5,000", value: "1000-5000" },
+  { label: "₦5,000 - ₦10,000", value: "5000-10000" },
+  { label: "₦10,000+", value: "10000-999999999" },
+];
+
 const TransactionTable = () => {
   const router = useRouter();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
@@ -61,15 +70,6 @@ const TransactionTable = () => {
         </span>
       ),
     },
-    // {
-    //   accessorKey: "type",
-    //   header: () => <span className="whitespace-nowrap font-semibold text-base">Type</span>,
-    //   cell: ({ row }) => {
-    //     return (
-    //       <span className="font-normal text-base text-ctm-secondary-200">{row.original.type}</span>
-    //     );
-    //   },
-    // },
     {
       accessorKey: "createdAt",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Date/Time</span>,
@@ -129,16 +129,12 @@ const TransactionTable = () => {
       ),
     },
   ];
-  // const handleQueryChange = (key: string, selectedOptions: string | string[] | number) => {
-  //   setQueryValues((prevqueryValues) => ({
-  //     ...prevqueryValues,
-  //     ...{ [key]: selectedOptions },
-  //   }));
-  // };
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
+
   const { allParams } = useUrlState();
   useEffect(() => {
     setQueryValues({
@@ -147,13 +143,14 @@ const TransactionTable = () => {
       limit: Number(allParams.limit ?? 10),
     });
   }, [allParams]);
+
   return (
-    <main className="flex flex-col  p-6 bg-white">
-      <h1 className="text-2xl font-bold mb-5">Transations</h1>
+    <main className="flex flex-col p-6 bg-white">
+      <h1 className="text-2xl font-bold mb-5">Transactions</h1>
 
       <div className="my-4">
         <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
-          <div className="flex gap-4 w-full my-4">
+          <div className="flex gap-4 w-full my-4 flex-wrap">
             <Button
               className="stroke-ctm-secondary-300 hover:stroke-ctm-primary-500 px-4"
               variant={"secondary"}
@@ -200,10 +197,45 @@ const TransactionTable = () => {
                 items={status}
               />
             </PopOver>
+
+            <PopOver
+              trigger={
+                <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                  Price Range
+                  <Icon name="arrow-down" height={16} width={16} />
+                </Button>
+              }
+              className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+            >
+              <RadioItems
+                onSubmit={(params) => {
+                  if (params) {
+                    const [min, max] = params.split("-");
+                    setQueryValues((prev) => ({
+                      ...prev,
+                      lowestAmount: min,
+                      highestAmount: max,
+                    }));
+                  } else {
+                    setQueryValues((prev) => {
+                      const { ...rest } = prev;
+                      return rest;
+                    });
+                  }
+                }}
+                selectedItem={
+                  queryValues.lowestAmount && queryValues.highestAmount
+                    ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
+                    : ""
+                }
+                items={priceRangeOptions}
+              />
+            </PopOver>
+
             <DatePicker
               trigger={
                 <Button variant={"secondary"}>
-                  Date
+                  Date Applied
                   <ChevronDown />
                 </Button>
               }
@@ -212,12 +244,13 @@ const TransactionTable = () => {
                 setQueryValues((prev) => ({ ...prev, date: date?.toISOString() ?? "" }))
               }
             />
+
             <div className="w-full flex justify-end justify-self-end">
               <Input
                 className="w-fit bg-transparent"
                 slotBefore={<Search className="text-ctm-secondary-300" />}
                 placeholder="Search"
-                value={queryValues.search}
+                value={(queryValues.search as string) || ""}
                 onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
               />
             </div>
