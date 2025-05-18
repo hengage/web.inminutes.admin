@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useRouter } from "next/navigation";
 import Tag from "@/components/general/Tag";
@@ -18,19 +19,25 @@ import { tag } from "@/types";
 import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import TransactionDetails from "./TransactionDetails";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const status = [
   { label: "Success", value: "success" },
+  { label: "Abandoned", value: "abandoned" },
   { label: "Pending", value: "pending" },
+];
+const reason = [
+  { label: "Cashout", value: "cashout" },
+  { label: "Refund", value: "refund" },
+  { label: "Disbursement", value: "disbursement" },
 ];
 
 const priceRangeOptions = [
-  { label: "₦50 - ₦100", value: "50-100" },
-  { label: "₦100 - ₦500", value: "100-500" },
-  { label: "₦500 - ₦1,000", value: "500-1000" },
-  { label: "₦1,000 - ₦5,000", value: "1000-5000" },
-  { label: "₦5,000 - ₦10,000", value: "5000-10000" },
-  { label: "₦10,000+", value: "10000-999999999" },
+  { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
+  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
 ];
 
 const TransactionTable = () => {
@@ -92,10 +99,9 @@ const TransactionTable = () => {
       accessorKey: "amount",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Amount</span>,
       cell: ({ row }) => {
+        const formattedAmount = Number(row.original.amount).toLocaleString("en-NG");
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">
-            ₦{row.original.amount}
-          </span>
+          <span className="font-normal text-base text-ctm-secondary-200">₦{formattedAmount}</span>
         );
       },
     },
@@ -179,11 +185,10 @@ const TransactionTable = () => {
             >
               Clear Filter
             </Button>
-
             <PopOver
               trigger={
                 <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                  Status
+                  Reason
                   <Icon name="arrow-down" height={16} width={16} />
                 </Button>
               }
@@ -191,17 +196,23 @@ const TransactionTable = () => {
             >
               <RadioItems
                 onSubmit={(params) => {
-                  setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
+                  if (params) {
+                    setQueryValues((prev) => ({ ...prev, reason: params }));
+                  } else {
+                    setQueryValues((prev) => {
+                      const { reason, ...rest } = prev;
+                      return rest;
+                    });
+                  }
                 }}
-                selectedItem={(queryValues.status as string) ?? ""}
-                items={status}
+                selectedItem={(queryValues.reason as string) ?? ""}
+                items={reason}
               />
             </PopOver>
-
             <PopOver
               trigger={
                 <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                  Price Range
+                  Amount
                   <Icon name="arrow-down" height={16} width={16} />
                 </Button>
               }
@@ -218,7 +229,7 @@ const TransactionTable = () => {
                     }));
                   } else {
                     setQueryValues((prev) => {
-                      const { ...rest } = prev;
+                      const { lowestAmount, highestAmount, ...rest } = prev;
                       return rest;
                     });
                   }
@@ -232,19 +243,57 @@ const TransactionTable = () => {
               />
             </PopOver>
 
-            <DatePicker
+            <DateRangePicker
+              fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+              toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+              onApply={(fromDate, toDate) => {
+                setQueryValues((prev) => {
+                  const newValues = { ...prev };
+
+                  if (fromDate) {
+                    newValues.fromDate = fromDate.toISOString();
+                  } else {
+                    delete newValues.fromDate;
+                  }
+
+                  if (toDate) {
+                    newValues.toDate = toDate.toISOString();
+                  } else {
+                    delete newValues.toDate;
+                  }
+                  if (!fromDate && !toDate) {
+                    delete newValues.fromDate;
+                    delete newValues.toDate;
+                  }
+
+                  return newValues;
+                });
+              }}
+            />
+            <PopOver
               trigger={
-                <Button variant={"secondary"}>
-                  Date Applied
-                  <ChevronDown />
+                <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                  Status
+                  <Icon name="arrow-down" height={16} width={16} />
                 </Button>
               }
-              value={queryValues.date ? new Date(queryValues.date as string) : undefined}
-              onSelect={(date) =>
-                setQueryValues((prev) => ({ ...prev, date: date?.toISOString() ?? "" }))
-              }
-            />
-
+              className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+            >
+              <RadioItems
+                onSubmit={(params) => {
+                  if (params) {
+                    setQueryValues((prev) => ({ ...prev, status: params }));
+                  } else {
+                    setQueryValues((prev) => {
+                      const { status, ...rest } = prev;
+                      return rest;
+                    });
+                  }
+                }}
+                selectedItem={(queryValues.status as string) ?? ""}
+                items={status}
+              />
+            </PopOver>
             <div className="w-full flex justify-end justify-self-end">
               <Input
                 className="w-fit bg-transparent"
