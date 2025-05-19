@@ -61,13 +61,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-gray-700">From Date</span>
             <DatePicker
               value={fromDate}
               onSelect={(date) => setFromDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
-                  {fromDate ? format(fromDate, "dd MMM yyyy") : "Select start date"}
+                  {fromDate ? format(fromDate, "dd MMM yyyy") : "start date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               }
@@ -75,13 +74,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           </div>
 
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-gray-700">To Date</span>
             <DatePicker
               value={toDate}
               onSelect={(date) => setToDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
-                  {toDate ? format(toDate, "dd MMM yyyy") : "Select end date"}
+                  {toDate ? format(toDate, "dd MMM yyyy") : "end date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               }
