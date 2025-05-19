@@ -1,8 +1,8 @@
-import Transaction from "@/components/screens/transaction/Transaction";
+import TransactionTab from "@/components/screens/transaction/TransactionTab";
 import React from "react";
 
 const page = () => {
-  return <Transaction />;
+  return <TransactionTab />;
 };
 
 export default page;

@@ -33,11 +33,12 @@ const reason = [
 ];
 
 const priceRangeOptions = [
-  { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
-  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-  { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
+  { label: "₦500 - ₦10,000", value: "500-10000" },
+  { label: "₦10,000 - ₦50,000", value: "10000-50000" },
+  { label: "₦50,000 - ₦100,000", value: "50000-100000" },
+  { label: "₦100,000 - ₦200,000", value: "100000-200000" },
+  { label: "₦200,000 - ₦500,000", value: "200000-500000" },
+  { label: "₦500,000+", value: "500000-" },
 ];
 
 const TransactionTable = () => {
@@ -152,167 +153,163 @@ const TransactionTable = () => {
 
   return (
     <main className="flex flex-col p-6 bg-white">
-      <h1 className="text-2xl font-bold mb-5">Transactions</h1>
-
-      <div className="my-4">
-        <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
-          <div className="flex gap-4 w-full my-4 flex-wrap">
-            <Button
-              className="stroke-ctm-secondary-300 hover:stroke-ctm-primary-500 px-4"
-              variant={"secondary"}
-              size="icon"
-              onClick={() => {
-                handleRefresh(queryValues);
-              }}
-              disabled={result.isRefetching}
-            >
-              <Refresh2
-                className={cn("transition-transform", {
-                  "animate-spin text-ctm-primary-400": result.isRefetching,
-                })}
-              />
-            </Button>
-            <Button
-              onClick={() => {
-                setQueryValues((prev) => {
-                  router.push(`transaction/${stringifyQuery({ page: 1, limit: 10 })}#0`);
-                  return { page: prev.page, limit: prev.limit };
-                });
-                result.refetch();
-              }}
-              variant={"secondary"}
-              className="text-ctm-secondary-300"
-            >
-              Clear Filter
-            </Button>
-            <PopOver
-              trigger={
-                <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                  Reason
-                  <Icon name="arrow-down" height={16} width={16} />
-                </Button>
-              }
-              className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-            >
-              <RadioItems
-                onSubmit={(params) => {
-                  if (params) {
-                    setQueryValues((prev) => ({ ...prev, reason: params }));
-                  } else {
-                    setQueryValues((prev) => {
-                      const { reason, ...rest } = prev;
-                      return rest;
-                    });
-                  }
-                }}
-                selectedItem={(queryValues.reason as string) ?? ""}
-                items={reason}
-              />
-            </PopOver>
-            <PopOver
-              trigger={
-                <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                  Amount
-                  <Icon name="arrow-down" height={16} width={16} />
-                </Button>
-              }
-              className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-            >
-              <RadioItems
-                onSubmit={(params) => {
-                  if (params) {
-                    const [min, max] = params.split("-");
-                    setQueryValues((prev) => ({
-                      ...prev,
-                      lowestAmount: min,
-                      highestAmount: max,
-                    }));
-                  } else {
-                    setQueryValues((prev) => {
-                      const { lowestAmount, highestAmount, ...rest } = prev;
-                      return rest;
-                    });
-                  }
-                }}
-                selectedItem={
-                  queryValues.lowestAmount && queryValues.highestAmount
-                    ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
-                    : ""
+      <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
+        <div className="flex gap-4 w-full my-4 flex-wrap">
+          <Button
+            className="stroke-ctm-secondary-300 hover:stroke-ctm-primary-500 px-4"
+            variant={"secondary"}
+            size="icon"
+            onClick={() => {
+              handleRefresh(queryValues);
+            }}
+            disabled={result.isRefetching}
+          >
+            <Refresh2
+              className={cn("transition-transform", {
+                "animate-spin text-ctm-primary-400": result.isRefetching,
+              })}
+            />
+          </Button>
+          <Button
+            onClick={() => {
+              setQueryValues((prev) => {
+                router.push(`transaction/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                return { page: prev.page, limit: prev.limit };
+              });
+              result.refetch();
+            }}
+            variant={"secondary"}
+            className="text-ctm-secondary-300"
+          >
+            Clear Filter
+          </Button>
+          <PopOver
+            trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Reason
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              onSubmit={(params) => {
+                if (params) {
+                  setQueryValues((prev) => ({ ...prev, reason: params }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { reason, ...rest } = prev;
+                    return rest;
+                  });
                 }
-                items={priceRangeOptions}
-              />
-            </PopOver>
-
-            <DateRangePicker
-              fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
-              toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
-              onApply={(fromDate, toDate) => {
-                setQueryValues((prev) => {
-                  const newValues = { ...prev };
-
-                  if (fromDate) {
-                    newValues.fromDate = fromDate.toISOString();
-                  } else {
-                    delete newValues.fromDate;
-                  }
-
-                  if (toDate) {
-                    newValues.toDate = toDate.toISOString();
-                  } else {
-                    delete newValues.toDate;
-                  }
-                  if (!fromDate && !toDate) {
-                    delete newValues.fromDate;
-                    delete newValues.toDate;
-                  }
-
-                  return newValues;
-                });
               }}
+              selectedItem={(queryValues.reason as string) ?? ""}
+              items={reason}
             />
-            <PopOver
-              trigger={
-                <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                  Status
-                  <Icon name="arrow-down" height={16} width={16} />
-                </Button>
+          </PopOver>
+          <PopOver
+            trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Amount
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              onSubmit={(params) => {
+                if (params) {
+                  const [min, max] = params.split("-");
+                  setQueryValues((prev) => ({
+                    ...prev,
+                    lowestAmount: min,
+                    highestAmount: max,
+                  }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { lowestAmount, highestAmount, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
+              selectedItem={
+                queryValues.lowestAmount && queryValues.highestAmount
+                  ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
+                  : ""
               }
-              className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-            >
-              <RadioItems
-                onSubmit={(params) => {
-                  if (params) {
-                    setQueryValues((prev) => ({ ...prev, status: params }));
-                  } else {
-                    setQueryValues((prev) => {
-                      const { status, ...rest } = prev;
-                      return rest;
-                    });
-                  }
-                }}
-                selectedItem={(queryValues.status as string) ?? ""}
-                items={status}
-              />
-            </PopOver>
-            <div className="w-full flex justify-end justify-self-end">
-              <Input
-                className="w-fit bg-transparent"
-                slotBefore={<Search className="text-ctm-secondary-300" />}
-                placeholder="Search"
-                value={(queryValues.search as string) || ""}
-                onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
-              />
-            </div>
-          </div>
-          <DataTable dataQuery={result} columns={columns} />
-          {result.data?.data && result.data?.data?.length > 0 ? (
-            <Pagination
-              total={result.data?.total ?? 10}
-              page={Number(queryValues.page)}
-              limit={Number(queryValues.limit)}
+              items={priceRangeOptions}
             />
-          ) : null}
+          </PopOver>
+
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            onApply={(fromDate, toDate) => {
+              setQueryValues((prev) => {
+                const newValues = { ...prev };
+
+                if (fromDate) {
+                  newValues.fromDate = fromDate.toISOString();
+                } else {
+                  delete newValues.fromDate;
+                }
+
+                if (toDate) {
+                  newValues.toDate = toDate.toISOString();
+                } else {
+                  delete newValues.toDate;
+                }
+                if (!fromDate && !toDate) {
+                  delete newValues.fromDate;
+                  delete newValues.toDate;
+                }
+
+                return newValues;
+              });
+            }}
+          />
+          <PopOver
+            trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Status
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              onSubmit={(params) => {
+                if (params) {
+                  setQueryValues((prev) => ({ ...prev, status: params }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { status, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
+              selectedItem={(queryValues.status as string) ?? ""}
+              items={status}
+            />
+          </PopOver>
+          <div className="w-full flex justify-end justify-self-end">
+            <Input
+              className="w-fit bg-transparent"
+              slotBefore={<Search className="text-ctm-secondary-300" />}
+              placeholder="Search"
+              value={(queryValues.search as string) || ""}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+            />
+          </div>
         </div>
+        <DataTable dataQuery={result} columns={columns} />
+        {result.data?.data && result.data?.data?.length > 0 ? (
+          <Pagination
+            total={result.data?.total ?? 10}
+            page={Number(queryValues.page)}
+            limit={Number(queryValues.limit)}
+          />
+        ) : null}
       </div>
     </main>
   );
