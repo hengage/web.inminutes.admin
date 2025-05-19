@@ -66,6 +66,38 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 
+export const useGetReviewingProductsQuery = (filter: unknown = {}) => {
+  const result = useQuery<
+    IPaginationData<
+      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS, filter],
+    queryFn: async () => {
+      const response = await https.get(
+        "/product/list?status=pending" +
+          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
+      );
+      return response.data.data.products;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.totalPages,
+    }),
+  });
+
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+    refetch: result.refetch,
+  };
+};
 /**
  * Hook to fetch a single product by ID
  */
@@ -128,39 +160,6 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
     }),
   });
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
-};
-
-export const useGetReviewingProductsQuery = ({
-  page = 1,
-  limit = 10,
-}: { page?: number; limit?: number } = {}) => {
-  const result = useQuery<
-    IPaginationData<
-      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
-    >,
-    Error
-  >({
-    queryKey: [QUERY_KEYS.PRODUCTS, { status: "pending", page, limit }],
-    queryFn: async () => {
-      const response = await https.get(`/product/list?status=pending&page=${page}&limit=${limit}`);
-      return response.data.data.products;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    select: (data: any) => ({
-      data: data.docs,
-      total: data.totalDocs,
-      page: data.page,
-      limit: data.limit,
-      totalPages: data.totalPages,
-    }),
-  });
-
-  return {
-    isLoading: result.isPending,
-    data: result.data,
-    result,
-    refetch: result.refetch,
-  };
 };
 
 export const useCreateCategorytMutation = () => {

@@ -12,6 +12,7 @@ import { Search } from "lucide-react";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ICategory, useGetCategoriesQuery } from "@/api/product";
+import Link from "next/link";
 
 const ProductCategoryTable = () => {
   const router = useRouter();
@@ -44,9 +45,12 @@ const ProductCategoryTable = () => {
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+          <Link
+            href={`/product/category/${row.original?._id}`}
+            className="font-normal text-base text-ctm-secondary-200 capitalize hover:underline"
+          >
             {item.name}
-          </span>
+          </Link>
         );
       },
     },

@@ -27,13 +27,21 @@ import {
 } from "@/api/product";
 import { useToast } from "@/providers/ToastContext";
 import DateRangePicker from "@/components/ui/custom/Daterange";
+import Link from "next/link";
 
 const status = [
   { label: "Pending", value: "pending" },
   { label: "Approved", value: "approved" },
   { label: "Rejected", value: "rejected" },
 ];
-
+const priceRangeOptions = [
+  { label: "₦500 - ₦10,000", value: "500-10000" },
+  { label: "₦10,000 - ₦50,000", value: "10000-50000" },
+  { label: "₦50,000 - ₦100,000", value: "50000-100000" },
+  { label: "₦100,000 - ₦200,000", value: "100000-200000" },
+  { label: "₦200,000 - ₦500,000", value: "200000-500000" },
+  { label: "₦500,000+", value: "500000-" },
+];
 const AllProductTable = () => {
   const router = useRouter();
   const { showSuccess } = useToast();
@@ -74,20 +82,13 @@ const AllProductTable = () => {
       },
     });
   };
-  const priceRangeOptions = [
-    { label: "₦500 - ₦50,000", value: "5,00 - 50,000" },
-    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-    { label: "₦10,000 - ₦50,000", value: "10,000 - 50,000" },
-  ];
 
   const { allParams } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 25),
     });
   }, [allParams]);
 
@@ -146,9 +147,12 @@ const AllProductTable = () => {
       header: () => <span className="whitespace-nowrap font-semibold text-base">Category</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+          <Link
+            href={`/product/category/${row.original.category?._id}`}
+            className="text-blue-600 underline font-normal text-base capitalize hover:text-blue-800"
+          >
             {row.original.category.name}
-          </span>
+          </Link>
         );
       },
     },
@@ -156,13 +160,24 @@ const AllProductTable = () => {
       accessorKey: "vendor",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Vendor</span>,
       cell: ({ row }) => {
+        const vendorName = row.original.vendor || "N/A";
         return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.vendor || "N/A"}
-          </span>
+          <button
+            disabled={vendorName === "N/A"}
+            onClick={() => router.push(`/vendors/${vendorName}`)}
+            className={cn(
+              "font-normal text-base capitalize underline",
+              vendorName !== "N/A"
+                ? "text-blue-600 hover:text-blue-800"
+                : "text-gray-400 cursor-not-allowed"
+            )}
+          >
+            {vendorName}
+          </button>
         );
       },
     },
+
     {
       accessorKey: "status",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
@@ -361,6 +376,7 @@ const AllProductTable = () => {
             className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
           >
             <RadioItems
+              className="w-full"
               onSubmit={(params) => {
                 if (params) {
                   const [min, max] = params.split("-");
