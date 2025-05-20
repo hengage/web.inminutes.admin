@@ -65,7 +65,7 @@ const DataTable = <T,>({ dataQuery, columns, pagination }: PaginatedTableProps<T
               <TableRow key={headerGroup.id} className="border-none">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="px-6 font-medium text-[#737375]">
+                    <TableHead key={header.id} className="px-6 font-medium text-[#160A62]">
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}

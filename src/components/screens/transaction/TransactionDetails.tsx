@@ -106,10 +106,6 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
                 </p>
               </div>
             </div>
-            {/* 
-            <Button className="w-full" variant="destructive">
-              Delete
-            </Button> */}
           </div>
         ) : (
           <div className="p-6 text-center text-gray-500">Transaction not found</div>

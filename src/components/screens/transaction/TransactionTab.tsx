@@ -14,7 +14,7 @@ const TransactionTab = () => {
   return (
     <div className="bg-white rounded-lg p-4 w-full flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold mb-4">Transactions</h1>
+        <h1 className="text-2xl font-bold text-[#160A62]">Transactions</h1>
       </div>
 
       <div>
