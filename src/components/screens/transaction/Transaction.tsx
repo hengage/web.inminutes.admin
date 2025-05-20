@@ -28,8 +28,9 @@ const status = [
 ];
 const reason = [
   { label: "Cashout", value: "cashout" },
-  { label: "Refund", value: "refund" },
-  { label: "Disbursement", value: "disbursement" },
+  { label: "Refund", value: "fund reversal" },
+  { label: "Product purchase", value: "product purchase" },
+  { label: "Order", value: "order" },
 ];
 
 const priceRangeOptions = [
