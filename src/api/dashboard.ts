@@ -21,11 +21,11 @@ export const useGetDashboardQuery = (filter: DashboardFilter = {}) => {
       return response.data.data.data;
     },
     refetchOnWindowFocus: false,
-    enabled: false,
+    enabled: !!filter.startDate && !!filter.endDate,
   });
 
   return {
-    isLoading: result.isPending,
+    isLoading: result.isLoading,
     data: result?.data,
     error: result.error,
     refetch: result.refetch,
