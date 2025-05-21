@@ -70,9 +70,7 @@ const TransactionTable = () => {
     },
     {
       accessorKey: "reference",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Transaction ID</span>
-      ),
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Refrence ID</span>,
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">
           {row.original.reference}
@@ -139,7 +137,10 @@ const TransactionTable = () => {
   ];
 
   const handleRefresh = (value: typeof queryValues) => {
-    router.push(stringifyUrl(value));
+    router.push({
+      pathname: "/transaction",
+      query: value,
+    });
     result.refetch();
   };
 
@@ -174,8 +175,7 @@ const TransactionTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`transaction/${stringifyQuery({ page: 1, limit: 10 })}#0`);
-                return { page: prev.page, limit: prev.limit };
+                router.push(`/transaction?${stringifyQuery({ page: 1, limit: 10 })}#0`);
               });
               result.refetch();
             }}

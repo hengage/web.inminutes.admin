@@ -39,7 +39,10 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
           <div className="flex items-center gap-6">
             <DialogClose asChild>
               <div className="p-3">
-                <ArrowLeft className="bg-purple-100 text-purple-800 " size={35} />
+                <ArrowLeft
+                  className=" cursor-pointer hover:bg-purple-100 text-purple-800 "
+                  size={35}
+                />
               </div>
             </DialogClose>
 
