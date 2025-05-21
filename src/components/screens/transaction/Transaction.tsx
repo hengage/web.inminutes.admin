@@ -70,7 +70,9 @@ const TransactionTable = () => {
     },
     {
       accessorKey: "reference",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Reference ID</span>,
+      header: () => (
+        <span className="whitespace-nowrap font-semibold text-base">Reference No.</span>
+      ),
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">
           {row.original.reference}

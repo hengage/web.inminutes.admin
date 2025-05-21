@@ -58,7 +58,7 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
           <div className="py-4 overflow-y-auto">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <h3 className="text-sm text-gray-500 mb-1">ID: #{transactionData.reference}</h3>
+                <h3 className="text-sm text-gray-500 mb-1">Ref: #{transactionData.reference}</h3>
                 <Tag tag={transactionData.status.toLowerCase() as tag} />
               </div>
               <span
