@@ -46,7 +46,7 @@ const ProductCategoryTable = () => {
         const item = row.original;
         return (
           <Link
-            href={`/product/category/${row.original?._id}`}
+            href={`/product/category/details?id=${row.original?._id}&name=${encodeURIComponent(row.original?.name)}`}
             className="font-normal text-base text-ctm-secondary-200 capitalize hover:underline"
           >
             {item.name}

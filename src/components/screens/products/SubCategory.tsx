@@ -1,14 +1,17 @@
 "use client";
 import { useState } from "react";
 import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import CreateSubCategoryModal from "./CreateSubcategoryModal";
 
 const SubCategory = () => {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") ?? "";
+  const name = searchParams.get("name") ?? "";
   const [selectedCategory, setSelectedCategory] = useState(11);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-
+  console.log(id);
   const subCategories = [
     { id: 14, name: "Genesis Foods", productCount: 8 },
     { id: 13, name: "Genesis Foods", productCount: 15 },
@@ -58,7 +61,7 @@ const SubCategory = () => {
             />
           </svg>
         </span>
-        <h1 className="text-xl font-medium text-gray-800">Food & Beverages</h1>
+        <h1 className="text-xl font-medium text-gray-800">{name}</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] pb-6 gap-8">
         {/* Sub-Categories Section */}

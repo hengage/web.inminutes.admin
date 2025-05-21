@@ -148,7 +148,7 @@ const AllProductTable = () => {
       cell: ({ row }) => {
         return (
           <Link
-            href={`/product/category/${row.original.category?._id}`}
+            href={`/product/category/details?id=${row.original.category?._id}&name=${encodeURIComponent(row.original.category?.name)}`}
             className="text-blue-600 underline font-normal text-base capitalize hover:text-blue-800"
           >
             {row.original.category.name}
