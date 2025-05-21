@@ -70,7 +70,7 @@ const TransactionTable = () => {
     },
     {
       accessorKey: "reference",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Refrence ID</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Reference ID</span>,
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">
           {row.original.reference}
@@ -135,13 +135,9 @@ const TransactionTable = () => {
       ),
     },
   ];
-
   const handleRefresh = (value: typeof queryValues) => {
-    router.push({
-      pathname: "/transaction",
-      query: value,
-    });
-    result.refetch();
+    const queryString = new URLSearchParams(value as Record<string, string>).toString();
+    router.push(`/transaction?${queryString}`);
   };
 
   const { allParams } = useUrlState();
@@ -174,16 +170,17 @@ const TransactionTable = () => {
           </Button>
           <Button
             onClick={() => {
-              setQueryValues((prev) => {
-                router.push(`/transaction?${stringifyQuery({ page: 1, limit: 10 })}#0`);
-              });
+              const resetValues = { page: 1, limit: 10 };
+              setQueryValues(resetValues);
+              router.push(`transaction?${stringifyQuery(resetValues)}#0`);
               result.refetch();
             }}
-            variant={"secondary"}
+            variant="secondary"
             className="text-ctm-secondary-300"
           >
             Clear Filter
           </Button>
+
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
