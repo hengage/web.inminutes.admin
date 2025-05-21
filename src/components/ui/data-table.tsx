@@ -60,12 +60,12 @@ const DataTable = <T,>({ dataQuery, columns, pagination }: PaginatedTableProps<T
           </div>
         )}
         <Table className="relative">
-          <TableHeader className="h-[67px] border-none bg-[#FAFAFA] static top-0">
+          <TableHeader className="h-[67px] border-b border-b-gray-200 static top-0">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-none">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="px-6 font-medium text-[#737375]">
+                    <TableHead key={header.id} className="px-6 font-medium text-[#160A62]">
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
