@@ -61,13 +61,13 @@ const SubCategory = () => {
             />
           </svg>
         </span>
-        <h1 className="text-xl font-medium text-gray-800">{name}</h1>
+        <h1 className="text-2xl font-medium text-[#160A62]">{name}</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] pb-6 gap-8">
         {/* Sub-Categories Section */}
         <div className=" bg-white p-3">
           <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-            <div className="font-medium text-gray-800">
+            <div className="font-medium text-[#160A62]">
               Sub-Category{" "}
               <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-sm rounded-full">
                 ({subCategories.length})
@@ -114,7 +114,7 @@ const SubCategory = () => {
 
         <div className=" bg-white p-3">
           <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
-            <div className="font-medium text-gray-800">
+            <div className="font-medium text-[#160A62]">
               Products{" "}
               <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-sm rounded-full">
                 ({products.length})
