@@ -50,6 +50,7 @@ const RadioItems = ({
         setValue(value);
         onSubmit?.(value);
       }}
+      className="w-full"
       {...props}
     >
       {showSearchBox && (
@@ -65,7 +66,9 @@ const RadioItems = ({
       <div className="flex flex-col items-start gap-2 max-h-[200px] overflow-y-auto w-full">
         {renderedItems.map((item, i) => (
           <span key={i} className="w-full px-2 py-1 rounded-md hover:bg-ctm-primary-100">
-            <Radio value={item.value} label={item.label} />
+            <div className="w-full min-w-[250px]">
+              <Radio value={item.value} label={item.label} />
+            </div>{" "}
           </span>
         ))}
       </div>
