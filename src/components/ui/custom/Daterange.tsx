@@ -5,12 +5,14 @@ import { format } from "date-fns";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ChevronDown } from "lucide-react";
 import PopOver from "@/components/ui/custom/PopOver";
+
 interface DateRangePickerProps {
   fromDate?: Date;
   toDate?: Date;
   onApply: (fromDate: Date | null, toDate: Date | null) => void;
   className?: string;
 }
+
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
   fromDate: initialFromDate,
   toDate: initialToDate,
@@ -19,18 +21,22 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 }) => {
   const [fromDate, setFromDate] = useState<Date | undefined>(initialFromDate);
   const [toDate, setToDate] = useState<Date | undefined>(initialToDate);
+
   useEffect(() => {
     setFromDate(initialFromDate);
     setToDate(initialToDate);
   }, [initialFromDate, initialToDate]);
+
   const handleApply = () => {
     onApply(fromDate || null, toDate || null);
   };
+
   const handleClear = () => {
     setFromDate(undefined);
     setToDate(undefined);
     onApply(null, null);
   };
+
   const getButtonText = () => {
     if (fromDate && toDate) {
       return `${format(fromDate, "dd MMM yyyy")} - ${format(toDate, "dd MMM yyyy")}`;
@@ -41,6 +47,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
     return "Date";
   };
+ 
   return (
     <PopOver
       trigger={
@@ -66,12 +73,14 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             />
           </div>
 
+
           <div className="">
             <DatePicker
               value={toDate}
               onSelect={(date) => setToDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
+
                   {toDate ? format(toDate, "dd MMM yyyy") : "End date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
@@ -80,11 +89,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           </div>
         </div>
 
+
         <div className="flex justify-start  gap-2 border-t pt-4 border-gray-100">
           <PopoverClose asChild>
             <Button onClick={handleApply} variant="default">
               Apply
             </Button>
+
             <Button onClick={handleClear} variant="outline">
               Clear
             </Button>
@@ -94,4 +105,5 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     </PopOver>
   );
 };
+
 export default DateRangePicker;
