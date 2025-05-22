@@ -42,6 +42,7 @@ const Dashbord = () => {
       <div className="flex md:flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
         <DateRangePicker
+          className="border-2 border-black/40"
           fromDate={startDate}
           toDate={endDate}
           onApply={(from, to) => {

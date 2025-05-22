@@ -1,33 +1,68 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useRouter } from "next/navigation";
-import Tag from "@/components/general/Tag";
-import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/custom/Pagination";
-import PopOver from "@/components/ui/custom/PopOver";
-import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
-import { cn, stringifyUrl } from "@/lib/utils";
+import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
-
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { tag } from "@/types";
-import { IProduct, useGetReviewingProductsQuery } from "@/api/product";
-
+import {
+  IProduct,
+  useGetProductCategoriesQuery,
+  useGetReviewingProductsQuery,
+  useUpdateProductStatusMutation,
+} from "@/api/product";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/providers/ToastContext";
+import { Search } from "lucide-react";
+import RadioItems from "@/components/ui/custom/radio/RadioItems";
+import PopOver from "@/components/ui/custom/PopOver";
+import DateRangePicker from "@/components/ui/custom/Daterange";
+import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
+import { Icon } from "@/components/ui/Icon";
+import { CustomInput as Input } from "@/components/ui/custom/input";
+const priceRangeOptions = [
+  { label: "₦500 - ₦10,000", value: "500-10000" },
+  { label: "₦10,000 - ₦50,000", value: "10000-50000" },
+  { label: "₦50,000 - ₦100,000", value: "50000-100000" },
+  { label: "₦100,000 - ₦200,000", value: "100000-200000" },
+  { label: "₦200,000 - ₦500,000", value: "200000-500000" },
+  { label: "₦500,000+", value: "500000-" },
+];
 const ReviewProductTable = () => {
   const router = useRouter();
-  const [queryValues, setQueryValues] = useState({
-    page: 1,
-    limit: 10,
-  });
+  const { showSuccess } = useToast();
+  const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
+    {}
+  );
   const { result, isLoading, refetch } = useGetReviewingProductsQuery(queryValues);
+  const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
+  const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
   };
   const { allParams } = useUrlState();
+  const handleStatusUpdate = (productId: string, newStatus: boolean) => {
+    updateStatus(
+      {
+        productId,
+        approval: newStatus,
+      },
+      {
+        onSuccess: () => {
+          showSuccess("Product status updated successfully");
+        },
+        onError: (err: unknown) => {
+          console.error("Error updating status:", err);
+        },
+      }
+    );
+  };
   useEffect(() => {
     setQueryValues({
       ...allParams,
@@ -68,7 +103,7 @@ const ReviewProductTable = () => {
     },
     {
       accessorKey: "_id",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">ID Number</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Product ID</span>,
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
       ),
@@ -88,7 +123,7 @@ const ReviewProductTable = () => {
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.category.name}
+            {row.original.category?.name || "Uncategorized"}{" "}
           </span>
         );
       },
@@ -104,35 +139,18 @@ const ReviewProductTable = () => {
         );
       },
     },
-    {
-      accessorKey: "status",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
-      cell: ({ row }) => {
-        return <Tag tag={row.original.status.toLowerCase() as tag} />;
-      },
-    },
+
     {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
       cell: ({ row }) => {
         return (
-          <PopOver className="max-w-[110px]">
-            <div className="flex flex-col justify-center items-center">
-              <Button
-                className="w-[100px] justify-start"
-                variant={"ghost"}
-                onClick={() => router.push(`/product/${row.original._id}`)}
-              >
-                <Icon width={15} height={15} name="eye" />
-                View
-              </Button>
-
-              <Button className="w-[100px] justify-start" variant={"ghost"}>
-                <Icon width={15} height={15} name="trash" />
-                Delete
-              </Button>
-            </div>
-          </PopOver>
+          <Button
+            onClick={() => handleStatusUpdate(row.original._id, true)}
+            className="border border-blue-700 bg-transparent hover:bg-transparent text-blue-700 rounded-md px-4 py-2"
+          >
+            {updateLoading ? <span className="animate-spin">...</span> : "Approve Product"}
+          </Button>
         );
       },
     },
@@ -157,6 +175,122 @@ const ReviewProductTable = () => {
               })}
             />
           </Button>
+          <Button
+            onClick={() => {
+              setQueryValues((prev) => {
+                router.push(`product/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                return { page: prev.page, limit: prev.limit };
+              });
+              refetch();
+            }}
+            variant={"secondary"}
+            className="text-ctm-secondary-300"
+          >
+            Clear Filter
+          </Button>
+          <PopOver
+            trigger={
+              <Button
+                className="stroke-ctm-secondary-300"
+                variant={"secondary"}
+                disabled={categoryItemsLoading}
+              >
+                Category
+                {categoryItemsLoading ? (
+                  <Refresh2 className="animate-spin ml-2" size={16} />
+                ) : (
+                  <Icon name="arrow-down" height={16} width={16} />
+                )}
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <CheckboxItems
+              onSubmit={(params) => {
+                setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
+              }}
+              selectedItems={
+                categoryItems?.filter((item) =>
+                  (queryValues.category as string[])?.includes(item.value)
+                ) || []
+              }
+              showSearchBox
+              searchPlaceholder="Categories"
+              items={categoryItems || []}
+            />
+          </PopOver>
+
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            onApply={(fromDate, toDate) => {
+              setQueryValues((prev) => {
+                const newValues = { ...prev };
+
+                if (fromDate) {
+                  newValues.fromDate = fromDate.toISOString();
+                } else {
+                  delete newValues.fromDate;
+                }
+
+                if (toDate) {
+                  newValues.toDate = toDate.toISOString();
+                } else {
+                  delete newValues.toDate;
+                }
+                if (!fromDate && !toDate) {
+                  delete newValues.fromDate;
+                  delete newValues.toDate;
+                }
+
+                return newValues;
+              });
+            }}
+          />
+          <PopOver
+            trigger={
+              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
+                Amount
+                <Icon name="arrow-down" height={16} width={16} />
+              </Button>
+            }
+            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+          >
+            <RadioItems
+              className="w-full"
+              onSubmit={(params) => {
+                if (params) {
+                  const [min, max] = params.split("-");
+                  setQueryValues((prev) => ({
+                    ...prev,
+                    lowestAmount: min,
+                    highestAmount: max,
+                  }));
+                } else {
+                  setQueryValues((prev) => {
+                    const { lowestAmount, highestAmount, ...rest } = prev;
+                    return rest;
+                  });
+                }
+              }}
+              selectedItem={
+                queryValues.lowestAmount && queryValues.highestAmount
+                  ? `${queryValues.lowestAmount}-${queryValues.highestAmount}`
+                  : ""
+              }
+              items={priceRangeOptions}
+            />
+          </PopOver>
+
+          <div className="w-full flex justify-end justify-self-end">
+            <Input
+              className="w-fit bg-transparent"
+              slotBefore={<Search className="text-ctm-secondary-300" />}
+              placeholder="Search"
+              value={queryValues.search}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+            />
+          </div>
         </div>
 
         <DataTable dataQuery={result} columns={columns} />
@@ -173,7 +307,13 @@ const ReviewProductTable = () => {
 };
 
 const ReviewProduct = () => (
-  <Suspense>
+  <Suspense
+    fallback={
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ctm-primary-500"></div>
+      </div>
+    }
+  >
     <ReviewProductTable />
   </Suspense>
 );
