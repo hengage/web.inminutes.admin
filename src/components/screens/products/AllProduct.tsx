@@ -48,7 +48,10 @@ const AllProductTable = () => {
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
+  const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({
+    page: Number(1),
+    limit: Number(25),
+  });
   const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const { mutate: deleteItem, isPending } = useDeleteProductMutation();
   const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
@@ -280,7 +283,7 @@ const AllProductTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`product/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                router.push(`product/${stringifyQuery({ page: 1, limit: 25 })}#0`);
                 return { page: prev.page, limit: prev.limit };
               });
               refetch();

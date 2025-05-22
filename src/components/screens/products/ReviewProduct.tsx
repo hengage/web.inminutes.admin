@@ -67,7 +67,7 @@ const ReviewProductTable = () => {
     setQueryValues({
       ...allParams,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 25),
     });
   }, [allParams]);
   const columns: ColumnDef<
@@ -178,7 +178,7 @@ const ReviewProductTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`product/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                router.push(`product/${stringifyQuery({ page: 1, limit: 25 })}#0`);
                 return { page: prev.page, limit: prev.limit };
               });
               refetch();

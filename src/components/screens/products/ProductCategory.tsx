@@ -30,7 +30,7 @@ const ProductCategoryTable = () => {
     setQueryValues({
       ...allParams,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 25),
     });
   }, [allParams]);
   const columns: ColumnDef<Pick<ICategory, "_id" | "name" | "totalProducts">>[] = [
