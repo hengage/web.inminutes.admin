@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DatePicker } from "@/components/ui/custom/date/DatePicker";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const MetricsTab = () => {
   const [timeFrame, setTimeFrame] = useState("today");
@@ -44,31 +44,16 @@ const MetricsTab = () => {
         </Select>
 
         {timeFrame === "custom" && (
-          <div className="flex items-center ">
-            <div>
-              <DatePicker
-                value={startDate}
-                placeholder="Start-date"
-                onSelect={(date: Date | null | undefined) => {
-                  if (date !== undefined) {
-                    setStartDate(date);
-                  }
-                }}
-                triggerclassName="border p-2 rounded w-40"
-              />
-            </div>
-            <div>
-              <DatePicker
-                value={endDate}
-                placeholder="End-date"
-                onSelect={(date: Date | null | undefined) => {
-                  if (date !== undefined) {
-                    setEndDate(date);
-                  }
-                }}
-                triggerclassName="border p-2 rounded w-40"
-              />
-            </div>
+          <div className="flex items-center w-[300px]">
+            <DateRangePicker
+              fromDate={startDate ?? undefined}
+              toDate={endDate ?? undefined}
+              onApply={(from, to) => {
+                setStartDate(from);
+                setEndDate(to);
+              }}
+              className="border-2 border-black/40"
+            />
           </div>
         )}
       </div>
