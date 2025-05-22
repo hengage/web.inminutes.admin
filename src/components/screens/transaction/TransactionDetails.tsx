@@ -4,6 +4,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { useGetTransactionByIdQuery } from "@/api/transaction";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
+import { Icon } from "@/components/ui/Icon";
+import { ArrowLeft } from "lucide-react";
+import { DialogClose } from "@/components/ui/dialog";
 
 interface TransactionDetailsProps {
   transaction: string;
@@ -28,9 +31,21 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent side="right" className="w-full sm:w-96 overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="w-full max-w-[600px] sm:max-w-[35vw] overflow-y-auto [&>button]:hidden"
+      >
         <SheetHeader className="border-b border-gray-200 pb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <DialogClose asChild>
+              <div className="p-3">
+                <ArrowLeft
+                  className=" cursor-pointer hover:bg-purple-100 text-purple-800 "
+                  size={35}
+                />
+              </div>
+            </DialogClose>
+
             <SheetTitle className="text-lg font-semibold">Transaction Details</SheetTitle>
           </div>
         </SheetHeader>
@@ -41,15 +56,23 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
           </div>
         ) : transactionData ? (
           <div className="py-4 overflow-y-auto">
-            <div className="mb-4">
-              <h3 className="text-sm text-gray-500 mb-1">ID: #{transactionData.reference}</h3>
-              <Tag tag={transactionData.status.toLowerCase() as tag} />
+            <div className="mb-4 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <h3 className="text-sm text-gray-500 mb-1">Ref: #{transactionData.reference}</h3>
+                <Tag tag={transactionData.status.toLowerCase() as tag} />
+              </div>
+              <span
+                className="border border-red-500  rounded-md
+               px-1"
+              >
+                <Icon width={15} height={15} name="trash" />
+              </span>
             </div>
 
             {/* Transaction Reason */}
-            <div className="mb-4 border rounded-lg p-4 bg-gray-50">
+            <div className="mb-4 border rounded-lg p-4 bg-gray-50 flex items-center justify-between">
               <h3 className="text-sm text-gray-500 mb-1">Transaction Reason</h3>
-              <p className="font-medium">{transactionData.reason}</p>
+              <p className="font-medium capitalize">{transactionData.reason}</p>
             </div>
 
             {/* Details */}
@@ -86,10 +109,6 @@ const TransactionDetails = ({ transaction, children }: TransactionDetailsProps) 
                 </p>
               </div>
             </div>
-            {/* 
-            <Button className="w-full" variant="destructive">
-              Delete
-            </Button> */}
           </div>
         ) : (
           <div className="p-6 text-center text-gray-500">Transaction not found</div>
