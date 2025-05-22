@@ -47,7 +47,10 @@ export const Vendors = ({ timeFrame, startDate, endDate }: GraphProps) => {
             ticks={[0, 1000, 2000, 3000, 4000, 5000]}
             tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
           />
-          <Tooltip />
+          <Tooltip
+            contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
+            cursor={{ fill: "transparent" }}
+          />
           <Legend wrapperStyle={{ bottom: -10 }} />
           <Bar dataKey="Vendors" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
           <Bar dataKey="ActiveVendors" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
@@ -81,7 +84,10 @@ export const Riders = ({ timeFrame, startDate, endDate }: GraphProps) => {
             ticks={[0, 1000, 2000, 3000, 4000, 5000]}
             tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
           />
-          <Tooltip />
+          <Tooltip
+            contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
+            cursor={{ fill: "transparent" }}
+          />
           <Legend wrapperStyle={{ bottom: -10 }} />
           <Bar dataKey="Riders" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
           <Bar dataKey="ActiveRiders" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
@@ -115,7 +121,10 @@ export const Customers = ({ timeFrame, startDate, endDate }: GraphProps) => {
             ticks={[0, 1000, 2000, 3000, 4000, 5000]}
             tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
           />
-          <Tooltip />
+          <Tooltip
+            contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
+            cursor={{ fill: "transparent" }}
+          />
           <Legend wrapperStyle={{ bottom: -10 }} />
           <Bar dataKey="Customers" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
           <Bar dataKey="ActiveCustomers" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />

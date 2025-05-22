@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
@@ -5,14 +6,12 @@ import { format } from "date-fns";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ChevronDown } from "lucide-react";
 import PopOver from "@/components/ui/custom/PopOver";
-
 interface DateRangePickerProps {
   fromDate?: Date;
   toDate?: Date;
   onApply: (fromDate: Date | null, toDate: Date | null) => void;
   className?: string;
 }
-
 const DateRangePicker: React.FC<DateRangePickerProps> = ({
   fromDate: initialFromDate,
   toDate: initialToDate,
@@ -21,22 +20,18 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 }) => {
   const [fromDate, setFromDate] = useState<Date | undefined>(initialFromDate);
   const [toDate, setToDate] = useState<Date | undefined>(initialToDate);
-
   useEffect(() => {
     setFromDate(initialFromDate);
     setToDate(initialToDate);
   }, [initialFromDate, initialToDate]);
-
   const handleApply = () => {
     onApply(fromDate || null, toDate || null);
   };
-
   const handleClear = () => {
     setFromDate(undefined);
     setToDate(undefined);
     onApply(null, null);
   };
-
   const getButtonText = () => {
     if (fromDate && toDate) {
       return `${format(fromDate, "dd MMM yyyy")} - ${format(toDate, "dd MMM yyyy")}`;
@@ -47,7 +42,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
     return "Date";
   };
-  
   return (
     <PopOver
       trigger={
@@ -56,17 +50,16 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           <ChevronDown className="w-4 h-4 shrink-0" />
         </Button>
       }
-      className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md">
+      className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md"
+    >
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
-
           <div className="">
             <DatePicker
               value={fromDate}
               onSelect={(date) => setFromDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
-
                   {fromDate ? format(fromDate, "dd MMM yyyy") : "Start date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
@@ -88,12 +81,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-start  gap-2 border-t pt-4 border-gray-100">
+        <div className="flex justify-start gap-2 border-t pt-4 border-gray-100">
           <PopoverClose asChild>
             <Button onClick={handleApply} variant="default">
               Apply
             </Button>
-
+          </PopoverClose>
+          <PopoverClose asChild>
             <Button onClick={handleClear} variant="outline">
               Clear
             </Button>
@@ -103,5 +97,4 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     </PopOver>
   );
 };
-
 export default DateRangePicker;

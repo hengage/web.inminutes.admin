@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import MetricsTab from "./MetricsTab";
 import RecentTransactions from "./RecentTransac";
 import Tag from "@/components/general/Tag";
@@ -9,35 +9,57 @@ import { useGetErrandQuery } from "@/api/errand";
 import { useGetOrdersQuery } from "@/api/order";
 import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
+import { format } from "date-fns";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
   const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
   const { isLoading: isLoadingTransac, data: TransacData } = useGetTransactionQuery({});
-  const { isLoading: isLoadingDashboard, data: dashboardData } = useGetDashboardQuery({});
   const topErrands = errandsData ? errandsData.slice(0, 4) : [];
   const topOrders = ordersData ? ordersData.slice(0, 3) : [];
   const top10Transac = (TransacData?.data?.slice(0, 5) || []) as ITransaction[];
-  const ridersCount = dashboardData?.data?.riders || 0;
-  const customersCount = dashboardData?.data?.customers || 0;
-  const ordersCount = dashboardData?.data?.orders || 0;
+  const today = new Date();
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [endDate, setEndDate] = useState<Date | undefined>(today);
+  const formattedStartDate = startDate ? format(startDate, "yyyy-MM-dd") : "";
+  const formattedEndDate = endDate ? format(endDate, "yyyy-MM-dd") : "";
+  const { isLoading: isLoadingDashboard, data: dashboardData } = useGetDashboardQuery({
+    startDate: formattedStartDate,
+    endDate: formattedEndDate,
+  });
+
+  const growthColor = (value?: string | number) => {
+    if (typeof value === "string" && value.startsWith("-")) return "text-red-600";
+    if (typeof value === "number" && value < 0) return "text-red-600";
+    return "text-green-600";
+  };
+
   return (
     <main className="flex flex-col p-6">
-      <div className="flex flex-row items-center justify-between w-full mb-5">
+      <div className="flex md:flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
-        {/* <div>
-          <DatePicker placeholder="26/10/2022" />
-        </div> */}
+        <DateRangePicker
+          className="border-2 border-black/40"
+          fromDate={startDate}
+          toDate={endDate}
+          onApply={(from, to) => {
+            setStartDate(from || undefined);
+            setEndDate(to || undefined);
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="flex flex-row gap-4 justify-between items-center w-full">
             <div className="rounded-lg bg-ctm-primary-50 p-4 w-full flex flex-col">
-              <h2 className="text-[#818386] mb-4">All Riders</h2>
+              <h2 className="text-[#818386] mb-4">All Vendor</h2>
               <div className="flex flex-row gap-4 items-center">
                 <p className="text-2xl font-bold">
-                  {isLoadingDashboard ? "Loading..." : ridersCount}
+                  {isLoadingDashboard ? "Loading..." : (dashboardData?.vendors ?? 0)}
                 </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
@@ -49,23 +71,24 @@ const Dashbord = () => {
                   >
                     <path
                       d="M4.66508 9H7.33508C8.99509 9 9.67009 7.825 8.84509 6.39L8.47509 5.75C8.38509 5.595 8.22009 5.5 8.04008 5.5H3.96008C3.78008 5.5 3.61508 5.595 3.52508 5.75L3.15508 6.39C2.33008 7.825 3.00508 9 4.66508 9Z"
-                      fill="#DA3030"
+                      fill="#000000"
                     />
                     <path
                       d="M4.39478 4.99979H7.60979C7.80479 4.99979 7.92479 4.78979 7.82479 4.62479L7.50479 4.07478C6.67979 2.63979 5.31978 2.63979 4.49478 4.07478L4.17479 4.62479C4.07979 4.78979 4.19978 4.99979 4.39478 4.99979Z"
-                      fill="#DA3030"
+                      fill="#000000"
                     />
                   </svg>
-                  <p className="text-[#DA3030]">12.8%</p>
+                  <p className={growthColor(dashboardData?.growth?.vendors)}>
+                    {dashboardData?.growth?.vendors || "0 "}
+                  </p>
                 </span>
               </div>
             </div>
-
             <div className="rounded-lg bg-[#FFEDD9] p-4 w-full flex flex-col">
-              <h2 className="text-[#818386] mb-4">All Orders</h2>
+              <h2 className="text-[#818386] mb-4">All Riders</h2>
               <div className="flex flex-row gap-4 items-center">
                 <p className="text-2xl font-bold">
-                  {isLoadingDashboard ? "Loading..." : ordersCount}
+                  {isLoadingDashboard ? "Loading..." : (dashboardData?.riders ?? 3)}
                 </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
@@ -77,14 +100,16 @@ const Dashbord = () => {
                   >
                     <path
                       d="M4.66508 9H7.33508C8.99509 9 9.67009 7.825 8.84509 6.39L8.47509 5.75C8.38509 5.595 8.22009 5.5 8.04008 5.5H3.96008C3.78008 5.5 3.61508 5.595 3.52508 5.75L3.15508 6.39C2.33008 7.825 3.00508 9 4.66508 9Z"
-                      fill="#578921"
+                      fill="#000000"
                     />
                     <path
                       d="M4.39478 4.99979H7.60979C7.80479 4.99979 7.92479 4.78979 7.82479 4.62479L7.50479 4.07478C6.67979 2.63979 5.31978 2.63979 4.49478 4.07478L4.17479 4.62479C4.07979 4.78979 4.19978 4.99979 4.39478 4.99979Z"
-                      fill="#578921"
+                      fill="#000000"
                     />
                   </svg>
-                  <p className="text-[#578921]">12.8%</p>
+                  <p className={growthColor(dashboardData?.growth?.riders)}>
+                    {dashboardData?.growth?.riders || "0"}
+                  </p>
                 </span>
               </div>
             </div>
@@ -93,7 +118,7 @@ const Dashbord = () => {
               <h2 className="text-[#818386] mb-4">All Customers</h2>
               <div className="flex flex-row gap-4 items-center">
                 <p className="text-2xl font-bold">
-                  {isLoadingDashboard ? "Loading..." : customersCount}
+                  {isLoadingDashboard ? "Loading..." : (dashboardData?.customers ?? 0)}
                 </p>
                 <span className="rounded-lg bg-white px-1 flex w-fit items-center">
                   <svg
@@ -105,14 +130,16 @@ const Dashbord = () => {
                   >
                     <path
                       d="M4.66508 9H7.33508C8.99509 9 9.67009 7.825 8.84509 6.39L8.47509 5.75C8.38509 5.595 8.22009 5.5 8.04008 5.5H3.96008C3.78008 5.5 3.61508 5.595 3.52508 5.75L3.15508 6.39C2.33008 7.825 3.00508 9 4.66508 9Z"
-                      fill="#DA3030"
+                      fill="#000000"
                     />
                     <path
                       d="M4.39478 4.99979H7.60979C7.80479 4.99979 7.92479 4.78979 7.82479 4.62479L7.50479 4.07478C6.67979 2.63979 5.31978 2.63979 4.49478 4.07478L4.17479 4.62479C4.07979 4.78979 4.19978 4.99979 4.39478 4.99979Z"
-                      fill="#DA3030"
+                      fill="#000000"
                     />
                   </svg>
-                  <p className="text-[#DA3030]">12.8%</p>
+                  <p className={growthColor(dashboardData?.growth?.customers)}>
+                    {dashboardData?.growth?.customers || "0 "}
+                  </p>
                 </span>
               </div>
             </div>
