@@ -2,7 +2,7 @@ import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
 import { IListItem, IPaginationData } from "@/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface IProduct {
   _id: string;
@@ -66,6 +66,38 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 
+export const useGetReviewingProductsQuery = (filter: unknown = {}) => {
+  const result = useQuery<
+    IPaginationData<
+      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS, filter],
+    queryFn: async () => {
+      const response = await https.get(
+        "/product/list?status=pending" +
+          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
+      );
+      return response.data.data.products;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.totalPages,
+    }),
+  });
+
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+    refetch: result.refetch,
+  };
+};
 /**
  * Hook to fetch a single product by ID
  */
@@ -130,44 +162,15 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 
-export const useGetReviewingProductsQuery = ({
-  page = 1,
-  limit = 10,
-}: { page?: number; limit?: number } = {}) => {
-  const result = useQuery<
-    IPaginationData<
-      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
-    >,
-    Error
-  >({
-    queryKey: [QUERY_KEYS.PRODUCTS, { status: "pending", page, limit }],
-    queryFn: async () => {
-      const response = await https.get(`/product/list?status=pending&page=${page}&limit=${limit}`);
-      return response.data.data.products;
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    select: (data: any) => ({
-      data: data.docs,
-      total: data.totalDocs,
-      page: data.page,
-      limit: data.limit,
-      totalPages: data.totalPages,
-    }),
-  });
-
-  return {
-    isLoading: result.isPending,
-    data: result.data,
-    result,
-    refetch: result.refetch,
-  };
-};
-
 export const useCreateCategorytMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<unknown, Error, Partial<ICategory>>({
     mutationFn: async (data) => {
       const response = await https.post("/product/category", data);
       return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.Categories] });
     },
   });
 };
@@ -176,10 +179,15 @@ export const useCreateCategorytMutation = () => {
  * Hook to update an existing product
  */
 export const useUpdateProductMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<unknown, Error, { productId: string; data: Partial<IProduct> }>({
     mutationFn: async ({ productId, data }) => {
       const response = await https.put(`/product/${productId}`, data);
       return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
     },
   });
 };
@@ -188,10 +196,14 @@ export const useUpdateProductMutation = () => {
  * Hook to delete a product
  */
 export const useDeleteProductMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation<unknown, Error, string>({
     mutationFn: async (productId) => {
       const response = await https.delete(`/product/${productId}`);
       return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
     },
   });
 };
@@ -200,14 +212,15 @@ export const useDeleteProductMutation = () => {
  * Hook to update product status
  */
 export const useUpdateProductStatusMutation = () => {
-  return useMutation<
-    unknown,
-    Error,
-    { productId: string; status: "Approved" | "Pending" | "Rejected" }
-  >({
-    mutationFn: async ({ productId, status }) => {
-      const response = await https.patch(`/products/${productId}/status`, { status });
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, Error, { productId: string; approval: boolean }>({
+    mutationFn: async ({ productId, approval }) => {
+      const response = await https.put(`/product/${productId}/approval`, { approval });
       return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
     },
   });
 };

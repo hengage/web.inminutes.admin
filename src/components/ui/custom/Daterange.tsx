@@ -47,7 +47,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
     return "Date";
   };
-
+  
   return (
     <PopOver
       trigger={
@@ -56,30 +56,31 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           <ChevronDown className="w-4 h-4 shrink-0" />
         </Button>
       }
-      className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md"
-    >
+      className="bg-white border border-gray-200 rounded-2xl p-4 w-full max-w-md">
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
+
+          <div className="">
             <DatePicker
               value={fromDate}
               onSelect={(date) => setFromDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
-                  {fromDate ? format(fromDate, "dd MMM yyyy") : "start date"}
+
+                  {fromDate ? format(fromDate, "dd MMM yyyy") : "Start date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               }
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="">
             <DatePicker
               value={toDate}
               onSelect={(date) => setToDate(date || undefined)}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
-                  {toDate ? format(toDate, "dd MMM yyyy") : "end date"}
+                  {toDate ? format(toDate, "dd MMM yyyy") : "End date"}
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               }
@@ -87,15 +88,14 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 border-t pt-4 border-gray-100">
-          <PopoverClose asChild>
-            <Button onClick={handleClear} variant="outline">
-              Clear
-            </Button>
-          </PopoverClose>
+        <div className="flex justify-start  gap-2 border-t pt-4 border-gray-100">
           <PopoverClose asChild>
             <Button onClick={handleApply} variant="default">
               Apply
+            </Button>
+
+            <Button onClick={handleClear} variant="outline">
+              Clear
             </Button>
           </PopoverClose>
         </div>
