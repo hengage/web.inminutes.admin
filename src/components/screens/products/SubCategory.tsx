@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import CreateSubCategoryModal from "./CreateSubcategoryModal";
 
@@ -46,21 +46,13 @@ const SubCategory = () => {
     <div className="p-6 flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center">
-        <span onClick={() => router.back()} className=" bg-[#EEEBFF] rounded p-2 mr-3">
-          <svg
-            className="h-5 w-5 text-gray-500 "
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-        </span>
+        <div className="p-3">
+          <ArrowLeft
+            onClick={() => router.back()}
+            className=" cursor-pointer hover:bg-purple-100 text-purple-800 "
+            size={35}
+          />
+        </div>
         <h1 className="text-2xl font-medium text-[#160A62]">{name}</h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] pb-6 gap-8">

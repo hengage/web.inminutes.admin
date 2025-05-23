@@ -3,6 +3,7 @@ import { useGetProductByIdQuery } from "@/api/product";
 import Tag from "@/components/general/Tag";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 import { tag } from "@/types";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -20,21 +21,14 @@ const Details = () => {
     <div className="p-6 flex flex-col gap-6">
       <div className="flex items-center justify-between mb-6 ">
         <div className="flex items-center">
-          <span onClick={() => router.back()} className=" bg-[#EEEBFF] rounded p-2 mr-3">
-            <svg
-              className="h-5 w-5 text-gray-500 "
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-          </span>
+          <div className="p-3">
+            <ArrowLeft
+              onClick={() => router.back()}
+              className=" cursor-pointer hover:bg-purple-100 text-purple-800 "
+              size={35}
+            />
+          </div>
+
           <h1 className="text-xl font-semibold text-gray-800">Product Details</h1>
         </div>
         <div className="flex space-x-2">

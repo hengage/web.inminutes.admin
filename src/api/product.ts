@@ -113,20 +113,24 @@ export const useGetProductByIdQuery = (productId: string | string[]) => {
 };
 
 export const useGetProductCategoriesQuery = (
-  filter: Record<string, string | number | string[]> = {}
+  filter: Record<string, string | number | string[]> = { page: 1, limit: 25 }
 ) => {
-  const query = filter && Object.keys(filter).length > 0 ? `?${stringifyQuery(filter)}` : "";
-
-  const result = useQuery<ICategory[], Error>({
-    queryKey: [QUERY_KEYS.Categories, filter],
+  const finalFilter = {
+    page: 1,
+    limit: 25,
+    ...filter,
+  };
+  const query = stringifyQuery(finalFilter);
+  const result = useQuery<IPaginationData<ICategory>, Error>({
+    queryKey: [QUERY_KEYS.Categories, finalFilter],
     queryFn: async () => {
       const response = await https.get(`/product/categories${query}`);
-      return response.data.data.data;
+      return response.data.data;
     },
     enabled: true,
   });
 
-  const item: IListItem[] = (result.data ?? []).map((e) => ({
+  const item: IListItem[] = (result.data?.data ?? []).map((e) => ({
     label: e.name,
     value: e._id,
   }));
