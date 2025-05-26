@@ -246,36 +246,6 @@ export const useUpdateProductStatusMutation = () => {
   });
 };
 
-export const useGetProductsBySubCategoryQuery = (subCategoryId: string | string[] | null) => {
-  const result = useQuery<IPaginationData<IProduct>, Error>({
-    queryKey: [QUERY_KEYS.PRODUCTS, "subCategory", subCategoryId],
-    queryFn: async () => {
-      const queryParams: Record<string, string | number | string[]> = {};
-
-      if (subCategoryId) {
-        queryParams.subCategoryId = subCategoryId;
-      }
-
-      const response = await https.get(`/product/list${stringifyQuery(queryParams)}`);
-      return response.data.data.products;
-    },
-    enabled: Boolean(subCategoryId),
-    select: (data: any) => ({
-      data: data.docs,
-      total: data.totalDocs,
-      page: data.page,
-      limit: data.limit,
-      totalPages: data.totalPages,
-    }),
-  });
-
-  return {
-    isLoading: result.isPending,
-    data: result.data,
-    result,
-  };
-};
-
 export interface ICategory {
   _id: string;
   name: string;
