@@ -5,6 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import CreateSubCategoryModal from "./CreateSubcategoryModal";
 import { useGetProductsBySubCategoryQuery, useGetSubCategoriesQuery } from "@/api/product";
 import Image from "next/image";
+interface SubCategory {
+  _id: string;
+  name: string;
+  productCount: number;
+}
 
 const SubCategory = () => {
   const searchParams = useSearchParams();
@@ -55,7 +60,7 @@ const SubCategory = () => {
             </div>
           ) : (
             <div className="space-y-1">
-              {data?.subCategories?.map((category) => (
+              {data?.subCategories?.map((category: SubCategory) => (
                 <div
                   key={category._id}
                   className={`flex justify-between items-center p-2 rounded cursor-pointer ${

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
@@ -54,7 +55,7 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
       return response.data.data.products;
     },
     enabled: Object.entries(filter as Record<string, string | string[] | number>).length > 0,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     select: (data: any) => ({
       data: data.docs,
       total: data.totalDocs,
@@ -84,7 +85,7 @@ export const useGetReviewingProductsQuery = (
       return response.data.data.products;
     },
     enabled: true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     select: (data: any) => ({
       data: data.docs,
       total: data.totalDocs,
@@ -155,7 +156,7 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
     enabled: filter
       ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
       : true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     select: (data: any) => ({
       data: data.data,
       total: data.total,
@@ -167,7 +168,7 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 export const useGetSubCategoriesQuery = (categoryId: string) => {
-  const result = useQuery<IPaginationData<ICategory>, Error>({
+  const result = useQuery({
     queryKey: [QUERY_KEYS.SubCategory, categoryId],
     queryFn: async () => {
       const response = await https.get(`/product/category/${categoryId}/sub-categories`);
@@ -245,17 +246,20 @@ export const useUpdateProductStatusMutation = () => {
   });
 };
 
-export const useGetProductsBySubCategoryQuery = (subCategoryId: string | null) => {
+export const useGetProductsBySubCategoryQuery = (subCategoryId: string | string[] | null) => {
   const result = useQuery<IPaginationData<IProduct>, Error>({
     queryKey: [QUERY_KEYS.PRODUCTS, "subCategory", subCategoryId],
     queryFn: async () => {
-      const response = await https.get(
-        `/product/list${stringifyQuery({ subCategory: subCategoryId })}`
-      );
+      const queryParams: Record<string, string | number | string[]> = {};
+
+      if (subCategoryId) {
+        queryParams.subCategoryId = subCategoryId;
+      }
+
+      const response = await https.get(`/product/list${stringifyQuery(queryParams)}`);
       return response.data.data.products;
     },
     enabled: Boolean(subCategoryId),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     select: (data: any) => ({
       data: data.docs,
       total: data.totalDocs,

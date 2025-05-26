@@ -14,7 +14,6 @@ const Details = () => {
   const { data, isLoading } = useGetProductByIdQuery(Array.isArray(id) ? id[0] : (id ?? ""));
   if (isLoading) return <div>Loading...</div>;
   const product = data;
-  console.log(product);
   if (!product) return <div>No product found</div>;
 
   return (
@@ -101,7 +100,9 @@ const Details = () => {
 
             <div className="grid grid-cols-2 border-b py-3">
               <h2 className="text-gray-500">Vendor</h2>
-              <p className="text-right text-blue-600 underline">{product.vendor || "N/A"} </p>
+              <p className="text-right text-blue-600 underline">
+                {product.vendor.businessName || "N/A"}{" "}
+              </p>
             </div>
 
             <div className="grid grid-cols-2 border-b py-3">

@@ -43,7 +43,7 @@ const ReviewProductTable = () => {
   const { result, refetch } = useGetReviewingProductsQuery(queryValues);
   const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
   const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
-  const [loadingId, setLoadingId] = useState(null);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
   const handleRefresh = (value: typeof queryValues) => {
     const queryString = new URLSearchParams(value as Record<string, string>).toString();
     router.push(`/product?${queryString}`);
