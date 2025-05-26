@@ -54,26 +54,35 @@ const AllProductTable = () => {
   });
   const { result, isLoading, refetch } = useGetProductsQuery(queryValues);
   const { mutate: deleteItem, isPending } = useDeleteProductMutation();
-  const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
+  const { mutate: updateStatus } = useUpdateProductStatusMutation();
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
   const handleRefresh = (value: typeof queryValues) => {
-    router.push(stringifyUrl(value));
-    refetch();
+    const queryString = new URLSearchParams(value as Record<string, string>).toString();
+    router.push(`/product?${queryString}`);
   };
-  const handleStatusUpdate = (productId: string, newStatus: boolean) => {
-    updateStatus(
-      {
-        productId,
-        approval: newStatus,
-      },
-      {
-        onSuccess: () => {
-          showSuccess("Product status updated successfully");
+
+  const handleStatusUpdate = async (productId: string, newStatus: boolean) => {
+    setLoadingId(productId);
+    try {
+      await updateStatus(
+        {
+          productId,
+          approve: newStatus,
         },
-        onError: (err: unknown) => {
-          console.error("Error updating status:", err);
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            showSuccess("Product status updated successfully");
+            refetch();
+          },
+          onError: (err: unknown) => {
+            console.error("Error updating status:", err);
+          },
+        }
+      );
+    } finally {
+      setLoadingId(null);
+    }
   };
   const handleDelete = (productId: string) => {
     deleteItem(productId, {
@@ -163,20 +172,27 @@ const AllProductTable = () => {
       accessorKey: "vendor",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Vendor</span>,
       cell: ({ row }) => {
-        const vendorName = row.original.vendor || "N/A";
+        const vendorName = row.original.vendor?.businessName || "N/A";
+        const vendorId = row.original.vendor?._id;
+
         return (
-          <button
-            disabled={vendorName === "N/A"}
-            onClick={() => router.push(`/vendors/${vendorName}`)}
+          <Link
+            href={`/vendor/${vendorId}`}
+            prefetch={false}
+            onClick={(e) => {
+              if (vendorName === "N/A" || !vendorId) {
+                e.preventDefault();
+              }
+            }}
             className={cn(
               "font-normal text-base capitalize underline",
-              vendorName !== "N/A"
+              vendorName !== "N/A" && vendorId
                 ? "text-blue-600 hover:text-blue-800"
                 : "text-gray-400 cursor-not-allowed"
             )}
           >
             {vendorName}
-          </button>
+          </Link>
         );
       },
     },
@@ -194,6 +210,7 @@ const AllProductTable = () => {
       cell: ({ row }) => {
         const status = row.original.status.toLowerCase();
         const productId = row.original._id;
+        const isUpdating = loadingId === productId;
 
         return (
           <PopOver className="max-w-[110px]">
@@ -213,19 +230,19 @@ const AllProductTable = () => {
                     className="w-[100px] justify-start text-green-600"
                     variant={"ghost"}
                     onClick={() => handleStatusUpdate(productId, true)}
-                    disabled={updateLoading}
+                    disabled={isUpdating}
                   >
-                    <CheckSquare2 />
-                    Approve
+                    {isUpdating ? <Refresh2 className="animate-spin" /> : <CheckSquare2 />}
+                    {isUpdating ? "Updating..." : "Approve"}
                   </Button>
                   <Button
                     className="w-[100px] justify-start text-red-600"
                     variant={"ghost"}
                     onClick={() => handleStatusUpdate(productId, false)}
-                    disabled={updateLoading}
+                    disabled={isUpdating}
                   >
-                    <X />
-                    Reject
+                    {isUpdating ? <Refresh2 className="animate-spin" /> : <X />}
+                    {isUpdating ? "Updating..." : "Reject"}
                   </Button>
                 </>
               )}
@@ -235,10 +252,10 @@ const AllProductTable = () => {
                   className="w-[100px] justify-start text-green-600"
                   variant={"ghost"}
                   onClick={() => handleStatusUpdate(productId, true)}
-                  disabled={updateLoading}
+                  disabled={isUpdating}
                 >
-                  <CheckSquare2 />
-                  Approve
+                  {isUpdating ? <Refresh2 className="animate-spin" /> : <CheckSquare2 />}
+                  {isUpdating ? "Updating..." : "Approve"}
                 </Button>
               )}
 
@@ -246,14 +263,14 @@ const AllProductTable = () => {
                 className="w-[100px] justify-start"
                 variant={"ghost"}
                 onClick={() => handleDelete(productId)}
-                disabled={isPending}
+                disabled={isPending || isUpdating}
               >
                 {isPending ? (
                   <Refresh2 className="animate-spin" />
                 ) : (
                   <Icon width={15} height={15} name="trash" />
                 )}
-                Delete
+                {isPending ? "Deleting..." : "Delete"}
               </Button>
             </div>
           </PopOver>
@@ -282,11 +299,9 @@ const AllProductTable = () => {
           </Button>
           <Button
             onClick={() => {
-              setQueryValues((prev) => {
-                router.push(`product/${stringifyQuery({ page: 1, limit: 25 })}#0`);
-                return { page: prev.page, limit: prev.limit };
-              });
-              refetch();
+              const resetValues = { page: 1, limit: 25 };
+              setQueryValues(resetValues);
+              router.push(`/product${stringifyQuery(resetValues)}`);
             }}
             variant={"secondary"}
             className="text-ctm-secondary-300"
@@ -409,8 +424,8 @@ const AllProductTable = () => {
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={queryValues.searchQuery}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, searchQuery: e.target.value }))}
             />
           </div>
         </div>

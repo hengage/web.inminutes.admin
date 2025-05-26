@@ -24,6 +24,7 @@ import DateRangePicker from "@/components/ui/custom/Daterange";
 import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 import { Icon } from "@/components/ui/Icon";
 import { CustomInput as Input } from "@/components/ui/custom/input";
+import Link from "next/link";
 const priceRangeOptions = [
   { label: "₦500 - ₦10,000", value: "500-10000" },
   { label: "₦10,000 - ₦50,000", value: "10000-50000" },
@@ -33,35 +34,42 @@ const priceRangeOptions = [
   { label: "₦500,000+", value: "500000-" },
 ];
 const ReviewProductTable = () => {
+  const { allParams } = useUrlState();
   const router = useRouter();
   const { showSuccess } = useToast();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
-  const { result, isLoading, refetch } = useGetReviewingProductsQuery(queryValues);
+  const { result, refetch } = useGetReviewingProductsQuery(queryValues);
   const { mutate: updateStatus, isPending: updateLoading } = useUpdateProductStatusMutation();
   const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({});
-
+  const [loadingId, setLoadingId] = useState(null);
   const handleRefresh = (value: typeof queryValues) => {
-    router.push(stringifyUrl(value));
-    refetch();
+    const queryString = new URLSearchParams(value as Record<string, string>).toString();
+    router.push(`/product?${queryString}`);
   };
-  const { allParams } = useUrlState();
-  const handleStatusUpdate = (productId: string, newStatus: boolean) => {
-    updateStatus(
-      {
-        productId,
-        approval: newStatus,
-      },
-      {
-        onSuccess: () => {
-          showSuccess("Product status updated successfully");
+
+  const handleStatusUpdate = async (productId: string, newStatus: boolean) => {
+    setLoadingId(productId);
+    try {
+      await updateStatus(
+        {
+          productId,
+          approve: newStatus,
         },
-        onError: (err: unknown) => {
-          console.error("Error updating status:", err);
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            showSuccess("Product status updated successfully");
+            refetch();
+          },
+          onError: (err: unknown) => {
+            console.error("Error updating status:", err);
+          },
+        }
+      );
+    } finally {
+      setLoadingId(null);
+    }
   };
   useEffect(() => {
     setQueryValues({
@@ -132,10 +140,27 @@ const ReviewProductTable = () => {
       accessorKey: "vendor",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Vendor</span>,
       cell: ({ row }) => {
+        const vendorName = row.original.vendor?.businessName || "N/A";
+        const vendorId = row.original.vendor?._id;
+
         return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.vendor || "N/A"}
-          </span>
+          <Link
+            href={`/vendor/${vendorId}`}
+            prefetch={false}
+            onClick={(e) => {
+              if (vendorName === "N/A" || !vendorId) {
+                e.preventDefault();
+              }
+            }}
+            className={cn(
+              "font-normal text-base capitalize underline",
+              vendorName !== "N/A" && vendorId
+                ? "text-blue-600 hover:text-blue-800"
+                : "text-gray-400 cursor-not-allowed"
+            )}
+          >
+            {vendorName}
+          </Link>
         );
       },
     },
@@ -144,12 +169,16 @@ const ReviewProductTable = () => {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
       cell: ({ row }) => {
+        const productId = row.original._id;
+        const isUpdating = loadingId === productId;
+
         return (
           <Button
             onClick={() => handleStatusUpdate(row.original._id, true)}
             className="border border-blue-700 bg-transparent hover:bg-transparent text-blue-700 rounded-md px-4 py-2"
+            disabled={isUpdating}
           >
-            {updateLoading ? <span className="animate-spin">...</span> : "Approve Product"}
+            {isUpdating ? <span className="animate-spin">...</span> : "Approve Product"}
           </Button>
         );
       },
@@ -167,21 +196,19 @@ const ReviewProductTable = () => {
             onClick={() => {
               handleRefresh(queryValues);
             }}
-            disabled={isLoading}
+            disabled={result.isLoading}
           >
             <Refresh2
               className={cn("transition-transform", {
-                "animate-spin text-ctm-primary-400": isLoading,
+                "animate-spin text-ctm-primary-400": result.isLoading,
               })}
             />
           </Button>
           <Button
             onClick={() => {
-              setQueryValues((prev) => {
-                router.push(`product/${stringifyQuery({ page: 1, limit: 25 })}#0`);
-                return { page: prev.page, limit: prev.limit };
-              });
-              refetch();
+              const resetValues = { page: 1, limit: 25 };
+              setQueryValues(resetValues);
+              router.push(`/product${stringifyQuery(resetValues)}`);
             }}
             variant={"secondary"}
             className="text-ctm-secondary-300"
@@ -287,8 +314,8 @@ const ReviewProductTable = () => {
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={queryValues.searchQuery}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, searchQuery: e.target.value }))}
             />
           </div>
         </div>

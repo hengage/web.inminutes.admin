@@ -28,12 +28,10 @@ const RadioItems = ({
   addButtonText,
   ...props
 }: Omit<React.ComponentProps<typeof RadioGroup>, "onSubmit"> & RadioItemOptionsProps) => {
-  // Track temporary selection until Apply is clicked
   const [tempValue, setTempValue] = useState(props.selectedItem);
   const [searchValue, setSearchValue] = useState("");
   const [renderedItems, setRenderedItems] = useState(items);
 
-  // Update tempValue when selectedItem prop changes
   useEffect(() => {
     setTempValue(props.selectedItem);
   }, [props.selectedItem]);
@@ -52,22 +50,19 @@ const RadioItems = ({
   };
 
   const handleCancel = () => {
-    setTempValue(props.selectedItem); // Reset to original value
+    setTempValue(props.selectedItem);
     onSubmit?.(null);
   };
 
   return (
     <RadioGroup
       value={tempValue}
-      onValueChange={(value) => {
-        setTempValue(value);
-        // No longer calling onSubmit here, will wait for Apply button
-      }}
-      className="w-full"
+      onValueChange={(value) => setTempValue(value)}
+      className="w-fit overflow-hidden"
       {...props}
     >
       {showSearchBox && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full">
           <Input
             value={searchValue}
             onChange={(e) => handleSearch(e.target.value)}
@@ -76,15 +71,18 @@ const RadioItems = ({
           />
         </div>
       )}
-      <div className="flex flex-col items-start gap-2 max-h-[200px] overflow-y-auto w-full">
+
+      <div className="flex flex-col items-start gap-2 max-h-[200px] overflow-y-auto overflow-hidden w-fit">
         {renderedItems.map((item, i) => (
-          <span key={i} className="w-full px-2 py-1 rounded-md hover:bg-ctm-primary-100">
-            <div className="w-full min-w-[250px]">
-              <Radio value={item.value} label={item.label} />
-            </div>{" "}
+          <span
+            key={i}
+            className="inline-block px-2 py-1 rounded-md hover:bg-ctm-primary-100 w-fit whitespace-nowrap"
+          >
+            <Radio value={item.value} label={item.label} />
           </span>
         ))}
       </div>
+
       <div className="border-t border-ctm-secondary-50 p-2 flex justify-between items-center gap-2">
         <PopoverClose>
           <Button onClick={handleApply} variant={"ctm-primary"}>

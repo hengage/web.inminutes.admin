@@ -5,7 +5,7 @@ import { Pagination } from "@/components/ui/custom/Pagination";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
-import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
+import { cn, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
@@ -97,7 +97,7 @@ const ProductCategoryTable = () => {
               })}
             />
           </Button>
-          <Button
+          {/* <Button
             onClick={() => {
               setQueryValues((prev) => {
                 router.push(`product/${stringifyQuery({ page: 1, limit: 10 })}#0`);
@@ -109,15 +109,15 @@ const ProductCategoryTable = () => {
             className="text-ctm-secondary-300"
           >
             Clear Filter
-          </Button>
+          </Button> */}
 
           <div className="w-full flex justify-end justify-self-end">
             <Input
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={queryValues.searchQuery}
+              onChange={(e) => setQueryValues((prev) => ({ ...prev, searchQuery: e.target.value }))}
             />
           </div>
         </div>
