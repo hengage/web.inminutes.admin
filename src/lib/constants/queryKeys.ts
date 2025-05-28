@@ -8,6 +8,7 @@ export const QUERY_KEYS = {
   ERRANDS: "errands",
   Categories: "categories",
   SubCategory: "subcategories",
+  CUSTOMERS: "customers",
 } as const;
 
 // Function to check for duplicate values

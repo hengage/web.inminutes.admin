@@ -24,6 +24,8 @@ yarn.lock
 # misc
 .DS_Store
 *.pem
+.vscode
+.history
 
 # debug
 npm-debug.log*
