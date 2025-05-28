@@ -21,7 +21,7 @@ const Product = () => {
 
         {hashParams.tab === "1" && (
           <Button
-            variant="ctm-outline"
+            variant="ctm-primary"
             slotBefore={<Icon name="add" height={16} width={16} />}
             onClick={() => setOpenCategoryModal(true)}
           >
