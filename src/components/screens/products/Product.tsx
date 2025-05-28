@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Tab from "@/components/ui/custom/Tabs";
 import ProductCategory from "./ProductCategory";
 import AllProduct from "./AllProduct";
@@ -10,7 +10,7 @@ import { CustomButton as Button } from "@/components/ui/custom/button";
 import Link from "next/link";
 import useUrlHash from "@/hooks/useUrlHash";
 
-const Product = () => {
+const Tabs = () => {
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const { hashParams, updateHashUrl } = useUrlHash();
 
@@ -86,11 +86,15 @@ const Product = () => {
           value={hashParams.tab ?? "0"}
         />
       </div>
-
-      {/* ✅ Category Modal */}
       <CreateCategoryModal open={openCategoryModal} onOpenChange={setOpenCategoryModal} />
     </div>
   );
 };
+
+const Product = () => (
+  <Suspense>
+    <Tabs />
+  </Suspense>
+);
 
 export default Product;
