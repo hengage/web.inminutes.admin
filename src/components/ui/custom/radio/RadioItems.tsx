@@ -76,7 +76,7 @@ const RadioItems = ({
         {renderedItems.map((item, i) => (
           <span
             key={i}
-            className="inline-block px-2 py-1 rounded-md hover:bg-ctm-primary-100 w-full "
+            className="inline-block px-2 py-1 rounded-md hover:bg-ctm-primary-100 w-full !font-robboto "
           >
             <Radio value={item.value} label={item.label} />
           </span>

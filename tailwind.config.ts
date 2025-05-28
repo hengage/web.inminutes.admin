@@ -22,7 +22,10 @@ export default {
         sans: "var(--font-sans)",
         serif: "var(--font-serif)",
         mono: "var(--font-mono)",
-        istok_web: ["Istok Web", "sans-serif"],
+        robboto: "var(--font-roboto)",
+        inter: "var(--font-inter)",
+      },
+      fontSize: {
       },
       colors: {
         background: "hsl(var(--background))",

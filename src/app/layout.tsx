@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${roboto}  antialiased`}>
+      <body className={`${inter.variable} ${roboto.variable}  antialiased`}>
         <ProgressProvider>
           <QueryProvider>
             <ToastProvider>
