@@ -44,7 +44,7 @@ const CheckboxItems = ({ ...props }: CheckboxItemOptionsProps) => {
     setRenderedItems(allItems);
   }, [allItems]);
   return (
-    <>
+    <div className="flex flex-col gap-3">
       {props.showSearchBox && (
         <div className="flex flex-col gap-2">
           <Input
@@ -87,7 +87,7 @@ const CheckboxItems = ({ ...props }: CheckboxItemOptionsProps) => {
           </Button>
         </PopoverClose>
       </div>
-    </>
+    </div>
   );
 };
 

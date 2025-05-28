@@ -245,7 +245,48 @@ export const useUpdateProductStatusMutation = () => {
     },
   });
 };
+export const useGetProductsBySubCategoryQuery = (
+  subCategoryId: string,
+  filter: Omit<ProductFilter, "category"> = {}
+) => {
+  const result = useQuery<
+    IPaginationData<
+      Pick<
+        IProduct,
+        "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt" | "image"
+      >
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.PRODUCTS, "subcategory", subCategoryId, filter],
+    queryFn: async () => {
+      const queryParams = {
+        ...filter,
+        subCategory: subCategoryId,
+      };
+      const response = await https.get(
+        "/product/list" +
+          `${stringifyQuery(queryParams as Record<string, string | string[] | number>)}`
+      );
+      return response.data.data.products;
+    },
+    enabled: Boolean(subCategoryId),
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
 
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+    refetch: result.refetch,
+  };
+};
 export interface ICategory {
   _id: string;
   name: string;

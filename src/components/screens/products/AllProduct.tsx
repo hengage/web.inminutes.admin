@@ -105,7 +105,7 @@ const AllProductTable = () => {
   }, [allParams]);
 
   const columns: ColumnDef<
-    Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status">
+    Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "image">
   >[] = [
     {
       accessorKey: "index",
@@ -118,15 +118,16 @@ const AllProductTable = () => {
       cell: ({ row }) => {
         const item = row.original;
         return (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-3">
             <Image
               src={
+                item.image ||
                 "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
               }
               alt={item.name}
               width={40}
               height={40}
-              className="rounded-full"
+              className="rounded-[4px] object-cover w-[40px] h-[40px]"
             />
             <span className="font-normal text-base text-ctm-secondary-200 capitalize">
               {item.name}
@@ -340,12 +341,13 @@ const AllProductTable = () => {
                 )}
               </Button>
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+            className="!w-[18rem] !max-w-none p-4 bg-ctm-background border border-ctm-primary-500 rounded-[16px]"
           >
             <CheckboxItems
               onSubmit={(params) => {
                 setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
               }}
+              c
               selectedItems={
                 categoryItems?.filter((item) =>
                   (queryValues.category as string[])?.includes(item.value)
@@ -387,11 +389,11 @@ const AllProductTable = () => {
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Amount
+                Price range
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+            className="!w-[18rem] !max-w-none p-4 bg-ctm-background border border-ctm-primary-500 rounded-[16px]"
           >
             <RadioItems
               className="w-full"

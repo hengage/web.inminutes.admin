@@ -58,7 +58,7 @@ const RadioItems = ({
     <RadioGroup
       value={tempValue}
       onValueChange={(value) => setTempValue(value)}
-      className="w-fit overflow-hidden"
+      className="w-full overflow-hidden"
       {...props}
     >
       {showSearchBox && (
@@ -72,11 +72,11 @@ const RadioItems = ({
         </div>
       )}
 
-      <div className="flex flex-col items-start gap-2 max-h-[200px] overflow-y-auto overflow-hidden w-fit">
+      <div className="flex flex-col  gap-2 max-h-[200px] overflow-y-auto overflow-hidden w-full">
         {renderedItems.map((item, i) => (
           <span
             key={i}
-            className="inline-block px-2 py-1 rounded-md hover:bg-ctm-primary-100 w-fit whitespace-nowrap"
+            className="inline-block px-2 py-1 rounded-md hover:bg-ctm-primary-100 w-full "
           >
             <Radio value={item.value} label={item.label} />
           </span>

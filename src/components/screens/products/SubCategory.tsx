@@ -3,12 +3,25 @@ import { useState } from "react";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import CreateSubCategoryModal from "./CreateSubcategoryModal";
-import { useGetSubCategoriesQuery } from "@/api/product";
+import { useGetSubCategoriesQuery, useGetProductsBySubCategoryQuery } from "@/api/product";
 
 interface SubCategory {
   _id: string;
   name: string;
   productCount: number;
+}
+
+interface ProductItem {
+  _id: string;
+  name: string;
+  image: string;
+  cost: string | number;
+  vendor: {
+    _id: string;
+    businessName: string;
+  };
+  status: "Approved" | "Pending" | "Rejected";
+  createdAt: string;
 }
 
 const SubCategory = () => {
@@ -19,6 +32,15 @@ const SubCategory = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+
+  // Fetch products for selected subcategory
+  const { data: productsData, isLoading: productsLoading } = useGetProductsBySubCategoryQuery(
+    selectedCategory || "",
+    {
+      page: 1,
+      limit: 20,
+    }
+  );
 
   return (
     <div className="p-6 flex flex-col gap-6">
@@ -92,22 +114,60 @@ const SubCategory = () => {
             <div className="font-medium text-[#160A62]">
               Products{" "}
               <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-sm rounded-full">
-                (0)
+                ({productsData?.total ?? 0})
               </span>
             </div>
           </div>
 
-          <div className="flex justify-center items-center h-48 text-gray-500">
-            {!selectedCategory ? (
+          {!selectedCategory ? (
+            <div className="flex justify-center items-center h-48 text-gray-500">
               <div>Select a subcategory to view products</div>
-            ) : (
-              <div>Products for this subcategory will be available soon</div>
-            )}
-          </div>
+            </div>
+          ) : productsLoading ? (
+            <div className="flex justify-center items-center h-48">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-800"></div>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {productsData?.data?.map((product: ProductItem) => (
+                <div
+                  key={product._id}
+                  className="flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:bg-gray-50"
+                >
+                  {/* Product Image */}
+                  <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-sm text-gray-900 truncate">{product.name}</h4>
+                  </div>
+                </div>
+              ))}
+
+              {productsData?.data?.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No products found in this subcategory
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <CreateSubCategoryModal open={isModalOpen} onOpenChange={setIsModalOpen} categoryId={id} />
     </div>
   );
 };
+
 export default SubCategory;

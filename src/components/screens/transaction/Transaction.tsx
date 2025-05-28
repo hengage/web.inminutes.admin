@@ -214,7 +214,7 @@ const TransactionTable = () => {
                 <Icon name="arrow-down" height={16} width={16} />
               </Button>
             }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
+            className="!w-[18rem] !max-w-none p-4 bg-ctm-background border border-ctm-primary-500 rounded-[16px]"
           >
             <RadioItems
               onSubmit={(params) => {

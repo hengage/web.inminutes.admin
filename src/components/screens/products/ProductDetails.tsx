@@ -1,17 +1,17 @@
 "use client";
 import { useGetProductByIdQuery } from "@/api/product";
 import Tag from "@/components/general/Tag";
-import { CustomButton as Button } from "@/components/ui/custom/button";
 import { tag } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { Suspense } from "react";
+
 const Details = () => {
   const router = useRouter();
   const { id } = useParams();
   const { data, isLoading } = useGetProductByIdQuery(Array.isArray(id) ? id[0] : (id ?? ""));
+
   if (isLoading) return <div>Loading...</div>;
   const product = data;
   if (!product) return <div>No product found</div>;
@@ -27,15 +27,14 @@ const Details = () => {
               size={35}
             />
           </div>
-
           <h1 className="text-xl font-semibold text-gray-800">Product Details</h1>
         </div>
         <div className="flex space-x-2">
-          <Button variant="ctm-outline" asChild className="border-2">
-            <Link href={"/product/update"}>Update</Link>
-          </Button>
+          <button className="border-2 border-[#3F2BC3] text-[#3F2BC3] rounded-md px-3 py-1.5 hover:bg-[#F7F7F7]">
+            Update
+          </button>
           <button
-            className="p-1.5 border border-red-500 text-red-500 rounded-md"
+            className="p-1.5 border border-red-500 text-red-500 rounded-md hover:bg-red-50"
             title="Delete Product"
           >
             <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,107 +49,135 @@ const Details = () => {
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow">
-        <div className="flex items-center mb-6">
-          <h2 className="text-lg font-medium">ID: #{product._id}</h2>
+      {/* ID and Status */}
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-medium text-gray-900">ID: #{product._id}</h2>
           <Tag tag={product.status as tag} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div className="bg-[#EAEAEC] rounded-lg p-4 text-center shadow">
-            <div className="text-xs uppercase text-gray-500 mb-1">PRODUCT SOLD</div>
-            <div className="text-2xl font-semibold">200</div>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-[#F7F7F7] rounded-lg p-4 text-center">
+            <div className="text-xs uppercase text-gray-500 mb-2 font-medium">PRODUCT SOLD</div>
+            <div className="text-2xl font-bold text-gray-900">200</div>
           </div>
-          <div className="bg-[#EAEAEC] rounded-lg p-4 text-center shadow">
-            <div className="text-xs uppercase text-gray-500 mb-1">PRODUCT RETURNED</div>
-            <div className="text-2xl font-semibold">10</div>
+          <div className="bg-[#F7F7F7] rounded-lg p-4 text-center">
+            <div className="text-xs uppercase text-gray-500 mb-2 font-medium">PRODUCT RETURNED</div>
+            <div className="text-2xl font-bold text-gray-900">10</div>
           </div>
-          <div className="bg-[#EAEAEC] rounded-lg p-4 text-center shadow">
-            <div className="text-xs uppercase text-gray-500 mb-1">PRODUCT IN STOCK</div>
-            <div className="text-2xl font-semibold">10</div>
+          <div className="bg-[#F7F7F7] rounded-lg p-4 text-center">
+            <div className="text-xs uppercase text-gray-500 mb-2 font-medium">PRODUCT IN STOCK</div>
+            <div className="text-2xl font-bold text-gray-900">10</div>
           </div>
         </div>
       </div>
 
-      {/* Product details section */}
-      <div className="grid grid-cols-3 gap-8">
-        <div className="col-span-1">
-          <div className="bg-white rounded-lg shadow-sm p-4">
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={300}
-              height={300}
-              className="w-full h-auto object-contain mb-4"
-            />
-            <h3 className="font-medium mb-2">{product.name}</h3>
-            <p className="text-sm text-gray-600">{product.description}</p>
+      {/* Main Product Details Section */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex gap-8">
+          {/* Left side - Product Image and Basic Info */}
+          <div className="flex-shrink-0" style={{ width: "500px" }}>
+            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={268}
+                height={200}
+                className="w-full h-[200px] object-cover rounded-md"
+              />
+            </div>
+            <div className="space-y-3">
+              <h3 className="font-semibold text-lg text-gray-900">{product.name}</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
+            </div>
           </div>
-        </div>
 
-        {/* Product details table */}
-        <div className="col-span-2">
-          <div className="bg-white rounded-lg shadow-sm p-6">
-            <h3 className="font-medium border-b pb-3 mb-2">Product Details</h3>
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <h2 className="text-gray-500">Price</h2>
-              <p className="text-right font-medium">₦{Number(product.cost).toLocaleString()}</p>
-            </div>
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <h2 className="text-gray-500">Vendor</h2>
-              <p className="text-right text-blue-600 underline">
-                {product.vendor.businessName || "N/A"}{" "}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <h2 className="text-gray-500">Date Added</h2>
-              <p className="text-right">{new Date(product.createdAt).toLocaleDateString()}</p>
-            </div>
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <h2 className="text-gray-500">In Stock</h2>
-              <p className="text-right">{product.quantity}</p>
-            </div>
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <h2 className="text-gray-500">Category</h2>
-              <p className="text-right text-blue-600 underline">
-                {typeof product.category === "string" ? product.category : product.category.name}
-              </p>
-            </div>
-
-            {/* <div className="grid grid-cols-2 border-b py-3">
-              <div className="text-gray-500">Sub-category</div>
-              <p className="text-right  text-blue-600 underline">Food</p>
-            </div> */}
-
-            <div className="grid grid-cols-2 border-b py-3">
-              <div className="text-gray-500">Tags</div>
-              <div className="text-right">
-                {product.tags?.map((tag) => (
-                  <span key={tag} className="mr-2 bg-gray-100 px-2 py-1 rounded">
-                    {tag}
-                  </span>
-                ))}
+          {/* Right side - Product Details Table */}
+          <div className="flex-1">
+            <div className="border border-gray-100 rounded-lg overflow-hidden">
+              <div className=" px-4 py-3 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">Product Details</h3>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 py-3">
-              <div className="text-gray-500">Add-Ons</div>
-              <div>
-                {product.addOns?.length > 0 ? (
-                  product.addOns.map((addon, index) => (
-                    <div key={index} className="text-right">
-                      <p>Item: {addon?.item}</p>
-                      <p>Cost: {addon?.cost}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No add-ons available</p>
-                )}
+              <div className="divide-y divide-gray-100">
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Price</span>
+                  <span className="text-gray-900 font-semibold">
+                    ₦{Number(product.cost).toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Vendor</span>
+                  <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+                    {product.vendor.businessName || "N/A"}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Date Added</span>
+                  <span className="text-gray-900">
+                    {new Date(product.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">In Stock</span>
+                  <span className="text-gray-900 font-semibold">{product.quantity}</span>
+                </div>
+
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Category</span>
+                  <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+                    {typeof product.category === "string"
+                      ? product.category
+                      : product.category.name}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Sub-category</span>
+                  <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+                    Food
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-start px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Tags</span>
+                  <div className="flex flex-wrap gap-1 justify-end max-w-[200px]">
+                    {product.tags?.length > 0 ? (
+                      product.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-gray-100 text-gray-700 px-2 py-1 rounded-md text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-500 text-sm">0</span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-start px-4 py-3 hover:bg-gray-50">
+                  <span className="text-gray-600 font-medium">Add-Ons</span>
+                  <div className="text-right max-w-[200px]">
+                    {product.addOns?.length > 0 ? (
+                      <div className="space-y-2">
+                        {product.addOns.map((addon, index) => (
+                          <div key={index} className="text-sm">
+                            <p className="font-medium text-gray-900">{addon?.item}</p>
+                            <p className="text-gray-600">₦{Number(addon?.cost).toLocaleString()}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500 text-sm">0</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
