@@ -33,13 +33,8 @@ const SubCategory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
-  // Fetch products for selected subcategory
   const { data: productsData, isLoading: productsLoading } = useGetProductsBySubCategoryQuery(
-    selectedCategory || "",
-    {
-      page: 1,
-      limit: 20,
-    }
+    selectedCategory || ""
   );
 
   return (

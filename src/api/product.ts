@@ -43,7 +43,10 @@ export interface ProductFilter {
 export const useGetProductsQuery = (filter: ProductFilter = {}) => {
   const result = useQuery<
     IPaginationData<
-      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+      Pick<
+        IProduct,
+        "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt" | "image"
+      >
     >,
     Error
   >({
@@ -245,28 +248,12 @@ export const useUpdateProductStatusMutation = () => {
     },
   });
 };
-export const useGetProductsBySubCategoryQuery = (
-  subCategoryId: string,
-  filter: Omit<ProductFilter, "category"> = {}
-) => {
-  const result = useQuery<
-    IPaginationData<
-      Pick<
-        IProduct,
-        "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt" | "image"
-      >
-    >,
-    Error
-  >({
-    queryKey: [QUERY_KEYS.PRODUCTS, "subcategory", subCategoryId, filter],
+export const useGetProductsBySubCategoryQuery = (subCategoryId: string) => {
+  const result = useQuery<IPaginationData<IProduct>, Error>({
+    queryKey: [QUERY_KEYS.PRODUCTS, "subcategory", subCategoryId],
     queryFn: async () => {
-      const queryParams = {
-        ...filter,
-        subCategory: subCategoryId,
-      };
       const response = await https.get(
-        "/product/list" +
-          `${stringifyQuery(queryParams as Record<string, string | string[] | number>)}`
+        "/product/list" + `${stringifyQuery({ subCategory: subCategoryId })}`
       );
       return response.data.data.products;
     },

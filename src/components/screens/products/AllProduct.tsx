@@ -347,7 +347,6 @@ const AllProductTable = () => {
               onSubmit={(params) => {
                 setQueryValues((prev) => ({ ...prev, category: params.map((item) => item.value) }));
               }}
-              c
               selectedItems={
                 categoryItems?.filter((item) =>
                   (queryValues.category as string[])?.includes(item.value)
