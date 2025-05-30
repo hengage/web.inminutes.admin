@@ -5,9 +5,9 @@ import { tag } from "@/types";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { Suspense } from "react";
+import React from "react";
 
-const Details = () => {
+const ProductDetails = () => {
   const router = useRouter();
   const { id } = useParams();
   const { data, isLoading } = useGetProductByIdQuery(Array.isArray(id) ? id[0] : (id ?? ""));
@@ -111,7 +111,7 @@ const Details = () => {
                 <div className="flex justify-between items-center px-4 py-3 hover:bg-gray-50">
                   <span className="text-gray-600 font-medium">Vendor</span>
                   <span className="text-blue-600 font-medium hover:underline cursor-pointer">
-                    {product.vendor.businessName || "N/A"}
+                    {product.vendor ? product.vendor.businessName : "N/A"}
                   </span>
                 </div>
 
@@ -186,11 +186,5 @@ const Details = () => {
     </div>
   );
 };
-
-const ProductDetails = () => (
-  <Suspense>
-    <Details />
-  </Suspense>
-);
 
 export default ProductDetails;

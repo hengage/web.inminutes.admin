@@ -7,6 +7,7 @@ import { Pagination } from "@/components/ui/custom/Pagination";
 import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
+import { useDebounce } from "@/hooks/useDebounce";
 import useUrlState from "@/hooks/useUrlState";
 import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
@@ -48,6 +49,8 @@ const AllProductTable = () => {
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
   const { item: categoryItems, isLoading: categoryItemsLoading } = useGetProductCategoriesQuery({
     page: Number(1),
     limit: Number(25),
@@ -103,6 +106,13 @@ const AllProductTable = () => {
       limit: Number(allParams.limit ?? 25),
     });
   }, [allParams]);
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
 
   const columns: ColumnDef<
     Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "image">
@@ -425,8 +435,8 @@ const AllProductTable = () => {
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.searchQuery}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, searchQuery: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
