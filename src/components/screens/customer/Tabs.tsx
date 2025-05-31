@@ -4,9 +4,6 @@ import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import { CustomButton as Button } from "@/components/ui/custom/button";
-// import { Icon } from "@/components/ui/Icon";
-// import Customers from "./CustomersTable";
-// import Applicants from "./ApplicantsTable";
 import Customers from "./CustomersTable";
 
 const Tabs = () => {
@@ -19,16 +16,8 @@ const Tabs = () => {
         <span className="flex gap-2 items-center justify-end">
           {(hashParams.tab === "0" || !hashParams.tab) && (
             <>
-              {/* <Button
-                variant="ctm-primary"
-                slotBefore={<Icon name="add" height={16} width={16} />}
-                asChild
-              >
-                <Link href={"/customer/create"}>Create Customer</Link>
-              </Button> */}
-
-              <Button variant="ctm-outline" asChild className="border-2">
-                <Link href={"/customer/update"}>Update</Link>
+              <Button disabled variant="ctm-outline" asChild className="border-2">
+                <Link href={"#/customer/update"}>Update</Link>
               </Button>
             </>
           )}

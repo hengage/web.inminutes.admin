@@ -19,7 +19,7 @@ const CustomersTable = () => {
 
   return (
     <div>
-      <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
+      <div className="bg-ctm-background  rounded-md border-ctm-secondary-100 p-2 mt-6 mb-2">
         <div className="grid grid-cols-1 md:grid-cols-[1fr_500px] gap-4">
           <div className=" p-4 w-full grid gap-3">
             <CustomerCard singleCustomer={singleCustomer} />

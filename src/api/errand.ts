@@ -19,3 +19,15 @@ export const useGetErrandQuery = (filter = {}) => {
     result,
   };
 };
+
+export const useGetSingleErrandQuery = (errandId: string) => {
+  return useQuery({
+    queryKey: ["singleErrand", errandId],
+    queryFn: async () => {
+      const response = await https.get(`/errand/${errandId}`);
+      const data = response?.data?.data?.errand;
+      return data;
+    },
+    enabled: !!errandId,
+  });
+};

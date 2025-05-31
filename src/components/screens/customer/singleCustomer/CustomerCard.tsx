@@ -1,3 +1,4 @@
+import { useGetCustomersSummaryQuery } from "@/api/customers";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image"; // Remove if not using Next.js
 
@@ -23,6 +24,8 @@ interface CustomerCardProps {
 
 const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
   // Default values to handle undefined props
+  const { data: customerSummary } = useGetCustomersSummaryQuery();
+
   const customer: Customer = {
     _id: singleCustomer?._id || "#32678FGBDF",
     fullName: singleCustomer?.fullName || "Jane Doe",
@@ -64,16 +67,16 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
       </div>
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
-          <h4 className="text-sm text-gray-500">Total Orders</h4>
-          <p className="text-lg font-bold text-indigo-700">{customer.totalOrders}</p>
+          <h4 className="text-sm text-gray-500">New Customer</h4>
+          <p className="text-lg font-bold text-indigo-700">{customerSummary?.newCustomers}</p>
         </div>
         <div>
-          <h4 className="text-sm text-gray-500">Total Errands</h4>
-          <p className="text-lg font-bold text-indigo-700">{customer.totalErrands}</p>
+          <h4 className="text-sm text-gray-500">Returning Customer</h4>
+          <p className="text-lg font-bold text-indigo-700">{customerSummary?.returningCustomers}</p>
         </div>
         <div>
-          <h4 className="text-sm text-gray-500">Last Update</h4>
-          <p className="text-lg font-bold text-indigo-700">{customer.lastUpdate}</p>
+          <h4 className="text-sm text-gray-500">Total Customer</h4>
+          <p className="text-lg font-bold text-indigo-700">{customerSummary?.totalCustomers}</p>
         </div>
       </div>
     </div>

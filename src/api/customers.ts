@@ -1,8 +1,7 @@
-// import { Customer } from "@/components/screens/customer/singleCustomer/CustomerCard";
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
-import { ILocation, IPaginationData } from "@/types";
+import { IPaginationData } from "@/types";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useGetCustomersQuery = (filter: unknown) => {
@@ -29,6 +28,67 @@ export const useGetCustomersQuery = (filter: unknown) => {
   });
   return { isLoading: result.isPending, data: result.data, result };
 };
+export const useGetCustomersOrdersQuery = (
+  filter: Record<string, string | string[] | number>,
+  customerId: string
+) => {
+  const result = useQuery<IPaginationData<ErrandRow>, Error>({
+    queryKey: ["customer-orders", customerId, filter],
+    queryFn: async () => {
+      const response = await https.get(
+        `/order/list?customer=${customerId}${stringifyQuery(filter)}`
+      );
+      return response.data.data.orders;
+    },
+    enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useGetCustomersErrandsQuery = (
+  filter: Record<string, string | string[] | number>,
+  customerId: string
+) => {
+  const result = useQuery<IPaginationData<OrderRow>>({
+    queryKey: ["customer-errand", customerId, filter],
+    queryFn: async () => {
+      const response = await https.get(
+        `/errand/list?customer=${customerId}${stringifyQuery(filter)}`
+      );
+      return response.data.data.errands;
+    },
+    enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useGetCustomersSummaryQuery = () => {
+  return useQuery({
+    queryKey: ["customer-summary"],
+    queryFn: async () => {
+      const response = await https.get(`/customer/summary`);
+      const data = response.data?.data?.summary;
+      return data;
+    },
+  });
+};
+
 export const useGetSingleCustomersQuery = (customerId: string) => {
   return useQuery<
     Pick<Customer, "_id" | "email" | "phoneNumber" | "fullName" | "displayName" | "dateOfBirth">,
@@ -43,15 +103,7 @@ export const useGetSingleCustomersQuery = (customerId: string) => {
     enabled: !!customerId,
   });
 };
-export const useUpdateVendorMutation = (vendorId: string) => {
-  const result = useMutation<unknown, Error, IVendorCredentials>({
-    mutationFn: async (data) => {
-      const response = await https.post(`/customer/update/${vendorId}`, data);
-      return response.data.data;
-    },
-  });
-  return result;
-};
+
 export const useDeleteCustomerMutation = (customerId: string) => {
   const result = useMutation<unknown, Error, ICustomer>({
     mutationFn: async () => {
@@ -62,31 +114,11 @@ export const useDeleteCustomerMutation = (customerId: string) => {
   return result;
 };
 
-export interface IVendorCredentials {
-  businessName: string;
-  businessLogo: string;
-  email: string;
-  phoneNumber: string;
-  address: string;
-  location: ILocation["coordinates"] | null;
-  residentialAddress: string;
-  category: string;
-  subCategory?: string;
-}
-
 export interface ICustomer {
   _id: string;
   email: string;
   phoneNumber: string;
   fullName: string;
-}
-
-export interface ICategory {
-  _id: string;
-  name: string;
-  image: string;
-  subcategoryCount?: string;
-  vendorCount?: string;
 }
 
 export interface Customer {
@@ -103,3 +135,20 @@ export interface Customer {
   phoneNumber?: string;
   email?: string;
 }
+
+export type ErrandRow = {
+  index?: number;
+  _id: string;
+  pickupAddress?: string;
+  type?: string;
+  status: string;
+  [key: string]: string | number | undefined;
+};
+export type OrderRow = {
+  index?: number;
+  _id: string;
+  rider?: string;
+  type?: string;
+  status: string;
+  [key: string]: string | number | undefined;
+};
