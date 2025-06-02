@@ -77,10 +77,11 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
                 setToDate(date || undefined);
                 if (date) document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
               }}
-              disabled={(date) => {
+              disabled={(date): boolean => {
+                if (!date) return false;
                 if (date > new Date()) return true;
-                // if (fromDate && date < fromDate) return true;
-                // return false;
+                if (fromDate && date < fromDate) return true;
+                return false;
               }}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
