@@ -20,6 +20,7 @@ import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import TransactionDetails from "./TransactionDetails";
 import { DatePicker } from "@/components/ui/custom/date/DatePicker";
 import DateRangePicker from "@/components/ui/custom/Daterange";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const status = [
   { label: "Success", value: "success" },
@@ -47,6 +48,8 @@ const TransactionTable = () => {
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
     {}
   );
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
   const { result } = useGetTransactionQuery(queryValues);
   const columns: ColumnDef<
     Pick<ITransaction, "_id" | "reason" | "reference" | "amount" | "status" | "createdAt">
@@ -147,10 +150,16 @@ const TransactionTable = () => {
     setQueryValues({
       ...allParams,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 30),
     });
   }, [allParams]);
 
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
   return (
     <main className="flex flex-col p-6 bg-white">
       <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
@@ -172,9 +181,9 @@ const TransactionTable = () => {
           </Button>
           <Button
             onClick={() => {
-              const resetValues = { page: 1, limit: 10 };
+              const resetValues = { page: 1, limit: 30 };
               setQueryValues(resetValues);
-              router.push(`transaction?${stringifyQuery(resetValues)}#0`);
+              router.push(`transaction?${stringifyQuery(resetValues)}`);
               result.refetch();
             }}
             variant="secondary"
@@ -297,8 +306,8 @@ const TransactionTable = () => {
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={(queryValues.search as string) || ""}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>

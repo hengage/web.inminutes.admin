@@ -13,6 +13,7 @@ import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ICategory, useGetCategoriesQuery } from "@/api/product";
 import Link from "next/link";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const ProductCategoryTable = () => {
   const router = useRouter();
@@ -20,7 +21,8 @@ const ProductCategoryTable = () => {
     {}
   );
   const { result, isLoading, refetch } = useGetCategoriesQuery(queryValues);
-
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     refetch();
@@ -33,6 +35,13 @@ const ProductCategoryTable = () => {
       limit: Number(allParams.limit ?? 25),
     });
   }, [allParams]);
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
+
   const columns: ColumnDef<Pick<ICategory, "_id" | "name" | "totalProducts">>[] = [
     {
       accessorKey: "index",
@@ -116,8 +125,8 @@ const ProductCategoryTable = () => {
               className="w-fit bg-transparent"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.searchQuery}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, searchQuery: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>

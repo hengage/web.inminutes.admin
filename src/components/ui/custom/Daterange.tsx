@@ -57,7 +57,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           <div className="">
             <DatePicker
               value={fromDate}
-              onSelect={(date) => setFromDate(date || undefined)}
+              onSelect={(date) => {
+                setFromDate(date || undefined);
+                if (date) document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+              }}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
                   {fromDate ? format(fromDate, "dd MMM yyyy") : "Start date"}
@@ -70,7 +73,15 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           <div className="">
             <DatePicker
               value={toDate}
-              onSelect={(date) => setToDate(date || undefined)}
+              onSelect={(date) => {
+                setToDate(date || undefined);
+                if (date) document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+              }}
+              disabled={(date) => {
+                if (date > new Date()) return true;
+                // if (fromDate && date < fromDate) return true;
+                // return false;
+              }}
               trigger={
                 <Button variant="outline" className="w-full justify-between">
                   {toDate ? format(toDate, "dd MMM yyyy") : "End date"}
