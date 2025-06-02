@@ -42,9 +42,9 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 w-full">
       <div className="border-b border-gray-200 mb-4 flex justify-between items-center">
-        <h3 className="font-bold text-lg text-indigo-900 capitalize">ID: {customer._id}</h3>
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-          <svg className="w-2 h-2 text-green-500 mr-1" fill="currentColor" viewBox="0 0 8 8">
+        <h3 className="font-bold text-lg text-[#2E323A] capitalize">ID: {customer._id}</h3>
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-[#3F2BC3]">
+          <svg className="w-2 h-2 text-[#3F2BC3] mr-1" fill="currentColor" viewBox="0 0 8 8">
             <circle cx="4" cy="4" r="4" />
           </svg>
           {customer.status}
@@ -59,8 +59,8 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
           className="rounded-full"
         />
         <div>
-          <h3 className="font-bold text-lg text-indigo-700 capitalize">{customer.fullName}</h3>
-          <h3 className="font-normal text-sm text-indigo-600 capitalize">
+          <h3 className="font-bold text-lg text-[#160A62] capitalize">{customer.fullName}</h3>
+          <h3 className="font-normal text-sm text-[#656667] capitalize">
             Customer Since: {formatDate(customer.createdAt)}
           </h3>
         </div>
@@ -68,15 +68,15 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
           <h4 className="text-sm text-gray-500">New Customer</h4>
-          <p className="text-lg font-bold text-indigo-700">{customerSummary?.newCustomers}</p>
+          <p className="text-lg font-semibold text-[#160A62]">{customerSummary?.newCustomers}</p>
         </div>
         <div>
           <h4 className="text-sm text-gray-500">Returning Customer</h4>
-          <p className="text-lg font-bold text-indigo-700">{customerSummary?.returningCustomers}</p>
+          <p className="text-lg font-semibold text-[#160A62]">{customerSummary?.returningCustomers}</p>
         </div>
         <div>
           <h4 className="text-sm text-gray-500">Total Customer</h4>
-          <p className="text-lg font-bold text-indigo-700">{customerSummary?.totalCustomers}</p>
+          <p className="text-lg font-semibold text-[#160A62]">{customerSummary?.totalCustomers}</p>
         </div>
       </div>
     </div>

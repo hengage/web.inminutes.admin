@@ -25,9 +25,9 @@ const MetricsTab = () => {
 
   return (
     <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
-      <div className="flex w-full  justify-between gap-3">
-        <h3 className="text-lg w-full font-bold mb-4">Deliveries Summary</h3>
-        <div className="flex flex-wrap justify-between w-full mb-4 items-center">
+      <div className="flex justify-between">
+        <h3 className="text-lg w-full  text-[#160A62] font-bold mb-4">Deliveries Summary</h3>
+        <div className="flex  justify-between  mb-4 items-center">
           <Select value={timeFrame} onValueChange={handleTimeFrameChange}>
             <SelectTrigger className="border p-2 rounded w-40">
               <SelectValue placeholder="Select Timeframe" />
@@ -58,6 +58,8 @@ const MetricsTab = () => {
           )}
         </div>
       </div>
+
+     
 
       <DeliveriesSummary
         timeFrame={timeFrame as Timeframe}

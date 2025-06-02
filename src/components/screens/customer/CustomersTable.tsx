@@ -22,13 +22,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
 const status = [
   { label: "Active", value: "active" },
   { label: "In Active", value: "inactive" },
   { label: "Suspended", value: "suspended" },
 ];
 
+
+// Custom useDebounce hook
+const useDebounce = (value: string, delay: number) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+};
 const CustomersTable = () => {
   const router = useRouter();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
@@ -155,6 +164,27 @@ const CustomersTable = () => {
       limit: Number(allParams.limit ?? 10),
     });
   }, [allParams]);
+
+
+  
+  const handleStatusChange = (status: string | null) => {
+    const updatedQuery = { ...queryValues, status: status || "active", page: 1 }; // Reset to page 1
+    setQueryValues(updatedQuery);
+    router.push(stringifyUrl(updatedQuery));
+    result.refetch(); // Explicitly refetch
+  };
+
+  const debouncedSearch = useDebounce(queryValues.search as string, 500);
+  useEffect(() => {
+    if (debouncedSearch !== queryValues.search) {
+      const updatedQuery = { ...queryValues, search: debouncedSearch, page: 1 };
+      setQueryValues(updatedQuery);
+      router.push(stringifyUrl(updatedQuery));
+      result.refetch();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, queryValues.search, result]);
+
   return (
     <div className="my-4">
       <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
@@ -198,9 +228,7 @@ const CustomersTable = () => {
             className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
           >
             <RadioItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
+              onSubmit={handleStatusChange}
               selectedItem={(queryValues.status as string) ?? ""}
               items={status}
             />
@@ -256,3 +284,4 @@ const Customers = () => (
 );
 
 export default Customers;
+
