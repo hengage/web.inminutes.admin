@@ -10,7 +10,7 @@ import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
-import { Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ICustomer, useDeleteCustomerMutation, useGetCustomersQuery } from "@/api/customers";
@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 const status = [
   { label: "Active", value: "active" },
   { label: "In Active", value: "inactive" },
@@ -185,6 +186,32 @@ const CustomersTable = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, queryValues.search, result]);
 
+  const handleDateRangeChange = (fromDate: Date | null, toDate: Date | null) => {
+    type QueryType = typeof queryValues & { fromDate?: string; toDate?: string };
+    const updatedQuery: QueryType = { ...queryValues, page: 1 }; // Reset to page 1
+
+    if (fromDate) {
+      updatedQuery.fromDate = fromDate.toISOString();
+    } else {
+      delete updatedQuery.fromDate;
+    }
+
+    if (toDate) {
+      updatedQuery.toDate = toDate.toISOString();
+    } else {
+      delete updatedQuery.toDate;
+    }
+
+    if (!fromDate && !toDate) {
+      delete updatedQuery.fromDate;
+      delete updatedQuery.toDate;
+    }
+
+    setQueryValues(updatedQuery);
+    router.push(stringifyUrl(updatedQuery));
+    result.refetch(); // Trigger refetch after updating date range
+  };
+
   return (
     <div className="my-4">
       <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
@@ -233,9 +260,37 @@ const CustomersTable = () => {
               items={status}
             />
           </PopOver>
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            // onApply={(fromDate, toDate) => {
+            //   setQueryValues((prev) => {
+            //     const newValues = { ...prev };
+
+            //     if (fromDate) {
+            //       newValues.fromDate = fromDate.toISOString();
+            //     } else {
+            //       delete newValues.fromDate;
+            //     }
+
+            //     if (toDate) {
+            //       newValues.toDate = toDate.toISOString();
+            //     } else {
+            //       delete newValues.toDate;
+            //     }
+            //     if (!fromDate && !toDate) {
+            //       delete newValues.fromDate;
+            //       delete newValues.toDate;
+            //     }
+
+            //     return newValues;
+            //   });
+            // }}
+            onApply={handleDateRangeChange}
+          />
           <div className="w-full flex justify-end justify-self-end">
             <Input
-              className="w-fit bg-ctm-secondary-100"
+              className="w-fit"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
               value={queryValues.search}

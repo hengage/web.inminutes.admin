@@ -39,7 +39,7 @@ const Tabs = () => {
                   hash: updateHashUrl({ tab: "0" }).substring(1),
                 }}
               >
-                All Customers
+              Customer Info
               </Link>
             ),
             content: <Customers />,

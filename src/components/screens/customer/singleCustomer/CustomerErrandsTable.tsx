@@ -200,7 +200,7 @@ const ApplicantsTable = () => {
           />
           <div className="w-full flex justify-end justify-self-end">
             <Input
-              className="w-fit bg-ctm-secondary-100"
+              className="w-fit"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
               value={queryValues.search}
