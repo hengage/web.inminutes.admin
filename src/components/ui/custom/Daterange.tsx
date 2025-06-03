@@ -64,6 +64,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               }
+              disabled={(date): boolean => {
+                if (!date) return false;
+                if (date > new Date()) return true;
+                if (fromDate && date < fromDate) return true;
+                return false;
+              }}
             />
           </div>
 

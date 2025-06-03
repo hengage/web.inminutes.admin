@@ -27,7 +27,7 @@ const MetricsTab = () => {
   return (
     <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
       <h3 className="text-lg font-bold mb-4">Metric Summary</h3>
-      <div className="flex flex-wrap justify-between w-full mb-4 items-center">
+      <div className="flex space-x-3 w-full mb-4 items-center">
         <Select value={timeFrame} onValueChange={handleTimeFrameChange}>
           <SelectTrigger className="border p-2 rounded w-40">
             <SelectValue placeholder="Select Timeframe" />

@@ -11,7 +11,13 @@ import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
 import { format } from "date-fns";
 import DateRangePicker from "@/components/ui/custom/Daterange";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
   const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
@@ -41,15 +47,34 @@ const Dashbord = () => {
     <main className="flex flex-col p-6">
       <div className="flex md:flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
-        <DateRangePicker
-          className="border-2 border-black/40"
-          fromDate={startDate}
-          toDate={endDate}
-          onApply={(from, to) => {
-            setStartDate(from || undefined);
-            setEndDate(to || undefined);
-          }}
-        />
+        <div className="flex space-x-3 mb-4 items-center">
+          <Select>
+            <SelectTrigger className="border p-2 rounded w-40">
+              <SelectValue placeholder="Select Timeframe" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="lastWeek">Last Week</SelectItem>
+              <SelectItem value="lastMonth">Last Month</SelectItem>
+              <SelectItem value="thisYear">This Year</SelectItem>
+              <SelectItem value="lastYear">Last Year</SelectItem>
+              <SelectItem value="custom">Custom</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* {timeFrame === "custom" && ( */}
+          <DateRangePicker
+            className="border-2 border-black/40"
+            fromDate={startDate}
+            toDate={endDate}
+            onApply={(from, to) => {
+              setStartDate(from || undefined);
+              setEndDate(to || undefined);
+            }}
+          />
+          {/* )} */}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
