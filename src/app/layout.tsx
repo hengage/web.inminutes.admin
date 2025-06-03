@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Istok_Web } from "next/font/google";
+import { Inter, Roboto } from "next/font/google";
 import { ToastProvider } from "@/providers/ToastContext";
 import { ToastContainer } from "react-toastify";
 import "./globals.css";
@@ -14,8 +14,8 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const istok_web = Istok_Web({
-  variable: "--font-istok-web",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
   weight: ["400", "700"],
 });
@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${istok_web.variable}  antialiased`}>
+      <body className={`${inter.variable} ${roboto.variable}  antialiased`}>
         <ProgressProvider>
           <QueryProvider>
             <ToastProvider>
