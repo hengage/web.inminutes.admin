@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCreateCategorytMutation } from "@/api/product";
 import { useToast } from "@/providers/ToastContext";
+import { useCreateCategoryMutation } from "@/api/product";
 
 export interface CreateCategoryModalProps {
   open: boolean;
@@ -22,7 +22,7 @@ const CreateCategoryModal = ({ open, onOpenChange }: CreateCategoryModalProps) =
 
   const [name, setName] = useState("");
 
-  const { isPending, error, mutate: createCategory } = useCreateCategorytMutation();
+  const { isPending, error, mutate: createCategory } = useCreateCategoryMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);

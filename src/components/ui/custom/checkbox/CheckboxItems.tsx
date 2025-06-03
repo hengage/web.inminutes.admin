@@ -44,7 +44,7 @@ const CheckboxItems = ({ ...props }: CheckboxItemOptionsProps) => {
     setRenderedItems(allItems);
   }, [allItems]);
   return (
-    <>
+    <div className="flex flex-col gap-3">
       {props.showSearchBox && (
         <div className="flex flex-col gap-2">
           <Input
@@ -57,7 +57,10 @@ const CheckboxItems = ({ ...props }: CheckboxItemOptionsProps) => {
       )}
       <div className="flex flex-col items-start gap-2 max-h-[200px] overflow-y-auto">
         {renderedItems.map((item, i) => (
-          <span key={i} className="w-full px-2 py-1 rounded-md hover:bg-ctm-primary-100">
+          <span
+            key={i}
+            className="w-full px-2 py-1 rounded-md hover:bg-ctm-primary-100 !font-robboto"
+          >
             <Checkbox
               checked={item.checked}
               label={item.label}
@@ -87,7 +90,7 @@ const CheckboxItems = ({ ...props }: CheckboxItemOptionsProps) => {
           </Button>
         </PopoverClose>
       </div>
-    </>
+    </div>
   );
 };
 

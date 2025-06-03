@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
@@ -12,7 +13,7 @@ export interface IProduct {
   cost: string | number;
   category: ICategory;
   status: "Approved" | "Pending" | "Rejected";
-  vendor: string | null;
+  vendor: vendor;
   productCode: string;
   createdAt: string;
 }
@@ -42,7 +43,10 @@ export interface ProductFilter {
 export const useGetProductsQuery = (filter: ProductFilter = {}) => {
   const result = useQuery<
     IPaginationData<
-      Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
+      Pick<
+        IProduct,
+        "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt" | "image"
+      >
     >,
     Error
   >({
@@ -54,7 +58,7 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
       return response.data.data.products;
     },
     enabled: Object.entries(filter as Record<string, string | string[] | number>).length > 0,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     select: (data: any) => ({
       data: data.docs,
       total: data.totalDocs,
@@ -66,22 +70,25 @@ export const useGetProductsQuery = (filter: ProductFilter = {}) => {
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
 
-export const useGetReviewingProductsQuery = (filter: unknown = {}) => {
+export const useGetReviewingProductsQuery = (
+  filter: Record<string, string | string[] | number> = {}
+) => {
   const result = useQuery<
     IPaginationData<
       Pick<IProduct, "_id" | "name" | "vendor" | "cost" | "category" | "status" | "createdAt">
     >,
     Error
   >({
-    queryKey: [QUERY_KEYS.PRODUCTS, filter],
+    queryKey: [QUERY_KEYS.PRODUCTS, "reviewing", filter],
     queryFn: async () => {
-      const response = await https.get(
-        "/product/list?status=pending" +
-          `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
-      );
+      const finalFilter = { ...filter };
+      delete finalFilter.status;
+      const query = stringifyQuery({ ...finalFilter, status: "pending" });
+      const response = await https.get(`/product/list${query}`);
       return response.data.data.products;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    enabled: true,
+
     select: (data: any) => ({
       data: data.docs,
       total: data.totalDocs,
@@ -98,9 +105,7 @@ export const useGetReviewingProductsQuery = (filter: unknown = {}) => {
     refetch: result.refetch,
   };
 };
-/**
- * Hook to fetch a single product by ID
- */
+
 export const useGetProductByIdQuery = (productId: string | string[]) => {
   return useQuery<IProductDetails, Error>({
     queryKey: [QUERY_KEYS.PRODUCTS, productId],
@@ -154,7 +159,7 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
     enabled: filter
       ? Object.entries(filter as Record<string, string | string[] | number>).length > 0
       : true,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     select: (data: any) => ({
       data: data.data,
       total: data.total,
@@ -165,8 +170,25 @@ export const useGetCategoriesQuery = (filter: unknown = {}) => {
   });
   return { isLoading: result.isPending, data: result.data, result, refetch: result.refetch };
 };
+export const useGetSubCategoriesQuery = (categoryId: string) => {
+  const result = useQuery({
+    queryKey: [QUERY_KEYS.SubCategory, categoryId],
+    queryFn: async () => {
+      const response = await https.get(`/product/category/${categoryId}/sub-categories`);
+      return response.data.data;
+    },
+    enabled: Boolean(categoryId),
+  });
 
-export const useCreateCategorytMutation = () => {
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    error: result.error,
+    result,
+  };
+};
+
+export const useCreateCategoryMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<unknown, Error, Partial<ICategory>>({
     mutationFn: async (data) => {
@@ -179,26 +201,27 @@ export const useCreateCategorytMutation = () => {
   });
 };
 
-/**
- * Hook to update an existing product
- */
-export const useUpdateProductMutation = () => {
-  const queryClient = useQueryClient();
+export interface CreateSubCategoryPayload {
+  subCategoryName: string;
+  categoryId: string;
+}
 
-  return useMutation<unknown, Error, { productId: string; data: Partial<IProduct> }>({
-    mutationFn: async ({ productId, data }) => {
-      const response = await https.put(`/product/${productId}`, data);
+export const useCreateSubCategorytMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<unknown, Error, CreateSubCategoryPayload>({
+    mutationFn: async (data) => {
+      const response = await https.post(`/product/sub-category`, {
+        subCategoryName: data.subCategoryName,
+        categoryId: data.categoryId,
+      });
       return response.data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PRODUCTS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SubCategory] });
     },
   });
 };
 
-/**
- * Hook to delete a product
- */
 export const useDeleteProductMutation = () => {
   const queryClient = useQueryClient();
   return useMutation<unknown, Error, string>({
@@ -212,15 +235,12 @@ export const useDeleteProductMutation = () => {
   });
 };
 
-/**
- * Hook to update product status
- */
 export const useUpdateProductStatusMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, Error, { productId: string; approval: boolean }>({
-    mutationFn: async ({ productId, approval }) => {
-      const response = await https.put(`/product/${productId}/approval`, { approval });
+  return useMutation<unknown, Error, { productId: string; approve: boolean }>({
+    mutationFn: async ({ productId, approve }) => {
+      const response = await https.put(`/product/${productId}/approval`, { approve });
       return response.data.data;
     },
     onSuccess: () => {
@@ -228,7 +248,32 @@ export const useUpdateProductStatusMutation = () => {
     },
   });
 };
+export const useGetProductsBySubCategoryQuery = (subCategoryId: string) => {
+  const result = useQuery<IPaginationData<IProduct>, Error>({
+    queryKey: [QUERY_KEYS.PRODUCTS, "subcategory", subCategoryId],
+    queryFn: async () => {
+      const response = await https.get(
+        "/product/list" + `${stringifyQuery({ subCategory: subCategoryId })}`
+      );
+      return response.data.data.products;
+    },
+    enabled: Boolean(subCategoryId),
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
 
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+    refetch: result.refetch,
+  };
+};
 export interface ICategory {
   _id: string;
   name: string;
@@ -239,6 +284,10 @@ export interface ICategory {
 export interface IAddOn {
   item: string;
   cost: string | number;
+}
+export interface vendor {
+  _id: string;
+  businessName: string;
 }
 
 export interface IProductDetails {
@@ -251,7 +300,7 @@ export interface IProductDetails {
   tags: string[];
   addOns: IAddOn[];
   category: ICategory;
-  vendor: string | null;
+  vendor: vendor;
   status: "Approved" | "Pending" | "Rejected";
   isDeleted: boolean;
   createdAt: string;
