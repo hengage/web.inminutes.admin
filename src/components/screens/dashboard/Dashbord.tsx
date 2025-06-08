@@ -226,56 +226,33 @@ const Dashbord = () => {
             ) : topErrands.length > 0 ? (
               topErrands.map((errand: Errand) => {
                 const date = new Date(errand.createdAt);
-                const formattedDate = date.toLocaleDateString("en-GB");
-                const formattedTime = date.toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-
-                const packageType =
-                  errand.packageType[0].charAt(0).toUpperCase() + errand.packageType[0].slice(1);
+                const formattedDate = format(date, "dd/MM/yyyy");
+                const formattedTime = format(date, "hh:mm a");
 
                 return (
                   <div
                     key={errand._id}
-                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50"
+                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50 flex justify-between"
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <p className="font-medium text-gray-800 text-sm flex items-center gap-2">
-                          ID: {errand._id.substring(0, 8)}
-                          <span className="bg-gray-100 text-xs px-2 py-0.5 rounded">
-                            {packageType}
-                          </span>
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {formattedDate} {formattedTime}
-                        </p>
-                      </div>
-                      <Tag tag={errand.status as tag} />
+                    <div className="flex flex-col gap-4 basis-[50%]">
+                      <p className="font-medium text-gray-800 text-[16px]">
+                        ID: #{errand._id.substring(0, 8)}
+                      </p>
+                      <p className="text-[12.5px] text-gray-500  w-full">
+                        {formattedDate} <span className="ml-[7px]">{formattedTime}</span>
+                      </p>
                     </div>
-                    <div className="flex justify-between text-xs mt-2">
-                      <div>
-                        <p className="text-gray-500">Customer:</p>
-                        <p className="font-medium">{errand.customer.fullName}</p>
+                    <div className="flex flex-col gap-4 justify-items-end text-xs">
+                      <div className="">
+                        <p className="font-medium text-[16px] capitalize text-right">
+                          {errand.type}
+                        </p>
                       </div>
-                      <div>
-                        <p className="text-gray-500">Receiver:</p>
-                        <p className="font-medium">{errand.receiver.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-gray-500">Delivery:</p>
-                        <p className="font-medium capitalize">{errand.type}</p>
-                      </div>
-                    </div>
 
-                    {errand.dispatchFee !== "0" && (
-                      <div className="mt-2 text-xs text-right">
-                        <span className="bg-ctm-primary-50 text-ctm-primary-700 px-2 py-1 rounded font-medium">
-                          Fee: ₦{errand.dispatchFee}
-                        </span>
+                      <div className="text-right">
+                        <Tag tag={errand.status as tag} />
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })
