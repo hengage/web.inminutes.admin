@@ -227,28 +227,39 @@ const Dashbord = () => {
               topErrands.map((errand: Errand) => {
                 const date = new Date(errand.createdAt);
                 const formattedDate = format(date, "dd/MM/yyyy");
-                const formattedTime = format(date, "HH:mm");
+                const formattedTime = format(date, "hh:mm a");
 
                 return (
                   <div
                     key={errand._id}
-                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50"
+                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50 flex justify-between"
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <p className="font-medium text-gray-800 text-sm flex items-center gap-2">
-                          ID: {errand._id.substring(0, 8)}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {formattedDate} {formattedTime}
+                    <div
+                      className="flex flex-col gap-4 basis-[50%]"
+                      styl={{ border: "1px dashed blue" }}
+                    >
+                      <p className="font-medium text-gray-800 text-[16px]">
+                        ID: #{errand._id.substring(0, 8)}
+                      </p>
+                      <p
+                        className="text-[12.5px] text-gray-500  w-full"
+                        styl={{ border: "1px solid orange" }}
+                      >
+                        {formattedDate} <span className="ml-[7px]">{formattedTime}</span>
+                      </p>
+                    </div>
+                    <div
+                      className="flex flex-col gap-4 justify-items-end text-xs"
+                      styl={{ border: "1px solid red" }}
+                    >
+                      <div className="" styl={{ border: "1px solid blue" }}>
+                        <p className="font-medium text-[16px] capitalize text-right">
+                          {errand.type}
                         </p>
                       </div>
-                    </div>
-                    <div className="flex justify-between text-xs mt-2">
-                      <Tag tag={errand.status as tag} />
 
-                      <div className="text-right">
-                        <p className="font-medium capitalize">{errand.type}</p>
+                      <div className="text-right" styl={{ border: "1px solid blue" }}>
+                        <Tag tag={errand.status as tag} />
                       </div>
                     </div>
                   </div>
