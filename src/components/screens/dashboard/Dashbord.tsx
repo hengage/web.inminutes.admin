@@ -234,31 +234,22 @@ const Dashbord = () => {
                     key={errand._id}
                     className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50 flex justify-between"
                   >
-                    <div
-                      className="flex flex-col gap-4 basis-[50%]"
-                      styl={{ border: "1px dashed blue" }}
-                    >
+                    <div className="flex flex-col gap-4 basis-[50%]">
                       <p className="font-medium text-gray-800 text-[16px]">
                         ID: #{errand._id.substring(0, 8)}
                       </p>
-                      <p
-                        className="text-[12.5px] text-gray-500  w-full"
-                        styl={{ border: "1px solid orange" }}
-                      >
+                      <p className="text-[12.5px] text-gray-500  w-full">
                         {formattedDate} <span className="ml-[7px]">{formattedTime}</span>
                       </p>
                     </div>
-                    <div
-                      className="flex flex-col gap-4 justify-items-end text-xs"
-                      styl={{ border: "1px solid red" }}
-                    >
-                      <div className="" styl={{ border: "1px solid blue" }}>
+                    <div className="flex flex-col gap-4 justify-items-end text-xs">
+                      <div className="">
                         <p className="font-medium text-[16px] capitalize text-right">
                           {errand.type}
                         </p>
                       </div>
 
-                      <div className="text-right" styl={{ border: "1px solid blue" }}>
+                      <div className="text-right">
                         <Tag tag={errand.status as tag} />
                       </div>
                     </div>
