@@ -19,3 +19,15 @@ export const useGetOrdersQuery = (filter = {}) => {
     result,
   };
 };
+
+export const useGetSingleOrderQuery = (orderId: string) => {
+  return useQuery({
+    queryKey: ["singleErrand", orderId],
+    queryFn: async () => {
+      const response = await https.get(`/order/${orderId}`);
+      const data = response?.data?.data?.order;
+      return data;
+    },
+    enabled: !!orderId,
+  });
+};

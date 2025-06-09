@@ -65,3 +65,24 @@ export function stringifyQuery(query: UrlParams["query"]) {
 export const stringContains = (value: string, secondValue: string) => {
   return value?.toLowerCase().includes(secondValue?.toLowerCase());
 };
+
+export function formatDate(dateString?: string) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
+
+// Add this function near the top, after imports
+export function formatDOB(dateString?: string) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // fallback if invalid date
+  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+}
+
+export function formatNaira(amount?: string | number) {
+  if (!amount) return "₦0";
+  const num = typeof amount === "string" ? parseFloat(amount) : amount;
+  if (isNaN(num)) return "₦0";
+  return num.toLocaleString("en-NG", { style: "currency", currency: "NGN" });
+}

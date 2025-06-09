@@ -14,7 +14,10 @@ export function CustomInput({ slotBefore, slotAfter, ...props }: CustomInputProp
       {slotBefore && (
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">{slotBefore}</div>
       )}
-      <Input {...props} className={cn(props.className, { "px-10": slotBefore })} />
+      <Input
+        {...props}
+        className={cn(props.className, { "px-10 bg-ctm-secondary-50": slotBefore })}
+      />
       {slotAfter && (
         <div className="absolute inset-y-0 right-[2%] flex items-center pl-3">{slotAfter}</div>
       )}
