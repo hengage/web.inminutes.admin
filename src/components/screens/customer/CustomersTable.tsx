@@ -59,8 +59,21 @@ const CustomersTable = () => {
       cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
+      accessorKey: "fullName",
+      header: () => (
+        <span className="whitespace-nowrap font-semibold text-base">Customer Name</span>
+      ),
+      cell: ({ row }) => {
+        return (
+          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+            {row.original.fullName}
+          </span>
+        );
+      },
+    },
+    {
       accessorKey: "_id",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">ID Number</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">ID.NO</span>,
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
       ),
@@ -78,22 +91,9 @@ const CustomersTable = () => {
     },
 
     {
-      accessorKey: "fullName",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Customer Name</span>
-      ),
-      cell: ({ row }) => {
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.fullName}
-          </span>
-        );
-      },
-    },
-    {
       accessorKey: "phoneNumber",
       header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Customer PhoneNumber</span>
+        <span className="whitespace-nowrap font-semibold text-base">Phone No.</span>
       ),
       cell: ({ row }) => {
         return (
@@ -263,29 +263,7 @@ const CustomersTable = () => {
           <DateRangePicker
             fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
             toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
-            // onApply={(fromDate, toDate) => {
-            //   setQueryValues((prev) => {
-            //     const newValues = { ...prev };
-
-            //     if (fromDate) {
-            //       newValues.fromDate = fromDate.toISOString();
-            //     } else {
-            //       delete newValues.fromDate;
-            //     }
-
-            //     if (toDate) {
-            //       newValues.toDate = toDate.toISOString();
-            //     } else {
-            //       delete newValues.toDate;
-            //     }
-            //     if (!fromDate && !toDate) {
-            //       delete newValues.fromDate;
-            //       delete newValues.toDate;
-            //     }
-
-            //     return newValues;
-            //   });
-            // }}
+            
             onApply={handleDateRangeChange}
           />
           <div className="w-full flex justify-end justify-self-end">
