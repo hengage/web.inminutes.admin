@@ -162,7 +162,7 @@ const CustomersTable = () => {
     setQueryValues({
       ...allParams,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 30),
     });
   }, [allParams]);
 
@@ -234,7 +234,7 @@ const CustomersTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`customer/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                router.push(`customer/${stringifyQuery({ page: 1, limit: 30 })}#0`);
                 return { page: prev.page, limit: prev.limit };
               });
               result.refetch();
@@ -279,7 +279,7 @@ const CustomersTable = () => {
         <DataTable dataQuery={result} columns={columns} />
         {result.data?.data.length && result.data?.data.length > 0 ? (
           <Pagination
-            total={result.data?.total ?? 10}
+            total={result.data?.total ?? 30}
             page={Number(queryValues.page)}
             limit={Number(queryValues.limit)}
           />
