@@ -73,7 +73,7 @@ const CustomersTable = () => {
     },
     {
       accessorKey: "_id",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">ID.NO</span>,
+      header: () => <span className="whitespace-nowrap font-semibold text-base">ID. NO</span>,
       cell: ({ row }) => (
         <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
       ),
