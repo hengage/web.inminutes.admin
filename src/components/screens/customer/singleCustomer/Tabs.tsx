@@ -7,6 +7,7 @@ import { CustomButton as Button } from "@/components/ui/custom/button";
 import Customers from "./CustomersTable";
 import CustomerErrands from "./CustomerErrandsTable";
 import CustomerOrders from "./CustomersOrderTable";
+import PageHeader from "@/components/general/PageHeader";
 
 const Tabs = () => {
   const { hashParams, updateHashUrl } = useUrlHash();
@@ -16,7 +17,7 @@ const Tabs = () => {
   return (
     <main className="w-[98%] py-[2%] mx-auto">
       <div className="flex justify-between items-center">
-        <h2 className="ctm-header-1 text-ctm-primary-700">Customers Details</h2>
+        <PageHeader title="Customers Details" />
         <span className="flex gap-2 items-center justify-end">
           {(hashParams.tab === "0" || !hashParams.tab) && (
             <>
@@ -35,11 +36,11 @@ const Tabs = () => {
               <Link
                 href={{
                   pathname: `/customer/${customerId}`,
-                  query: { page: 1, limit: 10 },
+                  query: { page: 1, limit: 30 },
                   hash: updateHashUrl({ tab: "0" }).substring(1),
                 }}
               >
-              Customer Info
+                Customer Info
               </Link>
             ),
             content: <Customers />,
@@ -50,7 +51,7 @@ const Tabs = () => {
               <Link
                 href={{
                   pathname: `/customer/${customerId}`,
-                  query: { page: 1, limit: 10 },
+                  query: { page: 1, limit: 30 },
                   hash: updateHashUrl({ tab: "1" }).substring(1),
                 }}
               >
@@ -65,7 +66,7 @@ const Tabs = () => {
               <Link
                 href={{
                   pathname: `/customer/${customerId}`,
-                  query: { page: 1, limit: 10 },
+                  query: { page: 1, limit: 30 },
                   hash: updateHashUrl({ tab: "2" }).substring(1),
                 }}
               >

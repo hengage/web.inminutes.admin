@@ -8,7 +8,7 @@ export const useGetErrandQuery = (filter = {}) => {
     queryKey: [QUERY_KEYS.ERRANDS, filter],
     queryFn: async () => {
       const response = await https.get("/errand/list" + `${stringifyQuery(filter)}`);
-      return response.data.data.docs;
+      return response.data.data.errands.docs;
     },
   });
 

@@ -3,44 +3,39 @@ import { useState } from "react";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import CreateSubCategoryModal from "./CreateSubcategoryModal";
+import { useGetSubCategoriesQuery, useGetProductsBySubCategoryQuery } from "@/api/product";
+
+interface SubCategory {
+  _id: string;
+  name: string;
+  productCount: number;
+}
+
+interface ProductItem {
+  _id: string;
+  name: string;
+  image: string;
+  cost: string | number;
+  vendor: {
+    _id: string;
+    businessName: string;
+  };
+  status: "Approved" | "Pending" | "Rejected";
+  createdAt: string;
+}
 
 const SubCategory = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") ?? "";
   const name = searchParams.get("name") ?? "";
-  const [selectedCategory, setSelectedCategory] = useState(11);
+  const { data, isLoading } = useGetSubCategoriesQuery(id);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  console.log(id);
-  const subCategories = [
-    { id: 14, name: "Genesis Foods", productCount: 8 },
-    { id: 13, name: "Genesis Foods", productCount: 15 },
-    { id: 12, name: "Genesis Foods", productCount: 22 },
-    { id: 11, name: "Genesis Foods", productCount: 10 },
-    { id: 10, name: "Genesis Foods", productCount: 6 },
-    { id: 9, name: "Genesis Foods", productCount: 0 },
-    { id: 8, name: "Genesis Foods", productCount: 40 },
-    { id: 7, name: "Genesis Foods", productCount: 50 },
-    { id: 6, name: "Genesis Foods", productCount: 8 },
-    { id: 5, name: "Genesis Foods", productCount: 10 },
-    { id: 4, name: "Genesis Foods", productCount: 14 },
-    { id: 3, name: "Genesis Foods", productCount: 8 },
-    { id: 2, name: "Genesis Foods", productCount: 10 },
-    { id: 1, name: "Genesis Foods", productCount: 2 },
-  ];
 
-  const products = [
-    { id: 10, name: "Product Name" },
-    { id: 9, name: "Product Name" },
-    { id: 8, name: "Product Name" },
-    { id: 7, name: "Product Name" },
-    { id: 6, name: "Product Name" },
-    { id: 5, name: "Product Name" },
-    { id: 4, name: "Product Name" },
-    { id: 3, name: "Product Name" },
-    { id: 2, name: "Product Name" },
-    { id: 1, name: "Product Name" },
-  ];
+  const { data: productsData, isLoading: productsLoading } = useGetProductsBySubCategoryQuery(
+    selectedCategory || ""
+  );
 
   return (
     <div className="p-6 flex flex-col gap-6">
@@ -49,20 +44,20 @@ const SubCategory = () => {
         <div className="p-3">
           <ArrowLeft
             onClick={() => router.back()}
-            className=" cursor-pointer hover:bg-purple-100 text-purple-800 "
+            className="cursor-pointer hover:bg-purple-100 text-purple-800"
             size={35}
           />
         </div>
         <h1 className="text-2xl font-medium text-[#160A62]">{name}</h1>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] pb-6 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_470px] pb-6 gap-8">
         {/* Sub-Categories Section */}
-        <div className=" bg-white p-3">
+        <div className="bg-white p-3">
           <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
             <div className="font-medium text-[#160A62]">
               Sub-Category{" "}
               <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-sm rounded-full">
-                ({subCategories.length})
+                {isLoading ? "..." : `(${data?.totalSubCategories ?? 0})`}
               </span>
             </div>
             <button
@@ -73,67 +68,101 @@ const SubCategory = () => {
             </button>
           </div>
 
-          <div className="space-y-1">
-            {subCategories.map((category) => (
-              <div
-                key={category.id}
-                className={`flex justify-between items-center p-2 rounded cursor-pointer ${
-                  selectedCategory === category.id ? "bg-indigo-600 text-white" : "hover:bg-gray-50"
-                }`}
-                onClick={() => setSelectedCategory(category.id)}
-              >
-                <div className="flex items-center">
-                  <span
-                    className={`w-8 text-sm ${selectedCategory === category.id ? "" : "text-gray-500"}`}
-                  >
-                    {String(category.id).padStart(2, "0")}
-                  </span>
-                  <span>{category.name}</span>
-                </div>
-                <span
-                  className={`px-2 py-0.5 text-sm rounded-full ${
-                    selectedCategory === category.id
-                      ? "bg-white bg-opacity-25 text-white"
-                      : "bg-gray-100 text-gray-600"
+          {isLoading ? (
+            <div className="flex justify-center items-center h-48">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-800"></div>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {data?.subCategories?.map((category: SubCategory) => (
+                <div
+                  key={category._id}
+                  className={`flex justify-between items-center p-2 rounded cursor-pointer ${
+                    selectedCategory === category._id
+                      ? "bg-indigo-600 text-white"
+                      : "hover:bg-gray-50"
                   }`}
+                  onClick={() => setSelectedCategory(category._id)}
                 >
-                  {category.productCount} Products
-                </span>
-              </div>
-            ))}
-          </div>
+                  <span>{category.name}</span>
+                  <span
+                    className={`px-2 py-0.5 text-sm rounded-full ${
+                      selectedCategory === category._id
+                        ? "bg-white bg-opacity-25 text-white"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {category.productCount} Products
+                  </span>
+                </div>
+              ))}
+              {!data?.subCategories?.length && !isLoading && (
+                <div className="text-center py-4 text-gray-500">No subcategories found</div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className=" bg-white p-3">
+        {/* Products Section */}
+        <div className="bg-white p-3">
           <div className="flex justify-between items-center pb-2 border-b border-gray-100 mb-3">
             <div className="font-medium text-[#160A62]">
               Products{" "}
               <span className="ml-1 px-2 py-0.5 bg-gray-100 text-gray-600 text-sm rounded-full">
-                ({products.length})
+                ({productsData?.total ?? 0})
               </span>
             </div>
           </div>
 
-          <div className="space-y-1">
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="flex items-center p-2 rounded hover:bg-gray-50 cursor-pointer"
-              >
-                <span className="w-8 text-sm text-gray-500">
-                  {String(product.id).padStart(2, "0")}
-                </span>
-                <div className="flex items-center justify-center w-6 h-6 bg-gray-100 rounded mr-2">
-                  🚗
+          {!selectedCategory ? (
+            <div className="flex justify-center items-center h-48 text-gray-500">
+              <div>Select a subcategory to view products</div>
+            </div>
+          ) : productsLoading ? (
+            <div className="flex justify-center items-center h-48">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-800"></div>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {productsData?.data?.map((product: ProductItem) => (
+                <div
+                  key={product._id}
+                  className="flex items-center gap-3 p-3 border border-gray-100 rounded-lg hover:bg-gray-50"
+                >
+                  {/* Product Image */}
+                  <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Details */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-sm text-gray-900 truncate">{product.name}</h4>
+                  </div>
                 </div>
-                <span>{product.name}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+
+              {productsData?.data?.length === 0 && (
+                <div className="text-center py-8 text-gray-500">
+                  No products found in this subcategory
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
-      <CreateSubCategoryModal open={isModalOpen} onOpenChange={setIsModalOpen} />
+      <CreateSubCategoryModal open={isModalOpen} onOpenChange={setIsModalOpen} categoryId={id} />
     </div>
   );
 };
+
 export default SubCategory;

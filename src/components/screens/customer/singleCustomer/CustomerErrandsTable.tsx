@@ -35,7 +35,7 @@ const ApplicantsTable = () => {
   const router = useRouter();
   const customerId =
     typeof window !== "undefined" ? window.location.pathname.split("/").pop() : undefined;
-  const [selectedStatus, setSelectedStatus] = useState<string>("pending");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const queryClient = useQueryClient();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({

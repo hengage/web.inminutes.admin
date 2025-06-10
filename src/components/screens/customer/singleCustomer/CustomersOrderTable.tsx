@@ -32,12 +32,12 @@ const CustomersTable = () => {
   const router = useRouter();
   const customerId =
     typeof window !== "undefined" ? window.location.pathname.split("/").pop() : undefined;
-  const [selectedStatus, setSelectedStatus] = useState<string>("pending");
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     status: selectedStatus,
     page: 1,
-    limit: 10,
+    limit: 30,
   });
   const { result } = useGetCustomersOrdersQuery(queryValues, customerId as string);
 
@@ -123,7 +123,7 @@ const CustomersTable = () => {
       ...allParams,
       status: selectedStatus,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 30),
     });
   }, [allParams, selectedStatus]);
 
@@ -167,7 +167,7 @@ const CustomersTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`vendor/${stringifyQuery({ page: 1, limit: 10 })}#1`);
+                router.push(`customer/${stringifyQuery({ page: 1, limit: 30 })}#1`);
                 return { page: prev.page, limit: prev.limit };
               });
               result.refetch();
@@ -190,7 +190,7 @@ const CustomersTable = () => {
         <DataTable dataQuery={result} columns={columns} />
         {result.data?.data.length && result.data?.data.length > 0 ? (
           <Pagination
-            total={result.data?.total ?? 10}
+            total={result.data?.total ?? 30}
             page={Number(queryValues.page)}
             limit={Number(queryValues.limit)}
           />

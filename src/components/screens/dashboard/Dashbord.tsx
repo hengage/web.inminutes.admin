@@ -11,7 +11,13 @@ import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
 import { format } from "date-fns";
 import DateRangePicker from "@/components/ui/custom/Daterange";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
   const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
@@ -41,15 +47,34 @@ const Dashbord = () => {
     <main className="flex flex-col p-6">
       <div className="flex md:flex-row items-center justify-between w-full mb-5">
         <h1 className="text-2xl font-bold">Hello John</h1>
-        <DateRangePicker
-          className="border-2 border-black/40"
-          fromDate={startDate}
-          toDate={endDate}
-          onApply={(from, to) => {
-            setStartDate(from || undefined);
-            setEndDate(to || undefined);
-          }}
-        />
+        <div className="flex space-x-3 mb-4 items-center">
+          <Select>
+            <SelectTrigger className="border p-2 rounded w-40">
+              <SelectValue placeholder="Select Timeframe" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="yesterday">Yesterday</SelectItem>
+              <SelectItem value="lastWeek">Last Week</SelectItem>
+              <SelectItem value="lastMonth">Last Month</SelectItem>
+              <SelectItem value="thisYear">This Year</SelectItem>
+              <SelectItem value="lastYear">Last Year</SelectItem>
+              <SelectItem value="custom">Custom</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* {timeFrame === "custom" && ( */}
+          <DateRangePicker
+            className="border-2 border-black/40"
+            fromDate={startDate}
+            toDate={endDate}
+            onApply={(from, to) => {
+              setStartDate(from || undefined);
+              setEndDate(to || undefined);
+            }}
+          />
+          {/* )} */}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[1fr_350px] gap-4">
@@ -201,56 +226,33 @@ const Dashbord = () => {
             ) : topErrands.length > 0 ? (
               topErrands.map((errand: Errand) => {
                 const date = new Date(errand.createdAt);
-                const formattedDate = date.toLocaleDateString("en-GB");
-                const formattedTime = date.toLocaleTimeString("en-GB", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                });
-
-                const packageType =
-                  errand.packageType[0].charAt(0).toUpperCase() + errand.packageType[0].slice(1);
+                const formattedDate = format(date, "dd/MM/yyyy");
+                const formattedTime = format(date, "hh:mm a");
 
                 return (
                   <div
                     key={errand._id}
-                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50"
+                    className="p-3 border rounded-md mb-2 border-gray-100 hover:bg-gray-50 flex justify-between"
                   >
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <p className="font-medium text-gray-800 text-sm flex items-center gap-2">
-                          ID: {errand._id.substring(0, 8)}
-                          <span className="bg-gray-100 text-xs px-2 py-0.5 rounded">
-                            {packageType}
-                          </span>
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {formattedDate} {formattedTime}
-                        </p>
-                      </div>
-                      <Tag tag={errand.status as tag} />
+                    <div className="flex flex-col gap-4 basis-[50%]">
+                      <p className="font-medium text-gray-800 text-[16px]">
+                        ID: #{errand._id.substring(0, 8)}
+                      </p>
+                      <p className="text-[12.5px] text-gray-500  w-full">
+                        {formattedDate} <span className="ml-[7px]">{formattedTime}</span>
+                      </p>
                     </div>
-                    <div className="flex justify-between text-xs mt-2">
-                      <div>
-                        <p className="text-gray-500">Customer:</p>
-                        <p className="font-medium">{errand.customer.fullName}</p>
+                    <div className="flex flex-col gap-4 justify-items-end text-xs">
+                      <div className="">
+                        <p className="font-medium text-[16px] capitalize text-right">
+                          {errand.type}
+                        </p>
                       </div>
-                      <div>
-                        <p className="text-gray-500">Receiver:</p>
-                        <p className="font-medium">{errand.receiver.name}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-gray-500">Delivery:</p>
-                        <p className="font-medium capitalize">{errand.type}</p>
-                      </div>
-                    </div>
 
-                    {errand.dispatchFee !== "0" && (
-                      <div className="mt-2 text-xs text-right">
-                        <span className="bg-ctm-primary-50 text-ctm-primary-700 px-2 py-1 rounded font-medium">
-                          Fee: ₦{errand.dispatchFee}
-                        </span>
+                      <div className="text-right">
+                        <Tag tag={errand.status as tag} />
                       </div>
-                    )}
+                    </div>
                   </div>
                 );
               })
