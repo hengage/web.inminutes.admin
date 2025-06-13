@@ -57,7 +57,7 @@ export const useGetCustomersErrandsQuery = (
   filter: Record<string, string | string[] | number>,
   customerId: string
 ) => {
-  const result = useQuery<IPaginationData<OrderRow>>({
+  const result = useQuery<IPaginationData<ErrandRow>>({
     queryKey: ["customer-errand", customerId, filter],
     queryFn: async () => {
       const response = await https.get(
