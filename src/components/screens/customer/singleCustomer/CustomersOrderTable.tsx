@@ -1,11 +1,11 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/custom/Pagination";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
 import { cn, formatDate, formatNaira, stringifyQuery, stringifyUrl } from "@/lib/utils";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CustomInput as Input } from "@/components/ui/custom/input";
 import { Search } from "lucide-react";
 import DataTable from "@/components/ui/data-table";
@@ -30,8 +30,7 @@ const status = [
 ];
 const CustomersTable = () => {
   const router = useRouter();
-  const customerId =
-    typeof window !== "undefined" ? window.location.pathname.split("/").pop() : undefined;
+  const { customerId } = useParams();
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
@@ -78,11 +77,12 @@ const CustomersTable = () => {
       header: () => <span className="whitespace-nowrap font-semibold text-base">Rider</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.rider}</span>
+          <span className="font-normal text-center text-base text-ctm-secondary-200">
+            {row.original?.rider?.fullName || "-"}
+          </span>
         );
       },
     },
-
     {
       accessorKey: "status",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Status</span>,
@@ -299,10 +299,6 @@ const CustomersTable = () => {
   );
 };
 
-const CustomerOrders = () => (
-  <Suspense>
-    <CustomersTable />
-  </Suspense>
-);
+const CustomerOrders = () => <CustomersTable />;
 
 export default CustomerOrders;

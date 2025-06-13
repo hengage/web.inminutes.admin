@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useState } from "react";
+import React, { useState } from "react";
 import Tab from "@/components/ui/custom/Tabs";
 import ProductCategory from "./ProductCategory";
 import AllProduct from "./AllProduct";
@@ -91,10 +91,6 @@ const Tabs = () => {
   );
 };
 
-const Product = () => (
-  <Suspense>
-    <Tabs />
-  </Suspense>
-);
+const Product = () => <Tabs />;
 
 export default Product;

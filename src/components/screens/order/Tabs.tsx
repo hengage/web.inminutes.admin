@@ -9,6 +9,7 @@ import Applicants from "./ApplicantsTable";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 
 import dynamic from "next/dynamic";
+import Vendors from "./VendorsTable";
 
 const OrdersTable = dynamic(() => import("@/components/screens/order/OrderTable"), {
   ssr: false, // Disable SSR for this component

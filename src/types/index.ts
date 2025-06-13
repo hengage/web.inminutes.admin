@@ -49,7 +49,8 @@ export type tag =
   | "successful"
   | "arrived"
   | "approved"
-  | "rejected";
+  | "rejected"
+  | "unknown";
 
 export type tagTypes = "primary" | "error" | "success" | "warning";
 

@@ -32,7 +32,7 @@ export const useGetCustomersOrdersQuery = (
   filter: Record<string, string | string[] | number>,
   customerId: string
 ) => {
-  const result = useQuery<IPaginationData<ErrandRow>, Error>({
+  const result = useQuery<IPaginationData<OrderRow>, Error>({
     queryKey: ["customer-orders", customerId, filter],
     queryFn: async () => {
       const response = await https.get(
@@ -57,7 +57,7 @@ export const useGetCustomersErrandsQuery = (
   filter: Record<string, string | string[] | number>,
   customerId: string
 ) => {
-  const result = useQuery<IPaginationData<OrderRow>>({
+  const result = useQuery<IPaginationData<ErrandRow>>({
     queryKey: ["customer-errand", customerId, filter],
     queryFn: async () => {
       const response = await https.get(
@@ -147,8 +147,8 @@ export type ErrandRow = {
 export type OrderRow = {
   index?: number;
   _id: string;
-  rider?: string;
+  rider?: Customer;
   type?: string;
   status: string;
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | undefined | Customer;
 };

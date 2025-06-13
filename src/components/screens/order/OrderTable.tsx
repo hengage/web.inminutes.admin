@@ -14,9 +14,9 @@ import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
-import { OrderRow, } from "@/api/customers";
+// import { OrderRow, } from "@/api/customers";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
-import { useGetCustomersOrdersQuery, useGetSingleOrderQuery } from "@/api/order";
+import {  OrderRow, useGetOrdersQuery, useGetSingleOrderQuery } from "@/api/order";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const status = [
@@ -30,7 +30,8 @@ const status = [
 ];
 const CustomersTable = () => {
   const router = useRouter();
-  
+  const [isClient, setIsClient] = useState(false);
+
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
@@ -38,9 +39,10 @@ const CustomersTable = () => {
     page: 1,
     limit: 30,
   });
-  const { result } = useGetCustomersOrdersQuery();
+  const { result } = useGetOrdersQuery();
 
   console.log(result, 'result')
+  console.log(result?.data, 'new result')
 
   const [selectedErrandId, setSelectedErrandId] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -118,6 +120,11 @@ const CustomersTable = () => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const { allParams } = useUrlState();
   useEffect(() => {
     setQueryValues({
@@ -127,6 +134,12 @@ const CustomersTable = () => {
       limit: Number(allParams.limit ?? 30),
     });
   }, [allParams, selectedStatus]);
+
+  if (result.isLoading) {
+    return <div>Loading orders...</div>;
+  }
+  <h1>{isClient ? "Is Client" : "Is Server"}</h1>;
+  console.log(isClient, 'is client')
 
   return (
     <div className="my-4">
@@ -188,8 +201,12 @@ const CustomersTable = () => {
             />
           </div>
         </div>
-        <DataTable dataQuery={result} columns={columns} />
-        {result.data?.data.length && result.data?.data.length > 0 ? (
+        {/* <DataTable dataQuery={result} columns={columns} /> */}
+        <DataTable
+          dataQuery={{ ...result, data: { ...result.data, data: result.data?.data || [] } }}
+          columns={columns}
+        />
+        {result?.data?.data?.length && result.data?.data.length > 0 ? (
           <Pagination
             total={result.data?.total ?? 30}
             page={Number(queryValues.page)}
