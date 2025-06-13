@@ -9,7 +9,7 @@ import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import { useDebounce } from "@/hooks/useDebounce";
 import useUrlState from "@/hooks/useUrlState";
-import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
+import { cn, stringifyQuery } from "@/lib/utils";
 import CheckboxItems from "@/components/ui/custom/checkbox/CheckboxItems";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
