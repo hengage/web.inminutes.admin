@@ -19,9 +19,10 @@ import { OrderRow, useGetOrdersQuery } from "@/api/order";
 import { status, types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
 
-const OrderTable = () => {
+const OngoingOrderTable = () => {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+
   const [selectedType, setSelectedType] = useState<string>("");
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
@@ -231,6 +232,6 @@ const OrderTable = () => {
   );
 };
 
-const Orders = () => <OrderTable />;
+const OngoingOrders = () => <OngoingOrderTable />;
 
-export default Orders;
+export default OngoingOrders;

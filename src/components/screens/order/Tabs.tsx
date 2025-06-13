@@ -4,18 +4,11 @@ import Tab from "@/components/ui/custom/Tabs";
 import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import Categories from "./CategoriesTable";
-import Applicants from "./ApplicantsTable";
 import { CustomButton as Button } from "@/components/ui/custom/button";
 
-import dynamic from "next/dynamic";
-import Vendors from "./VendorsTable";
-
-const OrdersTable = dynamic(() => import("@/components/screens/order/OrderTable"), {
-  ssr: false, // Disable SSR for this component
-});
-
-
+import Orders from "./OrderTable";
+import OngoingOrders from "./OngoingOrderTable";
+import CancelledOrder from "./CancelledOrderTable";
 
 const Tabs = () => {
   const { hashParams, updateHashUrl } = useUrlHash();
@@ -43,17 +36,17 @@ const Tabs = () => {
         items={[
           {
             trigger: <Link href={getTabLink("0")}>All Orders</Link>,
-            content: <OrdersTable />,
+            content: <Orders />,
             key: "0",
           },
           {
             trigger: <Link href={getTabLink("1")}>Ongoing</Link>,
-            content: <Categories />,
+            content: <OngoingOrders />,
             key: "1",
           },
           {
             trigger: <Link href={getTabLink("2")}>Cancelled</Link>,
-            content: <Applicants />,
+            content: <CancelledOrder />,
             key: "2",
           },
         ]}
