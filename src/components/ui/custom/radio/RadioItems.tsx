@@ -83,7 +83,7 @@ const RadioItems = ({
         ))}
       </div>
 
-      <div className="border-t border-ctm-secondary-50 p-2 flex justify-between items-center gap-2">
+      <div className="border-t border-ctm-secondary-50 p-2 flex-wrap flex justify-between items-center gap-2">
         <PopoverClose>
           <Button onClick={handleApply} variant={"ctm-primary"}>
             {addButtonText ?? "Apply"}
