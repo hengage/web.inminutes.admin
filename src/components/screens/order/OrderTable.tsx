@@ -100,7 +100,7 @@ const OrderTable = () => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,

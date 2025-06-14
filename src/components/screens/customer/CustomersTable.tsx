@@ -10,7 +10,7 @@ import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
-import {  Search } from "lucide-react";
+import { Search } from "lucide-react";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { ICustomer, useDeleteCustomerMutation, useGetCustomersQuery } from "@/api/customers";
@@ -28,7 +28,6 @@ const status = [
   { label: "In Active", value: "inactive" },
   { label: "Suspended", value: "suspended" },
 ];
-
 
 // Custom useDebounce hook
 const useDebounce = (value: string, delay: number) => {
@@ -92,9 +91,7 @@ const CustomersTable = () => {
 
     {
       accessorKey: "phoneNumber",
-      header: () => (
-        <span className="whitespace-nowrap font-semibold text-base">Phone No.</span>
-      ),
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Phone No.</span>,
       cell: ({ row }) => {
         return (
           <span className="font-normal text-base text-ctm-secondary-200 capitalize">
@@ -157,7 +154,7 @@ const CustomersTable = () => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
@@ -166,8 +163,6 @@ const CustomersTable = () => {
     });
   }, [allParams]);
 
-
-  
   const handleStatusChange = (status: string | null) => {
     const updatedQuery = { ...queryValues, status: status || "active", page: 1 }; // Reset to page 1
     setQueryValues(updatedQuery);
@@ -183,7 +178,7 @@ const CustomersTable = () => {
       router.push(stringifyUrl(updatedQuery));
       result.refetch();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearch, queryValues.search, result]);
 
   const handleDateRangeChange = (fromDate: Date | null, toDate: Date | null) => {
@@ -263,7 +258,6 @@ const CustomersTable = () => {
           <DateRangePicker
             fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
             toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
-            
             onApply={handleDateRangeChange}
           />
           <div className="w-full flex justify-end justify-self-end">
@@ -317,4 +311,3 @@ const Customers = () => (
 );
 
 export default Customers;
-

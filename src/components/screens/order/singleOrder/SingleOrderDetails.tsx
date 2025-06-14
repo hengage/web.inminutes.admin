@@ -206,7 +206,7 @@ const SingleOrderDetails = () => {
             <div className="space-y-2">
               <div>
                 <span className="font-semibold">Delivery date</span>
-                <p>{formatDate(singleOrder?.createdAt)}</p>
+                <p>{singleOrder?.createdAt ? formatDate(singleOrder.createdAt) : ""}</p>
               </div>
               <div>
                 <span className="font-semibold">Delivery address</span>

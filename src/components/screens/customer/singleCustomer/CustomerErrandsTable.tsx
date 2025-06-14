@@ -126,7 +126,7 @@ const ApplicantsTable = () => {
     queryClient.invalidateQueries({ queryKey: ["customer-errand", customerId, queryValues] });
     errandData.refetch();
   };
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
