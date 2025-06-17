@@ -15,13 +15,13 @@ import { Icon } from "@/components/ui/Icon";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
-import { status, types } from "@/lib/comon/constant";
+import {  types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
 import { ErrandRow, useGetErrandQuery } from "@/api/errand";
 
 const CancelledErrandTable = () => {
   const router = useRouter();
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<string>("cancelled");
 
   const [selectedType, setSelectedType] = useState<string>("");
 
@@ -150,24 +150,7 @@ const CancelledErrandTable = () => {
           >
             Clear Filter
           </Button>
-          <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Status
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <RadioItems
-              onSubmit={(params) => {
-                setSelectedStatus(params ?? "");
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
-              selectedItem={selectedStatus}
-              items={status}
-            />
-          </PopOver>
+         
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>

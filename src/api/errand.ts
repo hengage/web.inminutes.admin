@@ -2,7 +2,8 @@ import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
 import { IPaginationData } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import qs from "query-string";
 
 
 
@@ -10,7 +11,7 @@ export const useGetSingleErrandQuery = (errandId: string) => {
   return useQuery({
     queryKey: ["singleErrand", errandId],
     queryFn: async () => {
-      const response = await https.get(`/errand/${errandId}`);
+      const response = await https.get(`/errands/${errandId}`);
       const data = response?.data?.data?.errand;
       return data;
     },
@@ -26,7 +27,7 @@ export const useGetSingleErrandByIdQuery = (errandId: string | string[]) => {
   return useQuery<ErrandDetails, Error>({
     queryKey: ["singleErrand", errandId],
     queryFn: async () => {
-      const response = await https.get(`/errand/${errandId}`);
+      const response = await https.get(`/errands/${errandId}`);
       return response.data.data.errand;
     },
     enabled: Boolean(errandId),
@@ -37,7 +38,7 @@ export const useGetErrandQuery = (filter: Record<string, string | string[] | num
   const result = useQuery<IPaginationData<ErrandRow>, Error>({
     queryKey: [QUERY_KEYS.ERRANDS, filter],
     queryFn: async () => {
-      const response = await https.get(`/errand/list${stringifyQuery(filter)}`);
+      const response = await https.get(`/errands${stringifyQuery(filter)}`);
       return response.data.data.errands;
     },
     enabled: Object.entries(filter).length > 0,
@@ -52,6 +53,59 @@ export const useGetErrandQuery = (filter: Record<string, string | string[] | num
   });
   return { isLoading: result.isPending, data: result.data, result };
 };
+
+export const useGetOngoingErrandsQuery = (
+  filter: Record<string, string | string[] | number>
+) => {
+  const result = useQuery<IPaginationData<ErrandRow>, Error>({
+    queryKey: ["errands", filter],
+    queryFn: async () => {
+      const queryWithOngoing = { ...filter, onlyOngoing: "true" };
+      const queryStringified = qs.stringify(queryWithOngoing, {
+        skipNull: true,
+        skipEmptyString: true,
+      });
+      const url = `/errands${queryStringified ? `?${queryStringified}` : ""}`;
+      const response = await https.get(url);
+      return response.data.data.errands;
+    },
+    enabled: Object.entries(filter).length > 0,
+  });
+
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    result,
+  };
+};
+
+export const useGetNearByRidersQuery = () => {
+  const result = useQuery({
+    queryKey: ["nearby-riders"],
+    queryFn: async () => {
+      const response = await https.get(
+        `/rider/nearby-working?lng=3.4013347&lat=6.5378218&distanceInKM=7.9`
+      );
+      return response.data.data;
+    },
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useReAssignErrandMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<unknown, Error, { errandId: string; data: { riderId: string | null } }>({
+    mutationFn: async ({ errandId, data }) => {
+      const response = await https.patch(`/errands/${errandId}/assign-rider`, data);
+      return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
+    },
+  });
+};
+
 
 export type ErrandRow = {
   index?: number;
@@ -90,6 +144,14 @@ interface Rider {
   fullName: string | null;
 }
 
+interface PickupCoordinates {
+  coordinates: [number, number]; // [latitude, longitude]
+}
+
+interface DropoffCoordinates {
+  coordinates: [number, number]; // [latitude, longitude]
+}
+
 export interface ErrandDetails {
   _id: string;
   customer: Customer;
@@ -98,8 +160,10 @@ export interface ErrandDetails {
   items: Item[];
   vendor: Vendor | null;
   receiver: Receiver | null;
-  deliveryAddress: string;
-  deliveryFee: string; // Stored as string in JSON
+  dropoffAddress: string;
+  pickupCoordinates: PickupCoordinates ;
+  dropoffCoordinates: DropoffCoordinates ;
+  dispatchFee: string; // Stored as string in JSON
   serviceFee: string; // Stored as string in JSON
   totalProductsCost: string; // Stored as string in JSON
   totalCost: string; // Stored as string in JSON

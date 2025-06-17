@@ -8,17 +8,45 @@ import { Trash } from "lucide-react";
 import PopOver from "@/components/ui/custom/PopOver";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import ErrandDetails from "./singleErrandDetails";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { useReAssignErrandMutation ,useGetNearByRidersQuery} from "@/api/errand";
 
-const riders = [
-  { value: "john1", label: "John Doe" },
-  { value: "john2", label: "John Doe" },
-  { value: "john3", label: "John Doe" },
-  { value: "john4", label: "John Doe" },
-  { value: "john5", label: "John Doe" },
-];
+
 
 const Tabs = () => {
+    const { errandId } = useParams<{ errandId?: string }>();
   const [selectedRider, setSelectedRider] = useState("");
+  const { data: riders, isLoading } = useGetNearByRidersQuery();
+
+  const { mutateAsync: reassignOrder } = useReAssignErrandMutation();
+
+  const handleAssignOrders = async (riderId: string | null) => {
+    if (!errandId) {
+      toast.error("Order ID is missing");
+      return;
+    }
+
+    try {
+      await reassignOrder({
+        errandId,
+        data: { riderId },
+      });
+      toast.success("Order reassigned successfully");
+      setSelectedRider(""); // Reset selected rider
+    } catch (err) {
+      toast.error("Error reassigning order");
+    }
+  };
+
+  const radioItems = riders
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      riders.map((rider: any) => ({
+        value: rider._id,
+        label: rider.fullName,
+      }))
+    : [];
+
 
   return (
     <main className="w-[98%] py-[2%] mx-auto">
@@ -34,14 +62,13 @@ const Tabs = () => {
             className="bg-ctm-background  border border-ctm-primary-500  rounded-[16px] p-1"
           >
             <RadioItems
-              onSubmit={(value) => {
-                setSelectedRider(value ?? "");
-              }}
+              items={radioItems}
               selectedItem={selectedRider}
-              items={riders}
+              onSubmit={(value) => handleAssignOrders(value)} // Trigger reassignment on Apply
               showSearchBox={true}
               searchPlaceholder="Search for rider"
               addButtonText="Re-assign"
+              disabled={isLoading}
             />
           </PopOver>
           <Button variant="ctm-outline" asChild className="border-2">

@@ -14,12 +14,11 @@ const SingleErrandDetails = () => {
   const { errandId } = useParams();
   const { data: singleOrder } = useGetSingleErrandByIdQuery(errandId || "");
 
-  console.log(singleOrder, "singleOrder");
 
   // Mock coordinates (replace with geocoding logic based on deliveryAddress)
   // Mock coordinates as tuples [latitude, longitude]
-  const pickupCoords: [number, number] = [4.8156, 7.0498]; // Port Harcourt, Nigeria (example)
-  const destinationCoords: [number, number] = [5.4833, 7.0333]; // Owerri, Nigeria (example)
+  const pickupCoords: [number, number] =  singleOrder?.pickupCoordinates?.coordinates || [4.7775, 7.0540]; // Port Harcourt, Nigeria (example)
+  const destinationCoords: [number, number] = singleOrder?.dropoffCoordinates?.coordinates || [5.4867, 7.0367] ; // Owerri, Nigeria (example)
   const polyline = [pickupCoords, destinationCoords];
 
   // Custom marker icons
@@ -178,7 +177,7 @@ const SingleErrandDetails = () => {
               </div>
               <div className="text-[#484D57] text-base flex justify-between">
                 <span>Delivery Fee</span>
-                <span>{formatNaira(singleOrder?.deliveryFee)}</span>
+                <span>{formatNaira(singleOrder?.dispatchFee)}</span>
               </div>
               <div className="text-[#160A62] text-base  flex justify-between font-semibold">
                 <span>Total Amount</span>
@@ -195,7 +194,7 @@ const SingleErrandDetails = () => {
               </div>
               <div>
                 <span className="font-semibold">Delivery address</span>
-                <p>{singleOrder?.deliveryAddress}</p>
+                <p>{singleOrder?.dropoffAddress}</p>
                 <button className="text-indigo-600 text-sm">Copy address</button>
               </div>
               <div>
