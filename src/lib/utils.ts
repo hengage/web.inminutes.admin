@@ -69,7 +69,7 @@ export function stringifyQuery(query: UrlParams["query"]) {
         ...query,
       },
     },
-    { skipNull: true }
+    { skipNull: true, skipEmptyString: true }
   );
 }
 

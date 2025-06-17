@@ -29,8 +29,6 @@ interface PaginatedTableProps<T> {
 const DataTable = <T,>({ dataQuery, columns, pagination }: PaginatedTableProps<T>) => {
   const defaultData = useMemo(() => [], []);
 
-  console.log(dataQuery, 'dataquery in dataTable')
-
   const table = useReactTable({
     data: dataQuery.data?.data ?? defaultData,
     columns,

@@ -34,7 +34,7 @@ const priceRangeOptions = [
   { label: "₦500,000+", value: "500000-" },
 ];
 const ReviewProductTable = () => {
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   const router = useRouter();
   const { showSuccess } = useToast();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(

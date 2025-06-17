@@ -54,6 +54,19 @@ export const useGetRidersQuery = (filter: unknown) => {
 //   return result;
 // };
 
+export const useGetNearByRidersQuery = () => {
+  const result = useQuery({
+    queryKey: ["nearby-riders"],
+    queryFn: async () => {
+      const response = await https.get(
+        `/rider/nearby-working?lng=3.4013347&lat=6.5378218&distanceInKM=7.9`
+      );
+      return response.data.data;
+    },
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
 export interface IRiderCredentials {
   businessName: string;
   businessLogo: string;
