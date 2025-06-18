@@ -97,7 +97,6 @@ const CustomersTable = () => {
                         stroke-linejoin="round"
                       />
                     </svg>
-
                     <span>{singleCustomer?.email}</span>
                   </h3>
                 </div>

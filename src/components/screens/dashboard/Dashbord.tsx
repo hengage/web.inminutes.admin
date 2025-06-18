@@ -6,7 +6,7 @@ import Tag from "@/components/general/Tag";
 import Link from "next/link";
 import { Errand, Order, tag } from "@/types";
 import { useGetErrandQuery } from "@/api/errand";
-import { useGetOrdersQuery } from "@/api/order";
+import { useGetDashboardOrdersQuery } from "@/api/order";
 import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
 import { format } from "date-fns";
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/select";
 const Dashbord = () => {
   const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
-  const { isLoading: isLoadingOrders, data: ordersData } = useGetOrdersQuery({});
+  const { isLoading: isLoadingOrders, data: ordersData } = useGetDashboardOrdersQuery({});
   const { isLoading: isLoadingTransac, data: TransacData } = useGetTransactionQuery({});
   const topErrands = errandsData ? errandsData.slice(0, 4) : [];
   const topOrders = ordersData ? ordersData.slice(0, 3) : [];

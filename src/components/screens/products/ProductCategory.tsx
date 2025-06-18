@@ -27,7 +27,7 @@ const ProductCategoryTable = () => {
     router.push(stringifyUrl(value));
     refetch();
   };
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,

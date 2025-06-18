@@ -8,6 +8,7 @@ const useUrlState = () => {
   const allParams = useMemo(() => {
     const params: Record<string, string | string[]> = {};
     for (const [key, value] of searchParams.entries()) {
+      if (typeof window === "undefined") return;
       if (key in params) {
         // If the key already exists, convert to array if needed and append
         params[key] = Array.isArray(params[key])
@@ -19,6 +20,7 @@ const useUrlState = () => {
     }
     return { ...params };
   }, [searchParams]);
+  
   const allKeys = useMemo(() => searchParams.keys(), [searchParams]);
   const getParam = useCallback((key: string) => searchParams.get(key), [searchParams]);
   const getAllParams = useCallback((key: string) => searchParams.getAll(key), [searchParams]);

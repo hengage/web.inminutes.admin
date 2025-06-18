@@ -25,7 +25,6 @@ interface CustomerCardProps {
 const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
   // Default values to handle undefined props
 
-
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 w-full">
       <div className="border-b border-gray-200 mb-4 flex justify-between pb-4 items-center">
@@ -34,7 +33,7 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
           <svg className="w-2 h-2 text-[#3F2BC3] mr-1" fill="currentColor" viewBox="0 0 8 8">
             <circle cx="4" cy="4" r="4" />
           </svg>
-          {singleCustomer?.status || 'Active'}
+          {singleCustomer?.status || "Active"}
         </span>
       </div>
       <div className="flex items-center gap-2 mb-4">
@@ -53,7 +52,8 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
             {singleCustomer?.fullName}
           </h3>
           <h3 className="font-normal text-sm text-[#656667] capitalize">
-            Customer Since: {formatDate(singleCustomer?.createdAt)}
+            Customer Since:{" "}
+            {singleCustomer?.createdAt ? formatDate(singleCustomer.createdAt) : ""}{" "}
           </h3>
         </div>
       </div>
@@ -69,7 +69,7 @@ const CustomerCard = ({ singleCustomer }: CustomerCardProps) => {
         <div>
           <h4 className="text-sm font-semibold text-gray-500">LAST UPDATE</h4>
           <p className="text-lg font-bold text-ctm-primary-700">
-            {formatDate(singleCustomer?.updatedAt)}
+            <p>{singleCustomer?.updatedAt ? formatDate(singleCustomer?.updatedAt) : ""}</p>
           </p>
         </div>
       </div>

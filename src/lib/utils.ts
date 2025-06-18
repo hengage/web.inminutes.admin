@@ -2,6 +2,17 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import qs from "query-string";
 
+import { format } from "date-fns";
+
+export const formatDate = (date: string | Date) => {
+  if (!date) return "N/A";
+  try {
+    return format(new Date(date), "PPP p"); // e.g., "Jun 12, 2025 10:28 AM"
+  } catch {
+    return "N/A";
+  }
+};
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -58,7 +69,7 @@ export function stringifyQuery(query: UrlParams["query"]) {
         ...query,
       },
     },
-    { skipNull: true }
+    { skipNull: true, skipEmptyString: true }
   );
 }
 
@@ -66,11 +77,11 @@ export const stringContains = (value: string, secondValue: string) => {
   return value?.toLowerCase().includes(secondValue?.toLowerCase());
 };
 
-export function formatDate(dateString?: string) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-}
+// export function formatDate(dateString?: string) {
+//   if (!dateString) return "";
+//   const date = new Date(dateString);
+//   return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+// }
 
 // Add this function near the top, after imports
 export function formatDOB(dateString?: string) {
