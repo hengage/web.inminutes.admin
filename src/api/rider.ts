@@ -54,15 +54,29 @@ export const useGetRidersQuery = (filter: unknown) => {
 //   return result;
 // };
 
-export const useGetNearByRidersQuery = () => {
+interface NearByRidersQueryParams {
+  lng?: number;
+  lat?: number;
+  distanceInKM?: number;
+  orderId?: string;
+}
+
+export const useGetNearByRidersQuery = (
+  { lng, lat, distanceInKM, orderId }: NearByRidersQueryParams = {},
+  options: { skip?: boolean } = {}
+) => {
   const result = useQuery({
-    queryKey: ["nearby-riders"],
+    queryKey: ["nearby-riders", { lng, lat, distanceInKM, orderId }],
     queryFn: async () => {
-      const response = await https.get(
-        `/rider/nearby-working?lng=3.4013347&lat=6.5378218&distanceInKM=7.9`
-      );
+      const params = new URLSearchParams();
+      if (lng) params.append("lng", lng.toString());
+      if (lat) params.append("lat", lat.toString());
+      if (distanceInKM) params.append("distanceInKM", distanceInKM.toString());
+      if (orderId) params.append("orderId", orderId);
+      const response = await https.get(`/rider/nearby-working?${params.toString()}`);
       return response.data.data;
     },
+    enabled: !options.skip,
   });
   return { isLoading: result.isPending, data: result.data, result };
 };

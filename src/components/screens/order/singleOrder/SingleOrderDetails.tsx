@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, formatNaira } from "@/lib/utils";
-import { Fragment, Suspense } from "react";
+import { Suspense } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { icon } from "leaflet";
@@ -33,9 +33,9 @@ const SingleOrderDetails = () => {
   });
 
   const status = singleOrder?.status.toLowerCase();
-  const isInTransit = status === "in-transit";
-  const isNearby = status === "nearby";
-  const isArrived = status === "arrived";
+  const isInTransit = status === "pending";
+  const isNearby = status === "ready";
+  const isArrived = status === "delivered";
 
   return (
     <div className="rounded-md border-ctm-secondary-100 p-2 mt-6 mb-2">
@@ -67,7 +67,10 @@ const SingleOrderDetails = () => {
                   In-transit
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                  <div className="bg-[#3B82F6] h-2 rounded-full" style={{ width: "100%" }}></div>
+                  <div
+                    className={isInTransit ? "text-[#3B82F6] font-medium" : "text-gray-500"}
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
               <div
@@ -166,20 +169,39 @@ const SingleOrderDetails = () => {
               <Polyline positions={polyline} color="blue" />
             </MapContainer>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h2 className="text-[#160A62] text-xl font-bold  mb-2">Products</h2>
-            <div className="grid grid-cols-[1fr_100px_100px] gap-2 text-sm">
-              <span className="text-[#160A62] text-lg font-semibold">Product ID</span>
-              <span className="text-[#160A62] text-lg  font-semibold">Quantity</span>
-              <span className="text-[#160A62] text-lg  font-semibold">Price</span>
-              {singleOrder?.items?.map((item, index) => (
-                <Fragment key={index}>
-                  <span>ID#{item.product}</span>
-                  <span>{item.quantity}</span>
-                  <span>{formatNaira(item.cost)}</span>
-                </Fragment>
-              ))}
-            </div>
+          <div className="bg-white border-2 border-[#EAEAEC] rounded-lg shadow-lg p-4">
+            <h2 className="text-[#160A62] text-xl font-bold border-b border-[#EAEAEC] mb-4 p-2">
+              Products
+            </h2>
+
+            {singleOrder?.items && singleOrder.items.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-[#EAEAEC]">
+                      <th className="text-left text-[#160A62] text-lg font-semibold py-2">
+                        Product ID
+                      </th>
+                      <th className="text-left text-[#160A62] text-lg font-semibold py-2">
+                        Quantity
+                      </th>
+                      <th className="text-left text-[#160A62] text-lg font-semibold py-2">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {singleOrder.items.map((item, index) => (
+                      <tr key={index} className="border-b border-[#EAEAEC]">
+                        <td className="py-2">ID#{item.product}</td>
+                        <td className="py-2">{item.quantity}</td>
+                        <td className="py-2">{formatNaira(item.cost)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-gray-500 py-4">No products found for this order.</div>
+            )}
           </div>
         </div>
 
@@ -211,13 +233,43 @@ const SingleOrderDetails = () => {
               <div>
                 <span className="font-semibold">Delivery address</span>
                 <p>{singleOrder?.deliveryAddress}</p>
-                <button className="text-indigo-600 text-sm">Copy address</button>
+                <button
+                  onClick={() => {
+                    if (singleOrder?.deliveryAddress) {
+                      navigator.clipboard.writeText(singleOrder.deliveryAddress);
+                    }
+                  }}
+                  className="text-[#3F2BC3] text-sm flex gap-3"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect width="24" height="24" rx="12" fill="#EBEBEB" />
+                    <path
+                      d="M14.4 12.5396V15.0596C14.4 17.1596 13.56 17.9996 11.46 17.9996H8.94C6.84 17.9996 6 17.1596 6 15.0596V12.5396C6 10.4396 6.84 9.59961 8.94 9.59961H11.46C13.56 9.59961 14.4 10.4396 14.4 12.5396Z"
+                      stroke="#3F2BC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M18.0016 8.94V11.46C18.0016 13.56 17.1616 14.4 15.0616 14.4H14.4016V12.54C14.4016 10.44 13.5616 9.6 11.4616 9.6H9.60156V8.94C9.60156 6.84 10.4416 6 12.5416 6H15.0616C17.1616 6 18.0016 6.84 18.0016 8.94Z"
+                      stroke="#3F2BC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="underline">Copy address</span>
+                </button>
               </div>
               <div>
                 <span className="font-semibold">Delivery instructions</span>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur. Volutpat vel ac mus placerat at malesuada.
-                </p>
+                <p>{singleOrder?.instruction}</p>
               </div>
             </div>
           </ContactCard>

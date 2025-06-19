@@ -114,27 +114,6 @@ export type OrderRow = {
   [key: string]: string | number | undefined | Customer;
 };
 
-// export interface OrderDetails {
-//   _id: string;
-//   customer: {
-//     _id: string;
-//     fullName: string;
-//     displayName: string;
-//     email: string;
-//   };
-//   rider: {
-//     _id: string;
-//     fullName: string;
-//     displayName: string;
-//     email: string;
-//   } | null;
-//   totalProductsCost: string;
-//   totalCost: string;
-//   type: string;
-//   status: string;
-//   createdAt: string;
-// }
-
 interface Customer {
   _id: string;
   fullName: string;
@@ -161,6 +140,7 @@ export interface OrderDetails {
   _id: string;
   customer: Customer;
   recipientPhoneNumber: string;
+  instruction?: string;
   rider: Rider | null;
   items: Item[];
   vendor: Vendor | null;
