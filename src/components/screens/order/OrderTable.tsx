@@ -68,7 +68,7 @@ const OrderTable = () => {
       cell: ({ row }) => {
         return (
           <span
-            onClick={() => router.push(`/order/${row.original._id}`)}
+            onClick={() => router.push(`/Riders/${row.original._id}`)}
             className="font-normal text-center text-base text-ctm-secondary-200"
           >
             {row.original?.rider?.fullName || "-"}

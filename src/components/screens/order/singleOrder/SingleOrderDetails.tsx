@@ -9,6 +9,7 @@ import { ContactCard } from "@/components/general/ContactCard";
 import { useParams } from "next/navigation";
 import { useGetSingleOrderByIdQuery } from "@/api/order";
 import TransitIcon from "@/components/ui/transit-icon";
+import Link from "next/link";
 
 const SingleOrderDetails = () => {
   const { orderId } = useParams();
@@ -278,21 +279,27 @@ const SingleOrderDetails = () => {
             <div className="space-y-2">
               <div>
                 <span className="text-[#484D57] text-base font-medium">Customer name</span>
+                <Link href={`/customer/${singleOrder?._id}`}>
                 <p className="text-[#3F2BC3] text-lg capitalize underline ">
                   {singleOrder?.customer?.fullName}
                 </p>
+                </Link>
               </div>
               <div>
                 <span className="text-[#484D57] text-base font-medium">Rider name</span>
+                <Link href={`/Rider/${singleOrder?._id}`}>
                 <p className="text-[#3F2BC3] text-lg capitalize underline ">
                   {singleOrder?.rider?.fullName || "N/A"}
                 </p>
+                </Link>
               </div>
               <div>
                 <span className="text-[#484D57] text-base font-medium">Vendor name</span>
+                <Link href={`/order/${singleOrder?._id}`}>
                 <p className="text-[#3F2BC3] text-lg capitalize underline ">
                   {singleOrder?.vendor?.businessName || "N/A"}
                 </p>
+                </Link>
               </div>
             </div>
           </ContactCard>
