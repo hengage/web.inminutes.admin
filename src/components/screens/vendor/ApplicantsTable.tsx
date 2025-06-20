@@ -102,7 +102,7 @@ const VendorsTable = () => {
     queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VENDORS] });
     result.refetch();
   };
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,

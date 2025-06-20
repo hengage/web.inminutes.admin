@@ -15,25 +15,24 @@ import { Icon } from "@/components/ui/Icon";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
-import { OrderRow, useGetOrdersQuery } from "@/api/order";
-import { status, types } from "@/lib/comon/constant";
+import { OrderRow, useGetOngoingOrdersQuery } from "@/api/order";
+import { types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
 
 const OngoingOrderTable = () => {
   const router = useRouter();
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const [selectedType, setSelectedType] = useState<string>("");
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
-    status: selectedStatus,
     type: selectedType,
     fromDate: "",
     toDate: "",
     page: 1,
     limit: 30,
+    onlyOngoing: "true",
   });
-  const { result } = useGetOrdersQuery(queryValues);
+  const { result } = useGetOngoingOrdersQuery(queryValues);
 
   const columns: ColumnDef<OrderRow>[] = [
     {
@@ -105,14 +104,13 @@ const OngoingOrderTable = () => {
   useEffect(() => {
     setQueryValues({
       ...allParams,
-      status: selectedStatus,
       type: selectedType,
       fromDate: allParams.fromDate ?? "",
       toDate: allParams.toDate ?? "",
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams, selectedStatus, selectedType]);
+  }, [allParams, selectedType]);
 
   return (
     <div className="my-4">
@@ -136,10 +134,9 @@ const OngoingOrderTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`customer/${stringifyQuery({ page: 1, limit: 30 })}#1`);
+                router.push(`order/${stringifyQuery({ page: 1, limit: 30 })}#1`);
                 return { page: prev.page, limit: prev.limit };
               });
-              setSelectedStatus("");
               setSelectedType("");
               result.refetch();
             }}
@@ -148,24 +145,6 @@ const OngoingOrderTable = () => {
           >
             Clear Filter
           </Button>
-          <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Status
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <RadioItems
-              onSubmit={(params) => {
-                setSelectedStatus(params ?? "");
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
-              selectedItem={selectedStatus}
-              items={status}
-            />
-          </PopOver>
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>

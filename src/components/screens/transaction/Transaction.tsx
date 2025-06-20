@@ -145,7 +145,7 @@ const TransactionTable = () => {
     router.push(`/transaction?${queryString}`);
   };
 
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,

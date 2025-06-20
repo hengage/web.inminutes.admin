@@ -98,7 +98,7 @@ const AllProductTable = () => {
     });
   };
 
-  const { allParams } = useUrlState();
+  const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,

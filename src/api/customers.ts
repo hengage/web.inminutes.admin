@@ -35,9 +35,7 @@ export const useGetCustomersOrdersQuery = (
   const result = useQuery<IPaginationData<OrderRow>, Error>({
     queryKey: ["customer-orders", customerId, filter],
     queryFn: async () => {
-      const response = await https.get(
-        `/order/list?customer=${customerId}${stringifyQuery(filter)}`
-      );
+      const response = await https.get(`/order?customer=${customerId}${stringifyQuery(filter)}`);
       return response.data.data.orders;
     },
     enabled: Object.entries(filter).length > 0,
