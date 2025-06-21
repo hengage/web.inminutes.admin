@@ -5,7 +5,7 @@ import RecentTransactions from "./RecentTransac";
 import Tag from "@/components/general/Tag";
 import Link from "next/link";
 import { Errand, Order, tag } from "@/types";
-import { useGetErrandQuery } from "@/api/errand";
+import { useGetDashboardErrandsQuery } from "@/api/errand";
 import { useGetDashboardOrdersQuery } from "@/api/order";
 import { ITransaction, useGetTransactionQuery } from "@/api/transaction";
 import { useGetDashboardQuery } from "@/api/dashboard";
@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 const Dashbord = () => {
-  const { isLoading: isLoadingErrands, data: errandsData } = useGetErrandQuery({});
+  const { isLoading: isLoadingErrands, data: errandsData } = useGetDashboardErrandsQuery({});
   const { isLoading: isLoadingOrders, data: ordersData } = useGetDashboardOrdersQuery({});
   const { isLoading: isLoadingTransac, data: TransacData } = useGetTransactionQuery({});
   const topErrands = errandsData ? errandsData.slice(0, 4) : [];
