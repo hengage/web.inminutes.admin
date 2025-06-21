@@ -15,19 +15,22 @@ import { Icon } from "@/components/ui/Icon";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
-import {  types } from "@/lib/comon/constant";
+import { types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
 import { ErrandRow, useGetErrandQuery } from "@/api/errand";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const CancelledErrandTable = () => {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState<string>("cancelled");
 
   const [selectedType, setSelectedType] = useState<string>("");
-
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     status: selectedStatus,
     type: selectedType,
+    searchQuery: searchInput,
     fromDate: "",
     toDate: "",
     page: 1,
@@ -35,7 +38,6 @@ const CancelledErrandTable = () => {
   });
   const { result } = useGetErrandQuery(queryValues);
 
- 
   const columns: ColumnDef<ErrandRow>[] = [
     {
       accessorKey: "index",
@@ -65,7 +67,10 @@ const CancelledErrandTable = () => {
       header: () => <span className="whitespace-nowrap font-semibold text-base">Customer</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-center text-base text-ctm-secondary-200">
+          <span
+            onClick={() => router.push(`/customer/${row.original._id}`)}
+            className="font-normal cursor-pointer text-center text-base text-ctm-secondary-200"
+          >
             {row.original?.customer?.fullName || "-"}
           </span>
         );
@@ -109,12 +114,20 @@ const CancelledErrandTable = () => {
       ...allParams,
       status: selectedStatus,
       type: selectedType,
+      searchQuery: debouncedSearchTerm,
       fromDate: allParams.fromDate ?? "",
       toDate: allParams.toDate ?? "",
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams, selectedStatus, selectedType]);
+  }, [allParams, selectedStatus, debouncedSearchTerm, selectedType]);
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="my-4">
@@ -150,7 +163,7 @@ const CancelledErrandTable = () => {
           >
             Clear Filter
           </Button>
-         
+
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
@@ -199,8 +212,8 @@ const CancelledErrandTable = () => {
               className="w-fit"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search as string}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>

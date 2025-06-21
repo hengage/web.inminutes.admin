@@ -15,26 +15,28 @@ import { Icon } from "@/components/ui/Icon";
 import Tag from "@/components/general/Tag";
 import { tag } from "@/types";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
-import {  types } from "@/lib/comon/constant";
+import { types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
-import { ErrandRow,  useGetOngoingErrandsQuery } from "@/api/errand";
+import { ErrandRow, useGetOngoingErrandsQuery } from "@/api/errand";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const OngoingErrandTable = () => {
   const router = useRouter();
 
   const [selectedType, setSelectedType] = useState<string>("");
-
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     type: selectedType,
     fromDate: "",
+    searchQuery: searchInput,
     toDate: "",
     page: 1,
     limit: 30,
-    onlyOngoing: "true"
+    onlyOngoing: "true",
   });
   const { result } = useGetOngoingErrandsQuery(queryValues);
 
- 
   const columns: ColumnDef<ErrandRow>[] = [
     {
       accessorKey: "index",
@@ -64,7 +66,10 @@ const OngoingErrandTable = () => {
       header: () => <span className="whitespace-nowrap font-semibold text-base">Customer</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-center text-base text-ctm-secondary-200">
+          <span
+            onClick={() => router.push(`/customer/${row.original._id}`)}
+            className="font-normal cursor-pointer text-center text-base text-ctm-secondary-200"
+          >
             {row.original?.customer?.fullName || "-"}
           </span>
         );
@@ -97,7 +102,7 @@ const OngoingErrandTable = () => {
       ),
     },
   ];
-  
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
     result.refetch();
@@ -107,12 +112,20 @@ const OngoingErrandTable = () => {
     setQueryValues({
       ...allParams,
       type: selectedType,
+      searchQuery: debouncedSearchTerm,
       fromDate: allParams.fromDate ?? "",
       toDate: allParams.toDate ?? "",
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams, selectedType]);
+  }, [allParams, debouncedSearchTerm, selectedType]);
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="my-4">
@@ -136,7 +149,7 @@ const OngoingErrandTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`customer/${stringifyQuery({ page: 1, limit: 30 })}#1`);
+                router.push(`errand/${stringifyQuery({ page: 1, limit: 30 })}#1`);
                 return { page: prev.page, limit: prev.limit };
               });
               setSelectedType("");
@@ -147,7 +160,7 @@ const OngoingErrandTable = () => {
           >
             Clear Filter
           </Button>
-          
+
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
@@ -196,13 +209,13 @@ const OngoingErrandTable = () => {
               className="w-fit"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search as string}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
         <DataTable dataQuery={result} columns={columns} />
-        {result.data?.data.length && result.data?.data.length > 0 ? (
+        {result?.data?.data?.length && result?.data?.data?.length > 0 ? (
           <Pagination
             total={result.data?.total ?? 30}
             page={Number(queryValues.page)}

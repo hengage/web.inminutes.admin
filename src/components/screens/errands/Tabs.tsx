@@ -26,8 +26,8 @@ const Tabs = () => {
         <h2 className="ctm-header-1 text-ctm-primary-700">Errands</h2>
         <span className="flex gap-2 items-center justify-end">
           <Button disabled variant="ctm-outline" asChild className="border-2">
-            <Link aria-disabled="true" href={"/errand/update"}>
-              Update
+            <Link aria-disabled="true" href={"/errand"}>
+              Refresh
             </Link>
           </Button>
         </span>

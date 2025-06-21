@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDate, formatNaira } from "@/lib/utils";
-import {  Suspense } from "react";
+import { Suspense } from "react";
 import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { icon } from "leaflet";
@@ -9,16 +9,20 @@ import { ContactCard } from "@/components/general/ContactCard";
 import { useParams } from "next/navigation";
 import TransitIcon from "@/components/ui/transit-icon";
 import { useGetSingleErrandByIdQuery } from "@/api/errand";
+import Link from "next/link";
 
 const SingleErrandDetails = () => {
   const { errandId } = useParams();
   const { data: singleOrder } = useGetSingleErrandByIdQuery(errandId || "");
 
-
   // Mock coordinates (replace with geocoding logic based on deliveryAddress)
   // Mock coordinates as tuples [latitude, longitude]
-  const pickupCoords: [number, number] =  singleOrder?.pickupCoordinates?.coordinates || [4.7775, 7.0540]; // Port Harcourt, Nigeria (example)
-  const destinationCoords: [number, number] = singleOrder?.dropoffCoordinates?.coordinates || [5.4867, 7.0367] ; // Owerri, Nigeria (example)
+  const pickupCoords: [number, number] = singleOrder?.pickupCoordinates?.coordinates || [
+    4.7775, 7.054,
+  ]; // Port Harcourt, Nigeria (example)
+  const destinationCoords: [number, number] = singleOrder?.dropoffCoordinates?.coordinates || [
+    5.4867, 7.0367,
+  ]; // Owerri, Nigeria (example)
   const polyline = [pickupCoords, destinationCoords];
 
   // Custom marker icons
@@ -32,9 +36,9 @@ const SingleErrandDetails = () => {
   });
 
   const status = singleOrder?.status.toLowerCase();
-  const isInTransit = status === "in-transit";
-  const isNearby = status === "nearby";
-  const isArrived = status === "arrived";
+  const isInTransit = status === "pending";
+  const isNearby = status === "ready";
+  const isArrived = status === "delivered";
 
   return (
     <div className="rounded-md border-ctm-secondary-100 p-2 mt-6 mb-2">
@@ -67,6 +71,10 @@ const SingleErrandDetails = () => {
                 </p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div className="bg-[#3B82F6] h-2 rounded-full" style={{ width: "100%" }}></div>
+                  <div
+                    className={isInTransit ? "text-[#3B82F6] font-medium" : "text-gray-500"}
+                    style={{ width: "100%" }}
+                  ></div>
                 </div>
               </div>
               <div
@@ -195,13 +203,43 @@ const SingleErrandDetails = () => {
               <div>
                 <span className="font-semibold">Delivery address</span>
                 <p>{singleOrder?.dropoffAddress}</p>
-                <button className="text-indigo-600 text-sm">Copy address</button>
+                <button
+                  onClick={() => {
+                    if (singleOrder?.deliveryAddress) {
+                      navigator.clipboard.writeText(singleOrder.deliveryAddress);
+                    }
+                  }}
+                  className="text-[#3F2BC3] text-sm flex gap-3"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect width="24" height="24" rx="12" fill="#EBEBEB" />
+                    <path
+                      d="M14.4 12.5396V15.0596C14.4 17.1596 13.56 17.9996 11.46 17.9996H8.94C6.84 17.9996 6 17.1596 6 15.0596V12.5396C6 10.4396 6.84 9.59961 8.94 9.59961H11.46C13.56 9.59961 14.4 10.4396 14.4 12.5396Z"
+                      stroke="#3F2BC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M18.0016 8.94V11.46C18.0016 13.56 17.1616 14.4 15.0616 14.4H14.4016V12.54C14.4016 10.44 13.5616 9.6 11.4616 9.6H9.60156V8.94C9.60156 6.84 10.4416 6 12.5416 6H15.0616C17.1616 6 18.0016 6.84 18.0016 8.94Z"
+                      stroke="#3F2BC3"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <span className="underline">Copy address</span>
+                </button>
               </div>
               <div>
                 <span className="font-semibold">Delivery instructions</span>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur. Volutpat vel ac mus placerat at malesuada.
-                </p>
+                <p>{singleOrder?.instruction}</p>
               </div>
             </div>
           </ContactCard>
@@ -210,15 +248,19 @@ const SingleErrandDetails = () => {
             <div className="space-y-2">
               <div>
                 <span className="text-[#484D57] text-base font-medium">Customer name</span>
-                <p className="text-[#3F2BC3] text-lg capitalize underline ">
-                  {singleOrder?.customer?.fullName}
-                </p>
+                <Link href={`/customer/${singleOrder?._id}`}>
+                  <p className="text-[#3F2BC3] text-lg capitalize underline ">
+                    {singleOrder?.customer?.fullName}
+                  </p>
+                </Link>
               </div>
               <div>
                 <span className="text-[#484D57] text-base font-medium">Rider name</span>
-                <p className="text-[#3F2BC3] text-lg capitalize underline ">
-                  {singleOrder?.rider?.fullName || "N/A"}
-                </p>
+                <Link href={`/Rider/${singleOrder?._id}`}>
+                  <p className="text-[#3F2BC3] text-lg capitalize underline ">
+                    {singleOrder?.rider?.fullName}
+                  </p>
+                </Link>
               </div>
               <div>
                 <span className="text-[#484D57] text-base font-medium">Receiver name</span>

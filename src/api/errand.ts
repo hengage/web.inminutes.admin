@@ -5,8 +5,6 @@ import { IPaginationData } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import qs from "query-string";
 
-
-
 export const useGetSingleErrandQuery = (errandId: string) => {
   return useQuery({
     queryKey: ["singleErrand", errandId],
@@ -18,10 +16,6 @@ export const useGetSingleErrandQuery = (errandId: string) => {
     enabled: !!errandId,
   });
 };
-
-
-
-
 
 export const useGetSingleErrandByIdQuery = (errandId: string | string[]) => {
   return useQuery<ErrandDetails, Error>({
@@ -54,9 +48,7 @@ export const useGetErrandQuery = (filter: Record<string, string | string[] | num
   return { isLoading: result.isPending, data: result.data, result };
 };
 
-export const useGetOngoingErrandsQuery = (
-  filter: Record<string, string | string[] | number>
-) => {
+export const useGetOngoingErrandsQuery = (filter: Record<string, string | string[] | number>) => {
   const result = useQuery<IPaginationData<ErrandRow>, Error>({
     queryKey: ["errands", filter],
     queryFn: async () => {
@@ -70,6 +62,14 @@ export const useGetOngoingErrandsQuery = (
       return response.data.data.errands;
     },
     enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
   });
 
   return {
@@ -79,15 +79,29 @@ export const useGetOngoingErrandsQuery = (
   };
 };
 
-export const useGetNearByRidersQuery = () => {
+interface NearByRidersQueryParams {
+  lng?: number;
+  lat?: number;
+  distanceInKM?: number;
+  orderId?: string;
+}
+
+export const useGetNearByRidersQuery = (
+  { lng, lat, distanceInKM, orderId }: NearByRidersQueryParams = {},
+  options: { skip?: boolean } = {}
+) => {
   const result = useQuery({
-    queryKey: ["nearby-riders"],
+    queryKey: ["nearby-riders", { lng, lat, distanceInKM, orderId }],
     queryFn: async () => {
-      const response = await https.get(
-        `/rider/nearby-working?lng=3.4013347&lat=6.5378218&distanceInKM=7.9`
-      );
+      const params = new URLSearchParams();
+      if (lng) params.append("lng", lng.toString());
+      if (lat) params.append("lat", lat.toString());
+      if (distanceInKM) params.append("distanceInKM", distanceInKM.toString());
+      if (orderId) params.append("orderId", orderId);
+      const response = await https.get(`/rider/nearby-working?${params.toString()}`);
       return response.data.data;
     },
+    enabled: !options.skip,
   });
   return { isLoading: result.isPending, data: result.data, result };
 };
@@ -106,7 +120,6 @@ export const useReAssignErrandMutation = () => {
   });
 };
 
-
 export type ErrandRow = {
   index?: number;
   _id: string;
@@ -115,7 +128,6 @@ export type ErrandRow = {
   status: string;
   [key: string]: string | number | undefined | Customer;
 };
-
 
 interface Customer {
   _id: string;
@@ -160,9 +172,11 @@ export interface ErrandDetails {
   items: Item[];
   vendor: Vendor | null;
   receiver: Receiver | null;
+  deliveryAddress?: string;
+  instruction?: string;
   dropoffAddress: string;
-  pickupCoordinates: PickupCoordinates ;
-  dropoffCoordinates: DropoffCoordinates ;
+  pickupCoordinates: PickupCoordinates;
+  dropoffCoordinates: DropoffCoordinates;
   dispatchFee: string; // Stored as string in JSON
   serviceFee: string; // Stored as string in JSON
   totalProductsCost: string; // Stored as string in JSON
