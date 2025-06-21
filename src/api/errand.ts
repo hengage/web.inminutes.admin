@@ -5,6 +5,23 @@ import { IPaginationData } from "@/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import qs from "query-string";
 
+export const useGetDashboardErrandsQuery = (filter = {}) => {
+  const result = useQuery({
+    queryKey: [QUERY_KEYS.ERRANDS, filter],
+    queryFn: async () => {
+      const response = await https.get("/errands" + `${stringifyQuery(filter)}`);
+      return response.data.data.errands.docs;
+    },
+  });
+
+  return {
+    isLoading: result.isPending,
+    data: result.data,
+    error: result.error,
+    result,
+  };
+};
+
 export const useGetSingleErrandQuery = (errandId: string) => {
   return useQuery({
     queryKey: ["singleErrand", errandId],
