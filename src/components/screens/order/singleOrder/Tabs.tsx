@@ -7,7 +7,7 @@ import PageHeader from "@/components/general/PageHeader";
 import OrderDetails from "./SingleOrderDetails";
 import { Trash } from "lucide-react";
 import PopOver from "@/components/ui/custom/PopOver";
-import { useReAssignOrderMutation } from "@/api/order";
+import { useGetSingleOrderByIdQuery, useReAssignOrderMutation } from "@/api/order";
 import { toast } from "react-toastify";
 import { useGetNearByRidersQuery } from "@/api/rider";
 import { useParams } from "next/navigation";
@@ -15,13 +15,16 @@ import Radio from "@/components/ui/custom/radio/Radio";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { CustomInput } from "@/components/ui/custom/input";
 import { Icon } from "@/components/ui/Icon";
+import { Button as GenericButton } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const Tabs = () => {
   const { orderId } = useParams<{ orderId?: string }>();
-
+  const router = useRouter();
   const [selectedRider, setSelectedRider] = useState("");
   const [isPopOverOpen, setIsPopOverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const { refetch } = useGetSingleOrderByIdQuery(orderId || "");
 
   const { data: riders, isLoading } = useGetNearByRidersQuery(
     {
@@ -33,7 +36,9 @@ const Tabs = () => {
   );
 
   const { mutateAsync: reassignOrder } = useReAssignOrderMutation();
-
+  const handleRefresh = () => {
+    refetch(); // Trigger refetch of singleOrder data
+  };
   const handleAssignOrders = async (riderId: string | null) => {
     if (!orderId) {
       toast.error("Order ID is missing");
@@ -68,9 +73,11 @@ const Tabs = () => {
   return (
     <main className="w-[98%] py-[2%] mx-auto">
       <div className="flex justify-between items-center">
-        <PageHeader title="Order Details" />
+        <PageHeader onBack={() => router.push("/order")} title="Order Details" />
         <div className="flex gap-2 items-center justify-end">
           <PopOver
+            open={isPopOverOpen}
+            onOpenChange={setIsPopOverOpen}
             trigger={
               <Button
                 className="bg-[#3F2BC3] stroke-ctm-secondary-300"
@@ -126,9 +133,12 @@ const Tabs = () => {
             </div>
           </PopOver>
 
-          <Button variant="ctm-outline" asChild className="border-2">
-            <Link href={"/order"}>Refresh</Link>
-          </Button>
+          <GenericButton
+            onClick={handleRefresh}
+            className="border border-ctm-primary-500 bg-background shadow-sm hover:bg-transparent  text-ctm-primary-500 "
+          >
+            Refresh
+          </GenericButton>
           <Button variant="ctm-outline" asChild className="border-2 border-[#DA3030]">
             <Link href={"#/order/"}>
               <Trash className="text-[#DA3030]" />
