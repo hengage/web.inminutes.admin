@@ -97,7 +97,7 @@ export const useReAssignOrderMutation = () => {
   return useMutation<unknown, Error, { orderId: string; data: { riderId: string | null } }>({
     mutationFn: async ({ orderId, data }) => {
       const response = await https.patch(`/orders/${orderId}/assign-rider`, data);
-      return response.data.data;
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
@@ -113,27 +113,6 @@ export type OrderRow = {
   status: string;
   [key: string]: string | number | undefined | Customer;
 };
-
-// export interface OrderDetails {
-//   _id: string;
-//   customer: {
-//     _id: string;
-//     fullName: string;
-//     displayName: string;
-//     email: string;
-//   };
-//   rider: {
-//     _id: string;
-//     fullName: string;
-//     displayName: string;
-//     email: string;
-//   } | null;
-//   totalProductsCost: string;
-//   totalCost: string;
-//   type: string;
-//   status: string;
-//   createdAt: string;
-// }
 
 interface Customer {
   _id: string;
@@ -161,6 +140,7 @@ export interface OrderDetails {
   _id: string;
   customer: Customer;
   recipientPhoneNumber: string;
+  instruction?: string;
   rider: Rider | null;
   items: Item[];
   vendor: Vendor | null;

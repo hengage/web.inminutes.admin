@@ -3,17 +3,26 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "../button";
 import { cn } from "@/lib/utils";
 import { PopoverTriggerProps } from "@radix-ui/react-popover";
-
+import { Dispatch, SetStateAction } from "react"; // Import necessary types
 export interface PopOverProps {
   children: React.ReactNode;
   trigger?: React.ReactNode;
   triggerProps?: PopoverTriggerProps;
   className?: string;
+  open?: boolean; // Add open prop
+  onOpenChange?: Dispatch<SetStateAction<boolean>>;
 }
 
-const PopOver = ({ children, trigger, className, triggerProps }: PopOverProps) => {
+const PopOver = ({
+  children,
+  trigger,
+  className,
+  triggerProps,
+  open,
+  onOpenChange,
+}: PopOverProps) => {
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild {...triggerProps}>
         {trigger ? (
           trigger

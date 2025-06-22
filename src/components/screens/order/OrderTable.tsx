@@ -18,14 +18,18 @@ import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { OrderRow, useGetOrdersQuery } from "@/api/order";
 import { status, types } from "@/lib/comon/constant";
 import DateRangePicker from "@/components/ui/custom/Daterange";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const OrderTable = () => {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
 
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     status: selectedStatus,
+    searchQuery: searchInput,
     type: selectedType,
     fromDate: "",
     toDate: "",
@@ -63,7 +67,10 @@ const OrderTable = () => {
       header: () => <span className="whitespace-nowrap font-semibold text-base">Rider</span>,
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-center text-base text-ctm-secondary-200">
+          <span
+            onClick={() => router.push(`/Riders/${row.original._id}`)}
+            className="font-normal text-center text-base text-ctm-secondary-200"
+          >
             {row.original?.rider?.fullName || "-"}
           </span>
         );
@@ -100,18 +107,26 @@ const OrderTable = () => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
+
   const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
       status: selectedStatus,
       type: selectedType,
+      searchQuery: debouncedSearchTerm,
       fromDate: allParams.fromDate ?? "",
       toDate: allParams.toDate ?? "",
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams, selectedStatus, selectedType]);
+  }, [allParams, selectedStatus, debouncedSearchTerm, selectedType]);
 
   return (
     <div className="my-4">
@@ -213,8 +228,8 @@ const OrderTable = () => {
               className="w-fit"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search as string}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
