@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 export const types = [
   { label: "Instant", value: "instant" },
   { label: "Scheduled", value: "scheduled" },
@@ -33,3 +37,19 @@ export enum ORDER_STATUS {
   DELIVERED = "delivered",
   CANCELLED = "cancelled",
 }
+
+export const useScrollToActiveStatus = <T>(status: T) => {
+  const activeStatusRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (activeStatusRef.current) {
+      activeStatusRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [status]);
+
+  return activeStatusRef;
+};

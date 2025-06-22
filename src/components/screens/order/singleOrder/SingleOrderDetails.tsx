@@ -11,7 +11,7 @@ import { useGetSingleOrderByIdQuery } from "@/api/order";
 // import TransitIcon from "@/components/ui/transit-icon";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { ORDER_STATUS } from "@/lib/comon/constant";
+import { ORDER_STATUS, useScrollToActiveStatus } from "@/lib/comon/constant";
 import { getStatusIcon } from "@/lib/comon/order-utils";
 
 const SingleOrderDetails = () => {
@@ -52,12 +52,19 @@ const SingleOrderDetails = () => {
 
   // Map all statuses
   const statusMap = Object.values(ORDER_STATUS).reduce(
-    (map, statusKey) => {
-      map[statusKey] = status === statusKey.toLowerCase();
+    (map, statusKey, index) => {
+      const currentIndex = Object.values(ORDER_STATUS).findIndex(
+        (key) => key.toLowerCase() === status
+      );
+      // Set to true for all statuses up to and including the current status
+      map[statusKey] = currentIndex >= index;
       return map;
     },
     {} as Record<ORDER_STATUS, boolean>
   );
+
+  // Scroll to active status on mount
+  const activeStatusRef = useScrollToActiveStatus(singleOrder?.status);
 
   return (
     <div className="rounded-md border-ctm-secondary-100 p-2 mt-6 mb-2">
@@ -78,34 +85,32 @@ const SingleOrderDetails = () => {
             </div>
             <div className="overflow-x-auto max-w-3xl w-full container mb-4">
               <div className="flex space-x-2 mb-4 pb-4">
-                {Object.values(ORDER_STATUS).map((statusKey) => (
-                  <div
-                    key={statusKey}
-                    className={`flex-1 p-2 rounded-lg border border-gray-200 ${
-                      statusMap[statusKey] ? "bg-white" : "bg-gray-50"
-                    } min-w-[200px]`} // min-w to ensure visibility
-                  >
-                    <span className="inline-block mb-1">{getStatusIcon(statusKey)}</span>
-                    <p
-                      className={
-                        statusMap[statusKey] ? "text-[#3F2BC3] font-medium" : "text-gray-500"
-                      }
+                {Object.values(ORDER_STATUS).map((statusKey) => {
+                  const isActive = statusMap[statusKey];
+                  return (
+                    <div
+                      key={statusKey}
+                      ref={isActive ? activeStatusRef : null} // Assign ref to active status
+                      className={`flex-1 p-2 rounded-lg border border-gray-200 ${
+                        isActive ? "bg-white" : "bg-gray-50"
+                      } min-w-[200px]`}
                     >
-                      {statusKey
-                        .split(" ")
-                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(" ")}
-                    </p>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                      <div
-                        className={
-                          statusMap[statusKey] ? "bg-[#3F2BC3] h-2 rounded-full" : "bg-gray-500"
-                        }
-                        style={{ width: "100%" }}
-                      ></div>
+                      <span className="inline-block mb-1">{getStatusIcon(statusKey)}</span>
+                      <p className={isActive ? "text-[#3F2BC3] font-medium" : "text-gray-500"}>
+                        {statusKey
+                          .split(" ")
+                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                          .join(" ")}
+                      </p>
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                        <div
+                          className={isActive ? "bg-[#3F2BC3] h-2 rounded-full" : "bg-gray-500"}
+                          style={{ width: "100%" }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
