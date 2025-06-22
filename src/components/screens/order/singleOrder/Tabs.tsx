@@ -35,7 +35,7 @@ const Tabs = () => {
     { skip: !isPopOverOpen }
   );
 
-  const { mutateAsync: reassignOrder } = useReAssignOrderMutation();
+  const { mutateAsync: reassignOrder, isPending } = useReAssignOrderMutation();
   const handleRefresh = () => {
     refetch(); // Trigger refetch of singleOrder data
   };
@@ -46,12 +46,15 @@ const Tabs = () => {
     }
 
     try {
-      await reassignOrder({
+      const res = (await reassignOrder({
         orderId,
         data: { riderId },
-      });
-      toast.success("Order reassigned successfully");
-      setSelectedRider(""); // Reset selected rider
+      })) as { status?: boolean };
+      if (res?.status) {
+        setIsPopOverOpen(false);
+        toast.success("Order reassigned successfully");
+        setSelectedRider(""); // Reset selected rider
+      }
     } catch (err) {
       toast.error("Error reassigning order");
     }
@@ -121,10 +124,10 @@ const Tabs = () => {
               <div className="flex gap-2">
                 <Button
                   onClick={() => handleAssignOrders(selectedRider)}
-                  disabled={isLoading || !selectedRider}
+                  disabled={isLoading || !selectedRider || isPending}
                   className="bg-ctm-primary-500 text-white rounded-lg p-2 hover:bg-ctm-primary-600 disabled:opacity-50"
                 >
-                  Re-assign
+                  {isPending ? "Please wait" : "Re-assign"}
                 </Button>
                 <Button onClick={handleClose} variant={"ctm-outline"}>
                   Cancel

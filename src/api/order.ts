@@ -97,7 +97,7 @@ export const useReAssignOrderMutation = () => {
   return useMutation<unknown, Error, { orderId: string; data: { riderId: string | null } }>({
     mutationFn: async ({ orderId, data }) => {
       const response = await https.patch(`/orders/${orderId}/assign-rider`, data);
-      return response.data.data;
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
