@@ -38,6 +38,17 @@ export enum ORDER_STATUS {
   CANCELLED = "cancelled",
 }
 
+export enum ErrandStatus {
+  PENDING = "pending",
+  RIDER_ASSIGNED = "rider assigned",
+  PICKED_UP = "picked up",
+  IN_TRANSIT = "in transit",
+  NEARBY = "nearby",
+  ARRIVED_DELIVERY_LOCATION = "arrived delivery location",
+  DELIVERED = "delivered",
+  CANCELLED = "cancelled",
+}
+
 export const useScrollToActiveStatus = <T>(status: T) => {
   const activeStatusRef = useRef<HTMLDivElement>(null);
 

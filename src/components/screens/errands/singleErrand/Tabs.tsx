@@ -7,19 +7,26 @@ import PageHeader from "@/components/general/PageHeader";
 import { Trash } from "lucide-react";
 import PopOver from "@/components/ui/custom/PopOver";
 import ErrandDetails from "./singleErrandDetails";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useReAssignErrandMutation, useGetNearByRidersQuery } from "@/api/errand";
+import {
+  useReAssignErrandMutation,
+  useGetNearByRidersQuery,
+  useGetSingleErrandByIdQuery,
+} from "@/api/errand";
 import Radio from "@/components/ui/custom/radio/Radio";
 import { RadioGroup } from "@/components/ui/radio-group";
 import { CustomInput } from "@/components/ui/custom/input";
 import { Icon } from "@/components/ui/Icon";
+import { Button as GenericButton } from "@/components/ui/button";
 
 const Tabs = () => {
   const { errandId } = useParams<{ errandId?: string }>();
   const [selectedRider, setSelectedRider] = useState("");
   const [isPopOverOpen, setIsPopOverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const { refetch } = useGetSingleErrandByIdQuery(errandId || "");
+  const router = useRouter();
 
   const { data: riders, isLoading } = useGetNearByRidersQuery(
     {
@@ -29,7 +36,7 @@ const Tabs = () => {
     },
     { skip: !isPopOverOpen }
   );
-  const { mutateAsync: reassignOrder } = useReAssignErrandMutation();
+  const { mutateAsync: reassignOrder, isPending } = useReAssignErrandMutation();
 
   const handleAssignOrders = async (riderId: string | null) => {
     if (!errandId) {
@@ -38,13 +45,15 @@ const Tabs = () => {
     }
 
     try {
-      await reassignOrder({
+      const res = (await reassignOrder({
         errandId,
         data: { riderId },
-      });
-      toast.success("Order reassigned successfully");
-      setSelectedRider(""); // Reset selected rider
-      setIsPopOverOpen(false);
+      })) as { status?: boolean };
+      if (res?.status) {
+        setIsPopOverOpen(false);
+        toast.success("Errand reassigned successfully");
+        setSelectedRider(""); // Reset selected rider
+      }
     } catch (err) {
       toast.error("Error reassigning order");
     }
@@ -63,12 +72,18 @@ const Tabs = () => {
     setSearchQuery(""); // Optional: Reset search query on close
   };
 
+  const handleRefresh = () => {
+    refetch(); // Trigger refetch of singleOrder data
+  };
+
   return (
     <main className="w-[98%] py-[2%] mx-auto">
       <div className="flex justify-between items-center">
-        <PageHeader title="Errand Details" />
+        <PageHeader onBack={() => router.push("/errand")} title="Errand Details" />
         <div className="flex gap-2 items-center justify-end">
           <PopOver
+            open={isPopOverOpen}
+            onOpenChange={setIsPopOverOpen}
             trigger={
               <Button
                 className="bg-[#3F2BC3] stroke-ctm-secondary-300"
@@ -112,10 +127,10 @@ const Tabs = () => {
               <div className="flex gap-2">
                 <Button
                   onClick={() => handleAssignOrders(selectedRider)}
-                  disabled={isLoading || !selectedRider}
+                  disabled={isLoading || !selectedRider || isPending}
                   className="bg-ctm-primary-500 text-white rounded-lg p-2 hover:bg-ctm-primary-600 disabled:opacity-50"
                 >
-                  Re-assign
+                  {isPending ? "Please wait" : "Re-assign"}
                 </Button>
                 <Button onClick={handleClose} variant={"ctm-outline"}>
                   Cancel
@@ -123,9 +138,12 @@ const Tabs = () => {
               </div>
             </div>
           </PopOver>
-          <Button variant="ctm-outline" asChild className="border-2">
-            <Link href={"/order"}>Refresh</Link>
-          </Button>
+          <GenericButton
+            onClick={handleRefresh}
+            className="border border-ctm-primary-500 bg-background shadow-sm hover:bg-transparent  text-ctm-primary-500 "
+          >
+            Refresh
+          </GenericButton>
           <Button variant="ctm-outline" asChild className="border-2 border-[#DA3030]">
             <Link href={"#/order"}>
               <Trash className="text-[#DA3030]" />

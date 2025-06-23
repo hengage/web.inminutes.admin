@@ -4,7 +4,6 @@ import Tab from "@/components/ui/custom/Tabs";
 import useUrlHash from "@/hooks/useUrlHash";
 import Link from "next/link";
 import React, { Suspense } from "react";
-import { CustomButton as Button } from "@/components/ui/custom/button";
 
 import CancelledErrand from "./CancelledErrandTable";
 import OngoingErrand from "./OngoingErrandTable";
@@ -24,13 +23,6 @@ const Tabs = () => {
     <main className="w-[98%] py-[2%] mx-auto">
       <div className="flex justify-between items-center">
         <h2 className="ctm-header-1 text-ctm-primary-700">Errands</h2>
-        <span className="flex gap-2 items-center justify-end">
-          <Button disabled variant="ctm-outline" asChild className="border-2">
-            <Link aria-disabled="true" href={"/errand"}>
-              Refresh
-            </Link>
-          </Button>
-        </span>
       </div>
       <Tab
         items={[
