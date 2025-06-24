@@ -40,7 +40,7 @@ const Tabs = () => {
 
   const handleAssignOrders = async (riderId: string | null) => {
     if (!errandId) {
-      toast.error("Order ID is missing");
+      toast.error("Errand ID is missing");
       return;
     }
 
@@ -90,7 +90,7 @@ const Tabs = () => {
                 variant={"ctm-primary"}
                 onClick={() => setIsPopOverOpen(true)}
               >
-                Re-assign Order
+                Re-assign Errand
               </Button>
             }
             className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-4 w-96"
@@ -115,7 +115,7 @@ const Tabs = () => {
                   <p className="text-gray-500">No riders found</p>
                 )}
                 {isLoading ? (
-                  <p className="text-gray-500">Loading riders...</p>
+                  <p className="text-gray-500">Getting nearby riders...</p>
                 ) : (
                   filteredRiders.map((rider: any) => (
                     <Radio key={rider._id} value={rider._id} label={rider.fullName} />
