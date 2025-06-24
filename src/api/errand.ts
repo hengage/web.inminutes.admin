@@ -129,7 +129,7 @@ export const useReAssignErrandMutation = () => {
   return useMutation<unknown, Error, { errandId: string; data: { riderId: string | null } }>({
     mutationFn: async ({ errandId, data }) => {
       const response = await https.patch(`/errands/${errandId}/assign-rider`, data);
-      return response.data.data;
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
