@@ -61,7 +61,7 @@ const Tabs = () => {
             trigger: (
               <Link
                 href={{
-                  pathname: "/rider",
+                  pathname: "/Rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "0" }).substring(1),
                 }}
@@ -76,7 +76,7 @@ const Tabs = () => {
             trigger: (
               <Link
                 href={{
-                  pathname: "/rider",
+                  pathname: "/Rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "1" }).substring(1),
                 }}
@@ -91,7 +91,7 @@ const Tabs = () => {
             trigger: (
               <Link
                 href={{
-                  pathname: "/rider",
+                  pathname: "/Rider",
                   query: { page: 1, limit: 10 },
                   hash: updateHashUrl({ tab: "2" }).substring(1),
                 }}

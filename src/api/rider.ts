@@ -19,7 +19,7 @@ export const useGetRidersQuery = (filter: unknown) => {
       const response = await https.get(
         "/rider/list" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
       );
-      return response.data.data.vendors;
+      return response.data.data.riders;
     },
     enabled: Object.entries(filter as Record<string, string | string[] | number>).length > 0,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,6 +79,17 @@ export const useGetNearByRidersQuery = (
     enabled: !options.skip,
   });
   return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useGetSingleRiderByIdQuery = (riderId: string | string[]) => {
+  return useQuery<IRiderCredentials, Error>({
+    queryKey: ["singleRider", riderId],
+    queryFn: async () => {
+      const response = await https.get(`/rider/${riderId}`);
+      return response.data.data.order;
+    },
+    enabled: Boolean(riderId),
+  });
 };
 
 export interface IRiderCredentials {

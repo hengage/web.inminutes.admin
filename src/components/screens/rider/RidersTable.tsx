@@ -28,6 +28,7 @@ const RidersTable = () => {
     {}
   );
   const { result } = useGetRidersQuery(queryValues);
+
   const columns: ColumnDef<
     Pick<
       IRider,
@@ -101,10 +102,14 @@ const RidersTable = () => {
     {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Action</span>,
-      cell: () => (
+      cell: ({ row }) => (
         <PopOver className="max-w-[110px]">
           <div className="flex flex-col justify-center items-center">
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
+            <Button
+              className="w-[100px] justify-start"
+              variant={"ghost"}
+              onClick={() => router.push(`/rider/${row.original._id}`)}
+            >
               <Icon width={15} height={15} name="eye" />
               View
             </Button>
