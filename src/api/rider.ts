@@ -118,7 +118,7 @@ export const useGetSingleRiderByIdQuery = (riderId: string | string[]) => {
     queryKey: ["singleRider", riderId],
     queryFn: async () => {
       const response = await https.get(`/riders/${riderId}`);
-      return response.data.data?.rider;
+      return response.data.data?.rider?.rider;
     },
     enabled: Boolean(riderId),
   });
@@ -143,13 +143,13 @@ export const useGetOrdersQuery = (
     queryKey: ["riders_order", filter, riderId],
     queryFn: async () => {
       const riderParam = `rider=${riderId}`;
-      const filterString = stringifyQuery(filter);
-      const filterQuery = filterString
-        ? filterString.startsWith("&")
-          ? filterString
-          : `&${filterString}`
-        : "";
-      const url = `/orders?${riderParam}${filterQuery}`;
+      let filterString = stringifyQuery(filter);
+      if (filterString.startsWith("?")) {
+        filterString = filterString.replace("?", "&");
+      } else if (filterString && !filterString.startsWith("&")) {
+        filterString = `&${filterString}`;
+      }
+      const url = `/orders?${riderParam}${filterString}`;
       const response = await https.get(url);
       return response.data.data.orders;
     },
@@ -173,7 +173,15 @@ export const useGetErrandQuery = (
   const result = useQuery<IPaginationData<ErrandRow>, Error>({
     queryKey: [QUERY_KEYS.ERRANDS, filter],
     queryFn: async () => {
-      const response = await https.get(`/errands?rider=${riderId}${stringifyQuery(filter)}`);
+      const riderParam = `rider=${riderId}`;
+      let filterString = stringifyQuery(filter);
+      if (filterString.startsWith("?")) {
+        filterString = filterString.replace("?", "&");
+      } else if (filterString && !filterString.startsWith("&")) {
+        filterString = `&${filterString}`;
+      }
+      const url = `/errands?${riderParam}${filterString}`;
+      const response = await https.get(url);
       return response.data.data.errands;
     },
     enabled: Object.entries(filter).length > 0,
@@ -250,4 +258,5 @@ export interface Rider {
     coordinates: [number, number];
   };
   rating: IRating;
+  totalDeliveries: number;
 }

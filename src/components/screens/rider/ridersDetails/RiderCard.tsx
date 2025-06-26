@@ -34,7 +34,7 @@ const RiderCard = ({ singleRider }: RiderCardProps) => {
         <div>
           <h4 className="text-sm font-semibold text-gray-500">TOTAL DELIVERIES</h4>
           <p className="text-lg font-bold text-ctm-primary-700">
-            {singleRider?.totalOrders ?? "N/A"}
+            {singleRider?.totalDeliveries ?? "N/A"}
           </p>
         </div>
         <div>
