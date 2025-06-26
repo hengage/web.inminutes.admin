@@ -43,7 +43,7 @@ const ControlledFormInput = <T extends z.ZodType>({
               )}
               <FormControl>
                 <Input
-                  className="input-class border-0 ctm-paragraph-1 [&:-webkit-autofill]:!bg-transparent [&:-webkit-autofill]:!text-base-content [&:-webkit-autofill]:!shadow-[0_0_0_30px_white_inset]"
+                  className="input-class text-[#484D57] border-0 ctm-paragraph-1 [&:-webkit-autofill]:!bg-transparent [&:-webkit-autofill]:!text-base-content [&:-webkit-autofill]:!shadow-[0_0_0_30px_white_inset]"
                   {...field}
                   type={inputType}
                   placeholder={placeholder}

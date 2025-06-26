@@ -1,4 +1,4 @@
-import Tabs from "@/components/screens/rider/ridersDetails/Tabs";
+import Tabs from "@/components/screens/rider/Tabs";
 
 const page = async () => {
   return <Tabs />;

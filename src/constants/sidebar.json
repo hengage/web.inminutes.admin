@@ -1,7 +1,7 @@
 {
   "dashboard": { "name": "Dashboard", "key": "/dashboard" },
   "vendor": { "name": "Vendors", "key": "/vendor" },
-  "rider": { "name": "Riders", "key": "/Rider" },
+  "rider": { "name": "Riders", "key": "/rider" },
   "product": { "name": "Products", "key": "/product" },
   "customer": { "name": "Customers", "key": "/customer" },
   "order": { "name": "Orders", "key": "/order" },

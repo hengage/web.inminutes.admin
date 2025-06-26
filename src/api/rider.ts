@@ -2,7 +2,10 @@ import https from "@/lib/axios";
 import { QUERY_KEYS } from "@/lib/constants/queryKeys";
 import { stringifyQuery } from "@/lib/utils";
 import { ILocation, IPaginationData, IRating } from "@/types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { OrderRow } from "./order";
+import { ErrandRow } from "./errand";
+import { RiderData } from "@/lib/validators/rider";
 
 export const useGetRidersQuery = (filter: unknown) => {
   const result = useQuery<
@@ -17,7 +20,7 @@ export const useGetRidersQuery = (filter: unknown) => {
     queryKey: [QUERY_KEYS.RIDERS],
     queryFn: async () => {
       const response = await https.get(
-        "/rider/list" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
+        "/riders" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
       );
       return response.data.data.riders;
     },
@@ -33,16 +36,45 @@ export const useGetRidersQuery = (filter: unknown) => {
   });
   return { isLoading: result.isPending, data: result.data, result };
 };
+export const useGetRidersApplicationQuery = (
+  filter: Record<string, string | string[] | number>
+) => {
+  const result = useQuery<
+    IPaginationData<
+      Pick<
+        IRider,
+        "_id" | "fullName" | "email" | "displayName" | "email" | "currentlyWorking" | "phoneNumber"
+      >
+    >,
+    Error
+  >({
+    queryKey: [QUERY_KEYS.RIDERS],
+    queryFn: async () => {
+      const response = await https.get(`/riders${stringifyQuery(filter)}`);
+      return response.data.data.riders;
+    },
+    enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
 
-// export const useCreateRiderMutation = () => {
-//   const result = useMutation<unknown, Error, IRiderCredentials>({
-//     mutationFn: async (data) => {
-//       const response = await https.post("/vendor/register", data);
-//       return response.data.data;
-//     },
-//   });
-//   return result;
-// };
+export const useCreateRiderMutation = () => {
+  const result = useMutation<unknown, Error, RiderData>({
+    mutationFn: async (data) => {
+      const response = await https.post("/rider/register", data);
+      return response.data.data;
+    },
+  });
+  return result;
+};
 
 // export const useUpdateVendorMutation = (vendorId: string) => {
 //   const result = useMutation<unknown, Error, IRiderCredentials>({
@@ -73,7 +105,7 @@ export const useGetNearByRidersQuery = (
       if (lat) params.append("lat", lat.toString());
       if (distanceInKM) params.append("distanceInKM", distanceInKM.toString());
       if (orderId) params.append("orderId", orderId);
-      const response = await https.get(`/rider/nearby-working?${params.toString()}`);
+      const response = await https.get(`/riders/nearby-working?${params.toString()}`);
       return response.data.data;
     },
     enabled: !options.skip,
@@ -82,13 +114,88 @@ export const useGetNearByRidersQuery = (
 };
 
 export const useGetSingleRiderByIdQuery = (riderId: string | string[]) => {
-  return useQuery<IRiderCredentials, Error>({
+  return useQuery({
     queryKey: ["singleRider", riderId],
     queryFn: async () => {
-      const response = await https.get(`/rider/${riderId}`);
-      return response.data.data.order;
+      const response = await https.get(`/riders/${riderId}`);
+      return response.data.data?.rider;
     },
     enabled: Boolean(riderId),
+  });
+};
+
+export const useGetRiderWalletQuery = (riderId: string | string[]) => {
+  return useQuery({
+    queryKey: ["rider-deliveries", riderId],
+    queryFn: async () => {
+      const response = await https.get(`/riders/${riderId}/wallet`);
+      return response.data.data;
+    },
+    enabled: Boolean(riderId),
+  });
+};
+
+export const useGetOrdersQuery = (
+  filter: Record<string, string | string[] | number>,
+  riderId: string | string[]
+) => {
+  const result = useQuery<IPaginationData<OrderRow>, Error>({
+    queryKey: ["riders_order", filter, riderId],
+    queryFn: async () => {
+      const riderParam = `rider=${riderId}`;
+      const filterString = stringifyQuery(filter);
+      const filterQuery = filterString
+        ? filterString.startsWith("&")
+          ? filterString
+          : `&${filterString}`
+        : "";
+      const url = `/orders?${riderParam}${filterQuery}`;
+      const response = await https.get(url);
+      return response.data.data.orders;
+    },
+    enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useGetErrandQuery = (
+  filter: Record<string, string | string[] | number>,
+  riderId: string | string[]
+) => {
+  const result = useQuery<IPaginationData<ErrandRow>, Error>({
+    queryKey: [QUERY_KEYS.ERRANDS, filter],
+    queryFn: async () => {
+      const response = await https.get(`/errands?rider=${riderId}${stringifyQuery(filter)}`);
+      return response.data.data.errands;
+    },
+    enabled: Object.entries(filter).length > 0,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    select: (data: any) => ({
+      data: data.docs,
+      total: data.totalDocs,
+      page: data.page,
+      limit: data.limit,
+      totalPages: data.pagingCounter,
+    }),
+  });
+  return { isLoading: result.isPending, data: result.data, result };
+};
+
+export const useGetWorkAreaQuery = () => {
+  return useQuery({
+    queryKey: ["work-area"],
+    queryFn: async () => {
+      const response = await https.get(`/riders/work-area/list`);
+      return response.data.data;
+    },
   });
 };
 
@@ -113,9 +220,34 @@ export interface IRider {
   location: ILocation;
   dateOfBirth: string;
   residentialAddress: string;
-  currentlyWorking: false;
+  currentlyWorking: boolean;
   rating: IRating;
   createdAt: string;
   approvalStatus: string;
   accountStatus: string;
+}
+
+export interface Rider {
+  _id?: string;
+  fullName?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  profileImage?: string;
+  totalOrders?: number;
+  totalErrands?: number;
+  lastUpdate?: string;
+  status?: string;
+  dateOfBirth?: string;
+  displayName?: string;
+  email?: string;
+  phoneNumber?: string;
+  residentialAddress?: string;
+  currentlyWorking?: boolean;
+  accountStatus?: string;
+  approvalStatus?: string;
+  isDeleted?: boolean;
+  location?: {
+    coordinates: [number, number];
+  };
+  rating: IRating;
 }

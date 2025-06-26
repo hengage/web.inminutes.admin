@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Tag from "@/components/general/Tag";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/custom/Pagination";
 import PopOver from "@/components/ui/custom/PopOver";
@@ -9,26 +10,24 @@ import useUrlState from "@/hooks/useUrlState";
 import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import { CustomInput as Input } from "@/components/ui/custom/input";
-import { ChevronDown, Search } from "lucide-react";
-import { IVendor, useGetVendorsQuery } from "@/api/vendors";
+import { Search } from "lucide-react";
+import { IRider, useGetRidersApplicationQuery } from "@/api/rider";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { DatePicker } from "@/components/ui/custom/date/DatePicker";
-import { useQueryClient } from "@tanstack/react-query";
-import { QUERY_KEYS } from "@/lib/constants/queryKeys";
+import DateRangePicker from "@/components/ui/custom/Daterange";
 
-const VendorsTable = () => {
+const RidersApplicationTable = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     approvalStatus: "pending",
   });
-  const { result } = useGetVendorsQuery(queryValues);
+  const { result } = useGetRidersApplicationQuery(queryValues);
+
   const columns: ColumnDef<
     Pick<
-      IVendor,
-      "_id" | "businessName" | "businessLogo" | "email" | "category" | "accountStatus" | "createdAt"
+      IRider,
+      "_id" | "fullName" | "email" | "displayName" | "email" | "currentlyWorking" | "phoneNumber"
     >
   >[] = [
     {
@@ -37,8 +36,8 @@ const VendorsTable = () => {
       cell: ({ row }) => <span>{row.index + 1}</span>,
     },
     {
-      accessorKey: "applications",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Applications</span>,
+      accessorKey: "riderName",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Rider Name</span>,
       cell: ({ row }) => {
         const item = row.original;
         return (
@@ -47,46 +46,75 @@ const VendorsTable = () => {
               src={
                 "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
               }
-              alt={item.businessName}
+              alt={item.fullName}
               width={40}
               height={40}
               className="rounded-full"
             />
             <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-              {item.businessName}
+              {item.fullName}
             </span>
           </div>
         );
       },
     },
     {
-      accessorKey: "date",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Date Applied</span>,
+      accessorKey: "_id",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">ID Number</span>,
+      cell: ({ row }) => (
+        <span className="font-normal text-base text-ctm-secondary-200">{row.original._id}</span>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: () => (
+        <span className="whitespace-nowrap font-semibold text-base">Email Address</span>
+      ),
       cell: ({ row }) => {
         return (
-          <span className="font-normal text-base text-ctm-secondary-200">
-            {row.original.createdAt}
+          <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
+        );
+      },
+    },
+    {
+      accessorKey: "phone",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Phone Number</span>,
+      cell: ({ row }) => {
+        return (
+          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+            {row.original.phoneNumber}
           </span>
         );
       },
     },
     {
+      accessorKey: "status",
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Work Status</span>,
+      cell: ({ row }) => {
+        return <Tag tag={row.original.currentlyWorking ? "active" : "inactive"} />;
+      },
+    },
+    {
       accessorKey: "actions",
-      header: () => <span className="whitespace-nowrap font-semibold text-base">Actions</span>,
-      cell: () => (
+      header: () => <span className="whitespace-nowrap font-semibold text-base">Action</span>,
+      cell: ({ row }) => (
         <PopOver className="max-w-[110px]">
           <div className="flex flex-col justify-center items-center">
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
+            <Button
+              className="w-[100px] justify-start"
+              variant={"ghost"}
+              onClick={() => router.push(`/rider/${row.original._id}`)}
+            >
               <Icon width={15} height={15} name="eye" />
               View
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="restrict" />
-              Approve
+              Restrict
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="edit" />
-              Reject
+              Edit
             </Button>
             <Button className="w-[100px] justify-start" variant={"ghost"}>
               <Icon width={15} height={15} name="trash" />
@@ -97,9 +125,9 @@ const VendorsTable = () => {
       ),
     },
   ];
+
   const handleRefresh = (value: typeof queryValues) => {
     router.push(stringifyUrl(value));
-    queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.VENDORS] });
     result.refetch();
   };
   const { allParams = {} } = useUrlState();
@@ -108,9 +136,36 @@ const VendorsTable = () => {
       ...allParams,
       approvalStatus: "pending",
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 30),
     });
   }, [allParams]);
+
+  const handleDateRangeChange = (fromDate: Date | null, toDate: Date | null) => {
+    type QueryType = typeof queryValues & { fromDate?: string; toDate?: string };
+    const updatedQuery: QueryType = { ...queryValues, page: 1 }; // Reset to page 1
+
+    if (fromDate) {
+      updatedQuery.fromDate = fromDate.toISOString();
+    } else {
+      delete updatedQuery.fromDate;
+    }
+
+    if (toDate) {
+      updatedQuery.toDate = toDate.toISOString();
+    } else {
+      delete updatedQuery.toDate;
+    }
+
+    if (!fromDate && !toDate) {
+      delete updatedQuery.fromDate;
+      delete updatedQuery.toDate;
+    }
+
+    setQueryValues(updatedQuery);
+    router.push(stringifyUrl(updatedQuery));
+    result.refetch(); // Trigger refetch after updating date range
+  };
+
   return (
     <div className="my-4">
       <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
@@ -133,7 +188,7 @@ const VendorsTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`vendor/${stringifyQuery({ page: 1, limit: 10 })}#0`);
+                router.push(`rider/${stringifyQuery({ page: 1, limit: 30 })}#0`);
                 return { page: prev.page, limit: prev.limit };
               });
               result.refetch();
@@ -143,17 +198,10 @@ const VendorsTable = () => {
           >
             Clear Filter
           </Button>
-          <DatePicker
-            trigger={
-              <Button variant={"secondary"}>
-                Date Applied
-                <ChevronDown />
-              </Button>
-            }
-            value={queryValues.date ? new Date(queryValues.date as string) : undefined}
-            onSelect={(date) =>
-              setQueryValues((prev) => ({ ...prev, date: date?.toISOString() ?? "" }))
-            }
+          <DateRangePicker
+            fromDate={queryValues.fromDate ? new Date(queryValues.fromDate as string) : undefined}
+            toDate={queryValues.toDate ? new Date(queryValues.toDate as string) : undefined}
+            onApply={handleDateRangeChange}
           />
           <div className="w-full flex justify-end justify-self-end">
             <Input
@@ -168,7 +216,7 @@ const VendorsTable = () => {
         <DataTable dataQuery={result} columns={columns} />
         {result.data?.data.length && result.data?.data.length > 0 ? (
           <Pagination
-            total={result.data?.total ?? 10}
+            total={result.data?.total ?? 30}
             page={Number(queryValues.page)}
             limit={Number(queryValues.limit)}
           />
@@ -178,10 +226,10 @@ const VendorsTable = () => {
   );
 };
 
-const Applicants = () => (
+const RidersApplication = () => (
   <Suspense>
-    <VendorsTable />
+    <RidersApplicationTable />
   </Suspense>
 );
 
-export default Applicants;
+export default RidersApplication;
