@@ -1,76 +1,79 @@
 "use client";
-import { useGetWorkAreaQuery } from "@/api/rider";
+import { useGetWorkAreaQuery, useGetSessionQuery, useGetSessionRiderQuery } from "@/api/rider";
 import Image from "next/image";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
-// Define wallet interface
-
-// Define WorkArea interface
+// Define interfaces
 interface WorkArea {
+  _id: string;
   name: string;
   maxSlotsRequired: number;
   active?: boolean;
 }
 
-// Assume a new hook for wallet data (replace with actual API hook)
+interface Session {
+  _id: string;
+  session: string;
+  active?: boolean;
+}
 
-const mockRiders = [
-  {
-    id: 1,
-    name: "John Doe",
-    image:
-      "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    image:
-      "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg",
-  },
-  {
-    id: 3,
-    name: "John Doe",
-    image:
-      "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg",
-  },
-  {
-    id: 4,
-    name: "John Doe",
-    image:
-      "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg",
-  },
-  {
-    id: 5,
-    name: "John Doe",
-    image:
-      "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg",
-  },
-];
-const mockSessions = [
-  { time: "9am - 12pm", active: true },
-  { time: "9am - 12pm" },
-  { time: "9am - 12pm" },
-];
+interface Rider {
+  _id: string;
+  fullName: string;
+  image: string;
+}
 
 const Dashboard = () => {
-  const { data: workArea } = useGetWorkAreaQuery();
+  const { data: workAreas, isLoading: isWorkAreaLoading } = useGetWorkAreaQuery();
+  const [selectedWorkAreaId, setSelectedWorkAreaId] = useState<string | null>(null);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+
+  // Fetch sessions for the selected work area and date
+  const { data: sessions, isLoading: isSessionsLoading } = useGetSessionQuery(
+    selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
+    selectedWorkAreaId || ""
+  );
+
+  // Fetch riders for the selected session and work area
+  const { data: sessionRiders, isLoading: isRidersLoading } = useGetSessionRiderQuery(
+    selectedSessionId || "",
+    selectedWorkAreaId || ""
+  );
+
+  // Handle work area selection
+  const handleWorkAreaClick = (workAreaId: string) => {
+    setSelectedWorkAreaId(workAreaId);
+    setSelectedSessionId(null); // Reset session when work area changes
+  };
+
+  // Handle session selection
+  const handleSessionClick = (sessionId: string) => {
+    setSelectedSessionId(sessionId);
+  };
+
+  if (isWorkAreaLoading) {
+    return <div>Loading work areas...</div>;
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar placeholder - to be implemented separately */}
-
-      {/* Areas Section */}
-      {/* Main Content */}
       <div className="flex-1 p-6 overflow-x-auto w-full container mb-4">
+        {/* Areas Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-bold text-[#160A62] mb-4">Areas</h2>
           <div className="grid grid-cols-5 gap-4">
-            {workArea?.map((area: WorkArea, index: number) => (
+            {workAreas?.map((area: WorkArea) => (
               <div
-                key={index}
-                className={`p-4 rounded-lg text-center ${
-                  area.active ? "bg-[#3F2BC3] text-white" : "bg-gray-50 text-gray-700"
+                key={area._id}
+                className={`p-4 rounded-lg text-center cursor-pointer ${
+                  area._id === selectedWorkAreaId
+                    ? "bg-[#3F2BC3] text-white"
+                    : "bg-gray-50 text-gray-700"
                 }`}
+                onClick={() => handleWorkAreaClick(area._id)}
               >
                 <p className="text-sm capitalize">{area.name}</p>
                 <p className="text-2xl font-bold">{area.maxSlotsRequired}</p>
@@ -80,79 +83,88 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Calendar and Riders Section */}
+        {/* Calendar and Sessions Section */}
         <div className="grid grid-cols-2 gap-6">
-          {/* Calendar */}
-          <div className="">
-            <div className="bg-white rounded-lg shadow-md p-4 col-span-1">
-              <div className="flex justify-between items-center mb-2">
-                <button className="text-[#160A62]">&lt;</button>
-                <h3 className="text-lg text-[#160A62] font-bold">September 2023</h3>
-                <button className="text-[#160A62]">&gt;</button>
-              </div>
-              <div className="grid grid-cols-7 gap-1 text-center text-sm text-gray-500">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-                {/* Days 28-30 */}
-                {[
-                  28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 25, 26,
-                  27, 28, 29, 30, 1,
-                ].map((day, index) => (
-                  <div
-                    key={index}
-                    className={`p-2 rounded-full ${
-                      day === 10 ? "bg-[#3F2BC3] text-white" : "hover:bg-gray-200"
-                    }`}
-                  >
-                    {day}
-                  </div>
-                ))}
-              </div>
+          <div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <h2 className="text-xl font-bold text-[#160A62] mb-4">Calendar</h2>
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => setSelectedDate(date)}
+                showYearSwitcher={true}
+                yearRange={12}
+                className="!w-full max-w-none rounded-lg"
+                selectedClassName="bg-[#160A62] rounded-full text-white"
+                todayClassName="bg-gray-200  rounded-full text-gray-800"
+                buttonNextClassName="text-[#160A62]"
+                buttonPreviousClassName="text-[#160A62]"
+                captionLabelClassName="text-[#160A62] font-bold"
+              />
             </div>
 
             {/* Sessions Section */}
             <div className="bg-white rounded-lg shadow-md p-6 mt-6">
               <h2 className="text-xl font-bold text-[#160A62] mb-4">Sessions</h2>
-              <div className="grid grid-cols-2 gap-4">
-                {mockSessions.map((session, index) => (
-                  <div
-                    key={index}
-                    className={`p-4 border rounded-lg text-center ${
-                      session.active ? "bg-[#3F2BC3] text-white" : "bg-gray-50 text-gray-700"
-                    }`}
-                  >
-                    <p className="text-sm">{session.time}</p>
-                  </div>
-                ))}
-              </div>
+              {isSessionsLoading ? (
+                <div>Loading sessions...</div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {sessions?.length === 0 && (
+                    <div className="text-center text-gray-500">
+                      No sessions available for this date.
+                    </div>
+                  )}
+                  {sessions?.map((session: Session) => (
+                    <div
+                      key={session._id}
+                      className={`p-4 border rounded-lg text-center cursor-pointer transition-colors ${
+                        session._id === selectedSessionId
+                          ? "bg-[#3F2BC3] text-white"
+                          : "bg-[#FDFDFD] text-[#34383E] "
+                      }`}
+                      onClick={() => handleSessionClick(session._id)}
+                    >
+                      <p className="text-sm">{session.session}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Riders */}
-          <div className="bg-white rounded-lg shadow-md p-4 ">
+          {/* Riders Section */}
+          <div className="bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-bold text-[#160A62] mb-4">Riders</h2>
-            <div className="space-y-4">
-              {mockRiders.map((rider) => (
-                <div key={rider.id} className="flex items-center space-x-4">
-                  <Image
-                    src={rider.image}
-                    alt={rider.name}
-                    className="w-10 h-10 rounded-full"
-                    width={40}
-                    height={40}
-                  />
-                  <div>
-                    <p className="text-sm font-semibold">{rider.name}</p>
-                    <p className="text-xs text-gray-500">10</p>
+            {isRidersLoading ? (
+              <div>Loading riders...</div>
+            ) : (
+              <div className="space-y-4">
+                {sessionRiders?.length === 0 && (
+                  <div className="text-center text-gray-500">
+                    No riders available for this session.
                   </div>
-                </div>
-              ))}
-            </div>
+                )}
+
+                {sessionRiders?.map((rider: Rider) => (
+                  <div key={rider._id} className="flex items-center space-x-4">
+                    <Image
+                      src={
+                        "https://res.cloudinary.com/dx73n7qiv/image/upload/v1717115764/tmp-7-1717115763718_dvecds.jpg"
+                      }
+                      alt={rider.fullName}
+                      className="w-10 h-10 rounded-full"
+                      width={40}
+                      height={40}
+                    />
+                    <div>
+                      <p className="text-sm capitalize font-semibold">{rider.fullName}</p>
+                      <p className="text-xs text-gray-500">ID: {rider._id}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -161,7 +173,7 @@ const Dashboard = () => {
 };
 
 const WorkStation = () => (
-  <Suspense>
+  <Suspense fallback={<div>Loading dashboard...</div>}>
     <Dashboard />
   </Suspense>
 );

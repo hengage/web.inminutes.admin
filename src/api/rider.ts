@@ -201,9 +201,36 @@ export const useGetWorkAreaQuery = () => {
   return useQuery({
     queryKey: ["work-area"],
     queryFn: async () => {
-      const response = await https.get(`/riders/work-area/list`);
+      const response = await https.get(`/riders/work-areas`);
       return response.data.data;
     },
+  });
+};
+
+export const useGetSessionQuery = (date: string | string[], workAreaId: string | string[]) => {
+  return useQuery({
+    queryKey: ["rider-work-area", date, workAreaId],
+    queryFn: async () => {
+      const response = await https.get(`/riders/work-areas/${workAreaId}/sessions?date=${date}`);
+      return response.data.data?.timeSlots;
+    },
+    enabled: Boolean(workAreaId) && Boolean(date),
+  });
+};
+
+export const useGetSessionRiderQuery = (
+  sessionId: string | string[],
+  workAreaId: string | string[]
+) => {
+  return useQuery({
+    queryKey: ["rider-work-area", sessionId, workAreaId],
+    queryFn: async () => {
+      const response = await https.get(
+        `/riders/work-areas/${workAreaId}/sessions/${sessionId}/riders`
+      );
+      return response.data.data.bookedRiders;
+    },
+    enabled: Boolean(sessionId) && Boolean(workAreaId),
   });
 };
 

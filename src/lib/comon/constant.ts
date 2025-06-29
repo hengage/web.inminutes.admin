@@ -64,3 +64,10 @@ export const useScrollToActiveStatus = <T>(status: T) => {
 
   return activeStatusRef;
 };
+
+export enum WORK_SLOT_SESSIONS {
+  FIRST = "9am-12pm",
+  SECOND = "12pm-3pm",
+  THIRD = "3pm-6pm",
+  FOURTH = "6pm-9pm",
+}
