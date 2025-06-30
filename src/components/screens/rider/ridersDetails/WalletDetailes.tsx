@@ -35,19 +35,19 @@ const WalletTable = () => {
           </div>
         </div>
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-gray-100 p-4 rounded-lg text-center">
+          <div className="bg-gray-100 p-4 py-12 rounded-lg text-center">
             <p className="text-gray-500 text-sm">TOTAL EARNINGS</p>
             <p className="text-indigo-900 font-bold text-2xl">
               ₦{singleRider?.totalEarnings?.toLocaleString()}
             </p>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg text-center">
+          <div className="bg-gray-100 p-4 py-12 rounded-lg text-center">
             <p className="text-gray-500 text-sm">CURRENT BALANCE</p>
             <p className="text-indigo-900 font-bold text-2xl">
               ₦{singleRider?.balance?.toLocaleString()}
             </p>
           </div>
-          <div className="bg-gray-100 p-4 rounded-lg text-center">
+          <div className="bg-gray-100 p-4 py-12 rounded-lg text-center">
             <p className="text-gray-500 text-sm">TOTAL NO. OF TRANSACTION</p>
             <p className="text-indigo-900 font-bold text-2xl">{singleRider?.transactionCount}</p>
           </div>

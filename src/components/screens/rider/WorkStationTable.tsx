@@ -47,11 +47,13 @@ const Dashboard = () => {
   const handleWorkAreaClick = (workAreaId: string) => {
     setSelectedWorkAreaId(workAreaId);
     setSelectedSessionId(null); // Reset session when work area changes
+    setSelectedDate(undefined);
   };
 
   // Handle session selection
   const handleSessionClick = (sessionId: string) => {
     setSelectedSessionId(sessionId);
+    setSelectedDate(undefined);
   };
 
   if (isWorkAreaLoading) {
@@ -111,9 +113,7 @@ const Dashboard = () => {
               ) : (
                 <div className="grid grid-cols-2 gap-4">
                   {sessions?.length === 0 && (
-                    <div className="text-center text-gray-500">
-                      No sessions available for this date.
-                    </div>
+                    <div className="text-gray-500">No sessions available for this date.</div>
                   )}
                   {sessions?.map((session: Session) => (
                     <div
