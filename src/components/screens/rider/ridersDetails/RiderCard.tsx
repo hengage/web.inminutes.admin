@@ -33,9 +33,7 @@ const RiderCard = ({ singleRider }: RiderCardProps) => {
       <div className="grid grid-cols-3 gap-4 text-center">
         <div>
           <h4 className="text-sm font-semibold text-gray-500">TOTAL DELIVERIES</h4>
-          <p className="text-lg font-bold text-ctm-primary-700">
-            {singleRider?.totalDeliveries ?? "N/A"}
-          </p>
+          <p className="text-lg font-bold text-ctm-primary-700">{singleRider?.totalDeliveries}</p>
         </div>
         <div>
           <h4 className="text-sm font-semibold text-gray-500">LAST UPDATE</h4>

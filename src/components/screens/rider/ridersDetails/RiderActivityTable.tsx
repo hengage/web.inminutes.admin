@@ -295,14 +295,16 @@ const RiderActivityTable = () => {
               });
             }}
           />
-          <div className="w-full flex justify-end justify-self-end">
-            <Input
-              className="w-fit"
-              slotBefore={<Search className="text-ctm-secondary-300" />}
-              placeholder="Search"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-            />
+          <div className="w-full flex justify-end">
+            <div className="relative flex items-center bg-ctm-secondary-50 rounded-md w-fit h-10">
+              <Search className="text-ctm-secondary-300 absolute left-3 h-5 w-5" />
+              <Input
+                className="pl-10 h-10 w-fit "
+                placeholder="Search"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+              />
+            </div>
           </div>
         </div>
         <DataTable

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Suspense, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 // Define interfaces
 interface WorkArea {
@@ -30,7 +31,7 @@ const Dashboard = () => {
   const [selectedWorkAreaId, setSelectedWorkAreaId] = useState<string | null>(null);
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-
+  const router = useRouter();
   // Fetch sessions for the selected work area and date
   const { data: sessions, isLoading: isSessionsLoading } = useGetSessionQuery(
     selectedDate ? format(selectedDate, "yyyy-MM-dd") : "",
@@ -47,13 +48,11 @@ const Dashboard = () => {
   const handleWorkAreaClick = (workAreaId: string) => {
     setSelectedWorkAreaId(workAreaId);
     setSelectedSessionId(null); // Reset session when work area changes
-    setSelectedDate(undefined);
   };
 
   // Handle session selection
   const handleSessionClick = (sessionId: string) => {
     setSelectedSessionId(sessionId);
-    setSelectedDate(undefined);
   };
 
   if (isWorkAreaLoading) {
@@ -157,7 +156,10 @@ const Dashboard = () => {
                       width={40}
                       height={40}
                     />
-                    <div>
+                    <div
+                      onClick={() => router.push(`rider/${rider?._id}`)}
+                      className="cursor-pointer"
+                    >
                       <p className="text-sm capitalize font-semibold">{rider.fullName}</p>
                       <p className="text-xs text-gray-500">ID: {rider._id}</p>
                     </div>

@@ -17,7 +17,7 @@ export const useGetRidersQuery = (filter: unknown) => {
     >,
     Error
   >({
-    queryKey: [QUERY_KEYS.RIDERS],
+    queryKey: [QUERY_KEYS.RIDERS, filter],
     queryFn: async () => {
       const response = await https.get(
         "/riders" + `${stringifyQuery(filter as Record<string, string | string[] | number>)}`
@@ -48,7 +48,7 @@ export const useGetRidersApplicationQuery = (
     >,
     Error
   >({
-    queryKey: [QUERY_KEYS.RIDERS],
+    queryKey: [QUERY_KEYS.RIDERS, filter],
     queryFn: async () => {
       const response = await https.get(`/riders${stringifyQuery(filter)}`);
       return response.data.data.riders;
@@ -118,7 +118,7 @@ export const useGetSingleRiderByIdQuery = (riderId: string | string[]) => {
     queryKey: ["singleRider", riderId],
     queryFn: async () => {
       const response = await https.get(`/riders/${riderId}`);
-      return response.data.data?.rider?.rider;
+      return response.data.data?.rider;
     },
     enabled: Boolean(riderId),
   });
@@ -285,5 +285,5 @@ export interface Rider {
     coordinates: [number, number];
   };
   rating: IRating;
-  totalDeliveries: number;
+  totalDeliveries: number | string;
 }

@@ -7,7 +7,7 @@ import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
-import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
+import { cn, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
@@ -16,6 +16,7 @@ import { IRider, useGetRidersQuery } from "@/api/rider";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const status = [
   { label: "All", value: "" }, // Added to show all riders
@@ -25,9 +26,12 @@ const status = [
 
 const RidersTable = () => {
   const router = useRouter();
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
+
   const [queryValues, setQueryValues] = useState<{
     [name: string]: string | string[] | number;
-  }>({ page: 1, limit: 30 });
+  }>({ searchQuery: searchInput, page: 1, limit: 30 });
 
   const { result } = useGetRidersQuery(queryValues);
 
@@ -134,10 +138,18 @@ const RidersTable = () => {
   useEffect(() => {
     setQueryValues({
       ...allParams,
+      searchQuery: debouncedSearchTerm,
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams]);
+  }, [allParams, debouncedSearchTerm]);
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="my-4">
@@ -158,8 +170,7 @@ const RidersTable = () => {
           </Button>
           <Button
             onClick={() => {
-              setQueryValues({ page: 1, limit: 30 });
-              router.push(`rider/${stringifyQuery({ page: 1, limit: 30 })}#0`);
+              setQueryValues({ searchQuery: "", page: 1, limit: 30 });
               result.refetch();
             }}
             variant={"secondary"}
@@ -189,8 +200,8 @@ const RidersTable = () => {
               className="w-fit bg-ctm-secondary-100"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={(queryValues.search as string) ?? ""}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>

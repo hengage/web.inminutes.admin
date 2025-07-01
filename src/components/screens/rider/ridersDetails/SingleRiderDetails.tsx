@@ -23,7 +23,6 @@ const SingleRiderDetails = () => {
   // Mock destination coordinates (replace with actual destination if available)
   const destinationCoords: [number, number] = [5.4833, 7.0333]; // Example: Owerri, Nigeria
   const polyline = [riderCoords, destinationCoords];
-  console.log("Rider Coordinates:", singleRider);
   // Custom marker icons
   const riderIcon = icon({
     iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", // Rider location icon

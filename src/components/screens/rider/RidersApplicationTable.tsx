@@ -16,11 +16,17 @@ import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import DateRangePicker from "@/components/ui/custom/Daterange";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const RidersApplicationTable = () => {
   const router = useRouter();
+  const [searchInput, setSearchInput] = useState("");
+
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
+
   const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>({
     approvalStatus: "pending",
+    searchQuery: searchInput,
   });
   const { result } = useGetRidersApplicationQuery(queryValues);
 
@@ -130,15 +136,24 @@ const RidersApplicationTable = () => {
     router.push(stringifyUrl(value));
     result.refetch();
   };
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
+
   const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
       approvalStatus: "pending",
+      searchQuery: debouncedSearchTerm,
       page: Number(allParams.page ?? 1),
       limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams]);
+  }, [allParams, debouncedSearchTerm]);
 
   const handleDateRangeChange = (fromDate: Date | null, toDate: Date | null) => {
     type QueryType = typeof queryValues & { fromDate?: string; toDate?: string };
@@ -188,7 +203,7 @@ const RidersApplicationTable = () => {
           <Button
             onClick={() => {
               setQueryValues((prev) => {
-                router.push(`rider/${stringifyQuery({ page: 1, limit: 30 })}#0`);
+                router.push(`rider/${stringifyQuery({ page: 1, limit: 30 })}#2`);
                 return { page: prev.page, limit: prev.limit };
               });
               result.refetch();
@@ -208,8 +223,8 @@ const RidersApplicationTable = () => {
               className="w-fit bg-ctm-secondary-100"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
