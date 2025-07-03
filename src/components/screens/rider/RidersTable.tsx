@@ -7,7 +7,7 @@ import PopOver from "@/components/ui/custom/PopOver";
 import { Icon } from "@/components/ui/Icon";
 import { Refresh2 } from "iconsax-react";
 import useUrlState from "@/hooks/useUrlState";
-import { cn, stringifyQuery, stringifyUrl } from "@/lib/utils";
+import { cn, stringifyUrl } from "@/lib/utils";
 import { Suspense, useEffect, useState } from "react";
 import RadioItems from "@/components/ui/custom/radio/RadioItems";
 import { CustomInput as Input } from "@/components/ui/custom/input";
@@ -16,23 +16,27 @@ import { IRider, useGetRidersQuery } from "@/api/rider";
 import DataTable from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const status = [
-  { label: "Active", value: "active" },
-  { label: "In Active", value: "inactive" },
+  { label: "All", value: "" }, // Added to show all riders
+  { label: "Active", value: "true" },
+  { label: "Inactive", value: "false" },
 ];
 
 const RidersTable = () => {
   const router = useRouter();
-  const [queryValues, setQueryValues] = useState<{ [name: string]: string | string[] | number }>(
-    {}
-  );
+  const [searchInput, setSearchInput] = useState("");
+  const debouncedSearchTerm = useDebounce(searchInput, 500);
+
+  const [queryValues, setQueryValues] = useState<{
+    [name: string]: string | string[] | number;
+  }>({ searchQuery: searchInput, page: 1, limit: 30 });
+
   const { result } = useGetRidersQuery(queryValues);
+
   const columns: ColumnDef<
-    Pick<
-      IRider,
-      "_id" | "fullName" | "email" | "displayName" | "email" | "currentlyWorking" | "phoneNumber"
-    >
+    Pick<IRider, "_id" | "fullName" | "displayName" | "email" | "currentlyWorking" | "phoneNumber">
   >[] = [
     {
       accessorKey: "index",
@@ -74,37 +78,35 @@ const RidersTable = () => {
       header: () => (
         <span className="whitespace-nowrap font-semibold text-base">Email Address</span>
       ),
-      cell: ({ row }) => {
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
-        );
-      },
+      cell: ({ row }) => (
+        <span className="font-normal text-base text-ctm-secondary-200">{row.original.email}</span>
+      ),
     },
     {
       accessorKey: "phone",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Phone Number</span>,
-      cell: ({ row }) => {
-        return (
-          <span className="font-normal text-base text-ctm-secondary-200 capitalize">
-            {row.original.phoneNumber}
-          </span>
-        );
-      },
+      cell: ({ row }) => (
+        <span className="font-normal text-base text-ctm-secondary-200 capitalize">
+          {row.original.phoneNumber}
+        </span>
+      ),
     },
     {
       accessorKey: "status",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Work Status</span>,
-      cell: ({ row }) => {
-        return <Tag tag={row.original.currentlyWorking ? "active" : "inactive"} />;
-      },
+      cell: ({ row }) => <Tag tag={row.original.currentlyWorking ? "active" : "inactive"} />,
     },
     {
       accessorKey: "actions",
       header: () => <span className="whitespace-nowrap font-semibold text-base">Action</span>,
-      cell: () => (
+      cell: ({ row }) => (
         <PopOver className="max-w-[110px]">
           <div className="flex flex-col justify-center items-center">
-            <Button className="w-[100px] justify-start" variant={"ghost"}>
+            <Button
+              className="w-[100px] justify-start"
+              variant={"ghost"}
+              onClick={() => router.push(`/rider/${row.original._id}`)}
+            >
               <Icon width={15} height={15} name="eye" />
               View
             </Button>
@@ -125,24 +127,30 @@ const RidersTable = () => {
       ),
     },
   ];
-  // const handleQueryChange = (key: string, selectedOptions: string | string[] | number) => {
-  //   setQueryValues((prevqueryValues) => ({
-  //     ...prevqueryValues,
-  //     ...{ [key]: selectedOptions },
-  //   }));
-  // };
-  const handleRefresh = (value: typeof queryValues) => {
-    router.push(stringifyUrl(value));
+
+  const handleRefresh = () => {
+    router.push(stringifyUrl(queryValues));
     result.refetch();
   };
+
+  // Sync queryValues with URL params
   const { allParams = {} } = useUrlState();
   useEffect(() => {
     setQueryValues({
       ...allParams,
+      searchQuery: debouncedSearchTerm,
       page: Number(allParams.page ?? 1),
-      limit: Number(allParams.limit ?? 10),
+      limit: Number(allParams.limit ?? 30),
     });
-  }, [allParams]);
+  }, [allParams, debouncedSearchTerm]);
+
+  useEffect(() => {
+    setQueryValues((prev) => ({
+      ...prev,
+      searchQuery: debouncedSearchTerm,
+    }));
+  }, [debouncedSearchTerm]);
+
   return (
     <div className="my-4">
       <div className="bg-ctm-background rounded-md border-ctm-secondary-100 p-2 mb-2">
@@ -151,9 +159,7 @@ const RidersTable = () => {
             className="stroke-ctm-secondary-300 hover:stroke-ctm-primary-500 px-4"
             variant={"secondary"}
             size="icon"
-            onClick={() => {
-              handleRefresh(queryValues);
-            }}
+            onClick={handleRefresh}
             disabled={result.isRefetching}
           >
             <Refresh2
@@ -164,10 +170,7 @@ const RidersTable = () => {
           </Button>
           <Button
             onClick={() => {
-              setQueryValues((prev) => {
-                router.push(`vendor/${stringifyQuery({ page: 1, limit: 10 })}#0`);
-                return { page: prev.page, limit: prev.limit };
-              });
+              setQueryValues({ searchQuery: "", page: 1, limit: 30 });
               result.refetch();
             }}
             variant={"secondary"}
@@ -175,23 +178,6 @@ const RidersTable = () => {
           >
             Clear Filter
           </Button>
-          <PopOver
-            trigger={
-              <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
-                Vehicle Type
-                <Icon name="arrow-down" height={16} width={16} />
-              </Button>
-            }
-            className="bg-ctm-background border border-ctm-primary-500 rounded-[16px] p-1"
-          >
-            <RadioItems
-              onSubmit={(params) => {
-                setQueryValues((prev) => ({ ...prev, status: params ?? "" }));
-              }}
-              selectedItem={(queryValues.status as string) ?? ""}
-              items={status}
-            />
-          </PopOver>
           <PopOver
             trigger={
               <Button className="stroke-ctm-secondary-300" variant={"secondary"}>
@@ -214,15 +200,15 @@ const RidersTable = () => {
               className="w-fit bg-ctm-secondary-100"
               slotBefore={<Search className="text-ctm-secondary-300" />}
               placeholder="Search"
-              value={queryValues.search}
-              onChange={(e) => setQueryValues((prev) => ({ ...prev, search: e.target.value }))}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
         </div>
         <DataTable dataQuery={result} columns={columns} />
-        {result.data?.data.length && result.data?.data.length > 0 ? (
+        {result.data?.data?.length && result.data?.data?.length > 0 ? (
           <Pagination
-            total={result.data?.total ?? 10}
+            total={result.data?.total ?? 30}
             page={Number(queryValues.page)}
             limit={Number(queryValues.limit)}
           />
