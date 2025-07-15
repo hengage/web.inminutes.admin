@@ -1,24 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useState } from "react";
+import React from "react";
 // import { format } from "date-fns";
-import MetricsTab from "./MetricsTab";
 import SummaryCard, { MiniTable } from "./SummaryCard";
 import MiniTableSummary from "./MiniTableSummary";
-import { Products, Timeframe } from "./DashboardChart";
-const ProductsTab = () => {
-  const today = new Date();
-  const [startDate, setStartDate] = useState<Date | undefined>(
-    new Date(today.getFullYear(), today.getMonth(), 1)
-  );
-  const [timeFrame, setTimeFrame] = useState("today");
+import { Products } from "./DashboardChart";
+import { GraphProps } from "@/lib/comon/order-utils";
+import {
+  useGetProductsSummaryQuery,
+  useGetTopProductsCatQuery,
+  useGetTopProductsQuery,
+} from "@/api/metrics";
 
-  const [endDate, setEndDate] = useState<Date | undefined>(today);
+const ProductsTab = ({ startDate, endDate }: GraphProps) => {
+  const { data: productSummary } = useGetProductsSummaryQuery();
+  const { data: topProduct } = useGetTopProductsQuery();
+  const { data: topCategories } = useGetTopProductsCatQuery();
 
   const metrics = [
     {
       label: "Total Products",
-      value: 200,
+      value: productSummary?.totalProducts,
       icon: (
         <svg
           width="18"
@@ -53,7 +55,7 @@ const ProductsTab = () => {
     },
     {
       label: "Products Applicants",
-      value: 50,
+      value: productSummary?.productApplicants,
       icon: (
         <svg
           width="18"
@@ -95,7 +97,7 @@ const ProductsTab = () => {
     },
     {
       label: "Products Categories",
-      value: 14,
+      value: productSummary?.categories,
       icon: (
         <svg
           width="18"
@@ -130,7 +132,7 @@ const ProductsTab = () => {
     },
     {
       label: "Sub-Categories",
-      value: 20,
+      value: productSummary?.subCategories,
       icon: (
         <svg
           width="18"
@@ -152,31 +154,15 @@ const ProductsTab = () => {
     },
   ];
 
-  const topVendors = [
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 46 },
-  ];
-
-  const customersData = [
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-  ];
-
   return (
     <main className="flex flex-col p-6">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
             <h3 className="text-base text-[#2E323A] mb-4">Total Product</h3>
-            <h2 className="text-xl font-bold text-[#160A62] ">200</h2>
+            <h2 className="text-xl font-bold text-[#160A62] ">{productSummary?.totalProducts}</h2>
 
-            <Products timeFrame={timeFrame as Timeframe} startDate={startDate} endDate={endDate} />
+            <Products startDate={startDate} endDate={endDate} />
           </div>
         </section>
         <section className="h-full w-full gap-8 flex flex-col">
@@ -184,12 +170,12 @@ const ProductsTab = () => {
         </section>
       </div>
       <div className="grid grid-cols-2 gap-8 mt-8">
-        <MiniTable title="Top 5 Products" subText="Products" topList={topVendors} />
+        <MiniTable title="Top 5 Products" subText="Products" topList={topProduct} />
         <MiniTableSummary
           title="Top 5 Categories"
           subText="Number of Products"
           subTitle="Products"
-          data={customersData}
+          data={topCategories}
         />
       </div>
     </main>

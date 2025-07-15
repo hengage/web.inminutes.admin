@@ -1,30 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 // import { format } from "date-fns";
 
 import SummaryCard, { MiniTable } from "./SummaryCard";
 import MiniTableSummary from "./MiniTableSummary";
-import { Timeframe, Vendors } from "./DashboardChart";
-const VendorsTab = () => {
-  const today = new Date();
-  new Date(today.getFullYear(), today.getMonth(), 1);
-  const [timeFrame, setTimeFrame] = useState("today");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleTimeFrameChange = (value: string) => {
-    setTimeFrame(value);
-    if (value !== "custom") {
-      setStartDate(null);
-      setEndDate(null);
-    }
-  };
+import { Vendors } from "./DashboardChart";
+import { GraphProps } from "@/lib/comon/order-utils";
+import {
+  useGetTopVendorsCatQuery,
+  useGetTopVendorsQuery,
+  useGetVendorsSummaryQuery,
+} from "@/api/metrics";
+const VendorsTab = ({ startDate, endDate }: GraphProps) => {
+  const { data: topCategories } = useGetTopVendorsCatQuery();
+  const { data: topVendors } = useGetTopVendorsQuery();
+  const { data: topVendorsSummary } = useGetVendorsSummaryQuery();
 
   const metrics = [
     {
       label: "Total Vendor",
-      value: 200,
+      value: topVendorsSummary?.vendorsCount,
       icon: (
         <svg
           width="18"
@@ -45,7 +40,7 @@ const VendorsTab = () => {
     },
     {
       label: "Vendor Applicants",
-      value: 50,
+      value: topVendorsSummary?.pendingVendorsCount,
       icon: (
         <svg
           width="18"
@@ -87,7 +82,7 @@ const VendorsTab = () => {
     },
     {
       label: "Vendor Categories",
-      value: 14,
+      value: topVendorsSummary?.categoriesCount,
       icon: (
         <svg
           width="18"
@@ -122,7 +117,7 @@ const VendorsTab = () => {
     },
     {
       label: "Sub-Categories",
-      value: 20,
+      value: topVendorsSummary?.subCategoriesCount,
       icon: (
         <svg
           width="18"
@@ -144,31 +139,15 @@ const VendorsTab = () => {
     },
   ];
 
-  const topVendors = [
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 50 },
-    { name: "Genesis Foods", percentage: 46 },
-    { name: "Genesis Foods", percentage: 90 },
-    { name: "Genesis Foods", percentage: 46 },
-  ];
-
-  const customersData = [
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-  ];
-
   return (
     <main className="flex flex-col p-6">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
             <h3 className="text-base text-[#2E323A] mb-4">Total Vendors</h3>
-            <h2 className="text-xl font-bold text-[#160A62] ">200</h2>
+            <h2 className="text-xl font-bold text-[#160A62] ">{topVendorsSummary?.vendorsCount}</h2>
 
-            <Vendors timeFrame={timeFrame as Timeframe} startDate={startDate} endDate={endDate} />
+            <Vendors startDate={startDate} endDate={endDate} />
           </div>
         </section>
         <section className="h-full w-full gap-8 flex flex-col">
@@ -186,7 +165,7 @@ const VendorsTab = () => {
           title="Top 5 Categories"
           subText="Number of vendors"
           subTitle="Category"
-          data={customersData}
+          data={topCategories}
         />
       </div>
     </main>

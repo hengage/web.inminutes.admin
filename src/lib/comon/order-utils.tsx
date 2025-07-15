@@ -244,3 +244,72 @@ export const getErrandStatusIcon = (status: string) => {
       return null;
   }
 };
+
+export interface GraphProps {
+  startDate: Date | null;
+  endDate: Date | null;
+}
+
+export const transformChartData = (
+  data: { _id: { year: number; month: number }; count: number }[]
+) => {
+  return data?.map((item) => ({
+    date: `${new Date(item._id.year, item._id.month - 1).toLocaleString("default", { month: "short" })} ${item._id.year}`,
+    count: item.count,
+  }));
+};
+
+export const transformCompareChartData = (data: {
+  totalRiders: { _id: { year: number; month: number }; count: number }[];
+  activeRiders: { _id: { year: number; month: number }; count: number }[];
+}) => {
+  // Create a map to combine data by date
+  const dataMap = new Map<string, { date: string; Riders: number; ActiveRiders: number }>();
+
+  // Process totalRiders
+  data.totalRiders.forEach((item) => {
+    const date = `${new Date(item._id.year, item._id.month - 1).toLocaleString("default", { month: "short" })} ${item._id.year}`;
+    dataMap.set(date, { date, Riders: item.count, ActiveRiders: 0 });
+  });
+
+  // Process activeRiders and merge with totalRiders
+  data.activeRiders.forEach((item) => {
+    const date = `${new Date(item._id.year, item._id.month - 1).toLocaleString("default", { month: "short" })} ${item._id.year}`;
+    const existing = dataMap.get(date) || { date, Riders: 0, ActiveRiders: 0 };
+    dataMap.set(date, { ...existing, ActiveRiders: item.count });
+  });
+
+  // Convert map to array and sort by date
+  return Array.from(dataMap.values()).sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateA - dateB;
+  });
+};
+export const transformVendorsChartData = (data: {
+  totalVendors: { _id: { year: number; month: number }; count: number }[];
+  activeVendors: { _id: { year: number; month: number }; count: number }[];
+}) => {
+  // Create a map to combine data by date
+  const dataMap = new Map<string, { date: string; Vendors: number; ActiveVendors: number }>();
+
+  // Process totalVendors
+  data.totalVendors.forEach((item) => {
+    const date = `${new Date(item._id.year, item._id.month - 1).toLocaleString("default", { month: "short" })} ${item._id.year}`;
+    dataMap.set(date, { date, Vendors: item.count, ActiveVendors: 0 });
+  });
+
+  // Process activeVendors and merge with totalVendors
+  data.activeVendors.forEach((item) => {
+    const date = `${new Date(item._id.year, item._id.month - 1).toLocaleString("default", { month: "short" })} ${item._id.year}`;
+    const existing = dataMap.get(date) || { date, Vendors: 0, ActiveVendors: 0 };
+    dataMap.set(date, { ...existing, ActiveVendors: item.count });
+  });
+
+  // Convert map to array and sort by date
+  return Array.from(dataMap.values()).sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateA - dateB;
+  });
+};

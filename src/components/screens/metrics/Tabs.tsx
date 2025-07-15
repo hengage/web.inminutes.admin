@@ -14,20 +14,10 @@ import DateRangePicker from "@/components/ui/custom/Daterange";
 const Tabs = () => {
   const { hashParams, updateHashUrl } = useUrlHash();
   const today = new Date();
-  new Date(today.getFullYear(), today.getMonth(), 1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [timeFrame, setTimeFrame] = useState("today");
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleTimeFrameChange = (value: string) => {
-    setTimeFrame(value);
-    if (value !== "custom") {
-      setStartDate(null);
-      setEndDate(null);
-    }
-  };
+  const [startDate, setStartDate] = useState<Date | null>(
+    new Date(today.getFullYear(), today.getMonth(), 1)
+  );
+  const [endDate, setEndDate] = useState<Date | null>(today);
 
   // Defer hash URL generation to client-side
   const getTabLink = (tab: string) => ({
@@ -35,6 +25,13 @@ const Tabs = () => {
     query: { page: 1, limit: 30 },
     hash: updateHashUrl({ tab }).substring(1),
   });
+
+  const handleDateRangeChange = (from: Date | null, to: Date | null) => {
+    if (from && to) {
+      setStartDate(from);
+      setEndDate(to);
+    }
+  };
 
   return (
     <main className="w-[98%] py-[2%] mx-auto">
@@ -48,10 +45,7 @@ const Tabs = () => {
             className="border-2 border-black/40"
             fromDate={startDate ?? undefined}
             toDate={endDate ?? undefined}
-            onApply={(from, to) => {
-              setStartDate(from ?? null);
-              setEndDate(to ?? null);
-            }}
+            onApply={handleDateRangeChange}
           />
         </div>
       </div>
@@ -60,22 +54,22 @@ const Tabs = () => {
         items={[
           {
             trigger: <Link href={getTabLink("0")}>Vendors</Link>,
-            content: <VendorsTab />,
+            content: <VendorsTab startDate={startDate} endDate={endDate} />,
             key: "0",
           },
           {
             trigger: <Link href={getTabLink("1")}>Riders</Link>,
-            content: <RidersTab />,
+            content: <RidersTab startDate={startDate} endDate={endDate} />,
             key: "1",
           },
           {
             trigger: <Link href={getTabLink("2")}>Products</Link>,
-            content: <ProductsTab />,
+            content: <ProductsTab startDate={startDate} endDate={endDate} />,
             key: "2",
           },
           {
             trigger: <Link href={getTabLink("3")}>Customers</Link>,
-            content: <CustomersTab />,
+            content: <CustomersTab startDate={startDate} endDate={endDate} />,
             key: "3",
           },
         ]}

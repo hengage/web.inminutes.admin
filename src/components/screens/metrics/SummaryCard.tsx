@@ -8,7 +8,11 @@ type Metric = {
 };
 
 type TopListItem = {
-  name: string;
+  name?: string;
+  businessName?: string;
+  productName?: string;
+  averageRating?: number; // 0-5 scale
+  popularityPercentage?: number; // 0-100 scale
   subLabel?: string;
   percentage?: number;
   value?: string;
@@ -100,26 +104,42 @@ export const MiniTable = ({ title, subText, topList }: MiniTableSummaryProps) =>
         <span>Popularity</span>
       </div>
       <div className="space-y-2">
-        {topList.map((item, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-[50px_1fr_200px] text-sm text-gray-700 py-2 border-b"
-          >
-            <span className="text-gray-500">{index + 1}</span>
-            <span>{item.name}</span>
-            <div className="text-right flex items-center gap-3">
-              <div className="w-24 bg-gray-200 rounded-full h-2.5">
-                <div
-                  className="bg-[#3F2BC3] h-2.5 rounded-full"
-                  style={{ width: `${item.percentage || 0}%` }}
-                ></div>
+        {topList?.map((item, index) => {
+          const ratingPercentage =
+            typeof item.popularityPercentage === "number"
+              ? item.popularityPercentage
+              : typeof item.averageRating === "number"
+                ? (item.averageRating / 5) * 100
+                : 0;
+
+          // Format display rating
+          const displayRating =
+            typeof item.popularityPercentage === "number"
+              ? `${item.popularityPercentage}%`
+              : typeof item.averageRating === "number"
+                ? `${item.averageRating.toFixed(2)}/5`
+                : "N/A";
+          return (
+            <div
+              key={index}
+              className="grid grid-cols-[50px_1fr_200px] text-sm text-gray-700 py-2 border-b"
+            >
+              <span className="text-gray-500">{index + 1}</span>
+              <span className="capitalize">{item.businessName || item?.productName}</span>
+              <div className="text-right flex items-center gap-3">
+                <div className="w-24 bg-gray-200 rounded-full h-2.5">
+                  <div
+                    className="bg-[#3F2BC3] h-2.5 rounded-full"
+                    style={{ width: `${ratingPercentage || 0}%` }}
+                  ></div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1 border p-2 px-4 rounded border-[#0D0D0E]">
+                  {displayRating || item?.popularityPercentage}%
+                </p>
               </div>
-              <p className="text-xs text-gray-600 mt-1 border p-2 px-4 rounded border-[#0D0D0E]">
-                {item.percentage}%
-              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

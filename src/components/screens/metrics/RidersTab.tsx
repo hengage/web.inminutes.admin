@@ -5,19 +5,17 @@ import React, { useState } from "react";
 
 import SummaryCard from "./SummaryCard";
 import MiniTableSummary from "./MiniTableSummary";
-import { Riders, Timeframe } from "./DashboardChart";
-const RidersTab = () => {
-  const today = new Date();
-  const [startDate, setStartDate] = useState<Date | undefined>(
-    new Date(today.getFullYear(), today.getMonth(), 1)
-  );
-  const [timeFrame, setTimeFrame] = useState("today");
-  const [endDate, setEndDate] = useState<Date | undefined>(today);
+import { Riders } from "./DashboardChart";
+import { useGetRidersSummaryQuery, useGetTopRidersQuery } from "@/api/metrics";
+import { GraphProps } from "@/lib/comon/order-utils";
+const RidersTab = ({ startDate, endDate }: GraphProps) => {
+  const { data: topRiders } = useGetTopRidersQuery();
+  const { data: ridersSummary } = useGetRidersSummaryQuery();
 
   const metrics = [
     {
       label: "Total Riders",
-      value: 200,
+      value: ridersSummary?.totalRiders,
       icon: (
         <svg
           width="18"
@@ -36,7 +34,7 @@ const RidersTab = () => {
     },
     {
       label: "Rider Applicants",
-      value: 50,
+      value: ridersSummary?.totalPendingRiders,
       icon: (
         <svg
           width="18"
@@ -78,7 +76,7 @@ const RidersTab = () => {
     },
     {
       label: "Rider Categories",
-      value: 14,
+      value: ridersSummary?.totalOrdersForRiders,
       icon: (
         <svg
           width="18"
@@ -124,7 +122,7 @@ const RidersTab = () => {
     },
     {
       label: "Total Errands",
-      value: 20,
+      value: ridersSummary?.totalErrandsForRiders,
       icon: (
         <svg
           width="18"
@@ -173,23 +171,15 @@ const RidersTab = () => {
     },
   ];
 
-  const customersData = [
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-  ];
-
   return (
     <main className="flex flex-col p-6">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
             <h3 className="text-base text-[#2E323A] mb-4">Total Riders</h3>
-            <h2 className="text-xl font-bold text-[#160A62] ">200</h2>
+            <h2 className="text-xl font-bold text-[#160A62] ">{ridersSummary?.totalRiders}</h2>
 
-            <Riders timeFrame={timeFrame as Timeframe} startDate={startDate} endDate={endDate} />
+            <Riders startDate={startDate} endDate={endDate} />
           </div>
         </section>
         <section className="h-full w-full gap-8 flex flex-col">
@@ -201,7 +191,7 @@ const RidersTab = () => {
           title="Top 5 Riders"
           subTitle="Rider"
           subText="Number of Deliveries"
-          data={customersData}
+          data={topRiders}
         />
       </div>
     </main>

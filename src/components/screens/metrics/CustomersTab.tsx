@@ -1,25 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useState } from "react";
-// import { format } from "date-fns";
-
-import MetricsTab from "./MetricsTab";
+import React from "react";
 import SummaryCard from "./SummaryCard";
 import MiniTableSummary from "./MiniTableSummary";
-import { Customers, Timeframe } from "./DashboardChart";
-const CustomersTab = () => {
-  const today = new Date();
-  const [startDate, setStartDate] = useState<Date | undefined>(
-    new Date(today.getFullYear(), today.getMonth(), 1)
-  );
-  const [timeFrame, setTimeFrame] = useState("today");
+import { Customers } from "./DashboardChart";
+import { useGetCustomersSummaryQuery, useGetTopCustomersQuery } from "@/api/metrics";
+import { GraphProps } from "@/lib/comon/order-utils";
 
-  const [endDate, setEndDate] = useState<Date | undefined>(today);
+const CustomersTab = ({ startDate, endDate }: GraphProps) => {
+  const { data: topCustomer } = useGetTopCustomersQuery();
+  const { data: customerSummary } = useGetCustomersSummaryQuery();
 
   const metrics = [
     {
       label: "Total Customers",
-      value: 200,
+      value: customerSummary?.totalCustomers,
       icon: (
         <svg
           width="18"
@@ -75,7 +70,7 @@ const CustomersTab = () => {
     },
     {
       label: "New Customers",
-      value: 50,
+      value: customerSummary?.newCustomers,
       icon: (
         <svg
           width="18"
@@ -117,7 +112,7 @@ const CustomersTab = () => {
     },
     {
       label: "Returning Customers",
-      value: 14,
+      value: customerSummary?.returningCustomers,
       icon: (
         <svg
           width="18"
@@ -166,23 +161,15 @@ const CustomersTab = () => {
     },
   ];
 
-  const customersData = [
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-    { name: "Jane Doe", deliveries: 200 },
-  ];
-
   return (
     <main className="flex flex-col p-6">
       <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-4">
         <section className="h-full w-full gap-6 flex flex-col">
           <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
             <h3 className="text-base text-[#2E323A] mb-4">Total Customer</h3>
-            <h2 className="text-xl font-bold text-[#160A62] ">200</h2>
+            <h2 className="text-xl font-bold text-[#160A62] ">{customerSummary?.totalCustomers}</h2>
 
-            <Customers timeFrame={timeFrame as Timeframe} startDate={startDate} endDate={endDate} />
+            <Customers startDate={startDate} endDate={endDate} />
           </div>
         </section>
         <section className="h-full w-full gap-8 flex flex-col">
@@ -194,7 +181,7 @@ const CustomersTab = () => {
           title="Top 5 Customers"
           subText="Deliveries"
           subTitle="Customer"
-          data={customersData}
+          data={topCustomer}
         />
       </div>
     </main>

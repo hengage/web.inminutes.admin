@@ -1,4 +1,15 @@
-import { useGetGraphDataQuery } from "@/api/dashboard";
+import {
+  useGetCustomersChartQuery,
+  useGetProductsChartQuery,
+  useGetRidersChartQuery,
+  useGetVendorsChartQuery,
+} from "@/api/metrics";
+import {
+  GraphProps,
+  transformChartData,
+  transformCompareChartData,
+  transformVendorsChartData,
+} from "@/lib/comon/order-utils";
 import {
   BarChart,
   Bar,
@@ -18,34 +29,42 @@ export type Timeframe =
   | "lastYear"
   | "custom";
 
-interface GraphProps {
-  timeFrame: Timeframe;
-  startDate?: Date | null | undefined;
-  endDate?: Date | null | undefined;
-}
-
-export const Vendors = ({ timeFrame, startDate, endDate }: GraphProps) => {
-  const filter = {
-    service: "vendors",
-    timeframe: timeFrame,
-    ...(timeFrame === "custom" && { startDate, endDate }),
-  };
-
-  const { data, isLoading, error } = useGetGraphDataQuery(filter);
+export const Vendors = ({ startDate, endDate }: GraphProps) => {
+  const { data, isLoading, error } = useGetVendorsChartQuery({
+    fromDate: startDate,
+    toDate: endDate,
+  });
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
+
+  const chartData = transformVendorsChartData(data || { totalVendors: [], activeVendors: [] });
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 flex items-center justify-center text-gray-500">
+        No data available for the selected period
+      </div>
+    );
+  }
+  const maxCount = Math.max(
+    ...chartData.map((item) => Math.max(item.Vendors, item.ActiveVendors)),
+    1
+  );
+  const yAxisTicks = Array.from({ length: 5 }, (_, i) =>
+    Math.ceil((Math.max(maxCount, 5) / 4) * i)
+  );
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickLine={false}
-            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
-            tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
+            ticks={yAxisTicks}
+            tickFormatter={(value) => value.toString()}
+            domain={[0, Math.max(maxCount, 5)]} // Ensure minimum range for visibility
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
@@ -60,29 +79,44 @@ export const Vendors = ({ timeFrame, startDate, endDate }: GraphProps) => {
   );
 };
 
-export const Riders = ({ timeFrame, startDate, endDate }: GraphProps) => {
-  const filter = {
-    service: "riders",
-    timeframe: timeFrame,
-    ...(timeFrame === "custom" && { startDate, endDate }),
-  };
-
-  const { data, isLoading, error } = useGetGraphDataQuery(filter);
+export const Riders = ({ startDate, endDate }: GraphProps) => {
+  const { data, isLoading, error } = useGetRidersChartQuery({
+    fromDate: startDate,
+    toDate: endDate,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
+  const chartData = transformCompareChartData(data || { totalRiders: [], activeRiders: [] });
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 flex items-center justify-center text-gray-500">
+        No data available for the selected period
+      </div>
+    );
+  }
+
+  const maxCount = Math.max(
+    ...chartData.map((item) => Math.max(item.Riders, item.ActiveRiders)),
+    1
+  );
+  const yAxisTicks = Array.from({ length: 5 }, (_, i) =>
+    Math.ceil((Math.max(maxCount, 5) / 4) * i)
+  );
+
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickLine={false}
-            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
-            tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
+            ticks={yAxisTicks}
+            tickFormatter={(value) => value.toString()}
+            domain={[0, Math.max(maxCount, 5)]}
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
@@ -96,108 +130,93 @@ export const Riders = ({ timeFrame, startDate, endDate }: GraphProps) => {
     </div>
   );
 };
-export const DeliveriesSummary = ({ timeFrame, startDate, endDate }: GraphProps) => {
-  const filter = {
-    // service: "orders",
-    service: "riders",
-    timeframe: timeFrame,
-    ...(timeFrame === "custom" && { startDate, endDate }),
-  };
 
-  const { data, isLoading, error } = useGetGraphDataQuery(filter);
+export const Customers = ({ startDate, endDate }: GraphProps) => {
+  const { data, isLoading, error } = useGetCustomersChartQuery({
+    fromDate: startDate,
+    toDate: endDate,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
+  const chartData = transformChartData(data || []);
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 flex items-center justify-center text-gray-500">
+        No data available for the selected period
+      </div>
+    );
+  }
+
+  const maxCount = Math.max(...chartData.map((item) => item.count), 1);
+  const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickLine={false}
-            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
-            tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
+            ticks={yAxisTicks}
+            tickFormatter={(value) => value.toString()}
+            domain={[0, Math.max(maxCount, 5)]}
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
             cursor={{ fill: "transparent" }}
           />
           <Legend wrapperStyle={{ bottom: -10 }} />
-          <Bar dataKey="Orders" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
-          <Bar dataKey="Errands" fill="#FF7D0C" barSize={18} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="count" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-export const Customers = ({ timeFrame, startDate, endDate }: GraphProps) => {
-  const filter = {
-    service: "customers",
-    timeframe: timeFrame,
-    ...(timeFrame === "custom" && { startDate, endDate }),
-  };
-
-  const { data, isLoading, error } = useGetGraphDataQuery(filter);
+export const Products = ({ startDate, endDate }: GraphProps) => {
+  const { data, isLoading, error } = useGetProductsChartQuery({
+    fromDate: startDate,
+    toDate: endDate,
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
+  const chartData = transformChartData(data || []);
+  if (chartData.length === 0) {
+    return (
+      <div className="h-64 flex items-center justify-center text-gray-500">
+        No data available for the selected period
+      </div>
+    );
+  }
+
+  const maxCount = Math.max(...chartData.map((item) => item.count), 1);
+  const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
             axisLine={false}
             tickLine={false}
-            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
-            tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
+            ticks={yAxisTicks}
+            tickFormatter={(value) => value.toString()}
+            domain={[0, Math.max(maxCount, 5)]}
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
             cursor={{ fill: "transparent" }}
           />
           <Legend wrapperStyle={{ bottom: -10 }} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
-};
-
-export const Products = ({ timeFrame, startDate, endDate }: GraphProps) => {
-  const filter = {
-    service: "Product",
-    timeframe: timeFrame,
-    ...(timeFrame === "custom" && { startDate, endDate }),
-  };
-
-  const { data, isLoading, error } = useGetGraphDataQuery(filter);
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
-
-  return (
-    <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data?.data?.series} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="date" axisLine={false} tickLine={false} />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            ticks={[0, 1000, 2000, 3000, 4000, 5000]}
-            tickFormatter={(value) => (value === 0 ? "0" : `${value / 1000}k`)}
-          />
-          <Tooltip
-            contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
-            cursor={{ fill: "transparent" }}
-          />
-          <Legend wrapperStyle={{ bottom: -10 }} />
+          <Bar dataKey="count" fill="#3F2BC3" barSize={18} radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

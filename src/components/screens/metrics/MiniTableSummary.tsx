@@ -5,7 +5,16 @@ type MiniTableSummaryProps = {
   title: string;
   subTitle?: string;
   subText?: string;
-  data?: { name: string; deliveries: number }[];
+  data?: {
+    fullName?: string;
+    deliveries?: number;
+    totalDeliveries?: number;
+    riderId?: string;
+    categoryName?: string;
+    categoryId?: string;
+    vendorCount?: number;
+    productCount?: number;
+  }[];
 };
 
 const MiniTableSummary = ({ title, subTitle, subText, data = [] }: MiniTableSummaryProps) => {
@@ -24,12 +33,14 @@ const MiniTableSummary = ({ title, subTitle, subText, data = [] }: MiniTableSumm
       <div className="space-y-2">
         {data.map((item, index) => (
           <div
-            key={index}
+            key={index || item?.riderId || item?.categoryId}
             className="grid grid-cols-[50px_1fr_100px] text-sm text-[#656667] py-2 border-b"
           >
             <span className="text-[#656667]">{index + 1}</span>
-            <span>{item.name}</span>
-            <span className="text-[#160A62] font-bold">{item.deliveries}</span>
+            <span className="capitalize">{item.fullName || item?.categoryName}</span>
+            <span className="text-[#160A62] font-bold">
+              {item.deliveries || item?.vendorCount || item?.totalDeliveries || item?.productCount}
+            </span>
           </div>
         ))}
       </div>
