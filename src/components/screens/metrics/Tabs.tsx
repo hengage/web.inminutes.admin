@@ -15,7 +15,7 @@ const Tabs = () => {
   const { hashParams, updateHashUrl } = useUrlHash();
   const today = new Date();
   const [startDate, setStartDate] = useState<Date | null>(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())
   );
   const [endDate, setEndDate] = useState<Date | null>(today);
 
