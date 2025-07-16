@@ -75,7 +75,7 @@ const RidersTab = ({ startDate, endDate }: GraphProps) => {
       ),
     },
     {
-      label: "Rider Categories",
+      label: "Total Orders",
       value: ridersSummary?.totalOrdersForRiders,
       icon: (
         <svg
