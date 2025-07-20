@@ -34,7 +34,7 @@ const Tabs = () => {
   };
 
   return (
-    <main className="w-full bg-white p-4 mx-auto">
+    <main className="w-full bg-white py-2 px-4 mx-auto">
       <div className="flex justify-between items-center">
         <h2 className="ctm-header-1 text-ctm-primary-700">Metrics</h2>
         <div className="flex space-x-3 mb-4 items-center">

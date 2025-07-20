@@ -31,7 +31,7 @@ const DashboardSidebar = () => {
             </li>
           ))}
         </ul>
-        <span className="absolute bottom-[-55%] pl-4">
+        <span className="absolute bottom-[-40%] pl-4">
           <Button
             variant={"ctm-ghost"}
             slotBefore={<Icon name={"logout"} />}
