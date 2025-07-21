@@ -215,7 +215,7 @@ const Dashbord = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold text-gray-800">Ongoing Errands</h3>
               <Link
-                href="/errands"
+                href="/errand"
                 className="text-sm text-ctm-primary-500 hover:text-ctm-primary-500"
               >
                 See all
