@@ -62,7 +62,7 @@ export const Vendors = ({ startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -71,6 +71,7 @@ export const Vendors = ({ startDate, endDate }: GraphProps) => {
             ticks={yAxisTicks}
             tickFormatter={(value) => value.toString()}
             domain={[0, Math.max(maxCount, 5)]} // Ensure minimum range for visibility
+            orientation="left"
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
@@ -120,7 +121,7 @@ export const Riders = ({ startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -174,7 +175,7 @@ export const Customers = ({ startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -227,7 +228,7 @@ export const Products = ({ startDate, endDate }: GraphProps) => {
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
