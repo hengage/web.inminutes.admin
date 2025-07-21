@@ -163,9 +163,9 @@ const CustomersTab = ({ startDate, endDate }: GraphProps) => {
 
   return (
     <main className="flex flex-col p-6">
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_400px] gap-8">
         <section className="h-full w-full gap-6 flex flex-col">
-          <div className="bg-white rounded-lg p-4 w-full h-full flex flex-col">
+          <div className="bg-white rounded-lg p-4 w-full h-full shadow flex flex-col">
             <h3 className="text-base text-[#2E323A] mb-4">Total Customer</h3>
             <h2 className="text-xl font-bold text-[#160A62] ">{customerSummary?.totalCustomers}</h2>
 

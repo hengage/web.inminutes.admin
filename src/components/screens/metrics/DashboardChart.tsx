@@ -49,14 +49,20 @@ export const Vendors = ({ startDate, endDate }: GraphProps) => {
     ...chartData.map((item) => Math.max(item.Vendors, item.ActiveVendors)),
     1
   );
-  const yAxisTicks = Array.from({ length: 5 }, (_, i) =>
-    Math.ceil((Math.max(maxCount, 5) / 4) * i)
+  const tickCount = Math.max(maxCount, 5);
+  const stepSize = Math.ceil(tickCount / 4); // Divide into ~4 steps
+  const yAxisTicks = Array.from(
+    { length: Math.floor(tickCount / stepSize) + 1 },
+    (_, i) => i * stepSize
   );
+
+  //   const tickCount = Math.max(maxCount, 5); // Ensure at least 5 ticks
+  // const yAxisTicks = Array.from({ length: tickCount + 1 }, (_, i) => i);
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -65,6 +71,7 @@ export const Vendors = ({ startDate, endDate }: GraphProps) => {
             ticks={yAxisTicks}
             tickFormatter={(value) => value.toString()}
             domain={[0, Math.max(maxCount, 5)]} // Ensure minimum range for visibility
+            orientation="left"
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
@@ -101,14 +108,20 @@ export const Riders = ({ startDate, endDate }: GraphProps) => {
     ...chartData.map((item) => Math.max(item.Riders, item.ActiveRiders)),
     1
   );
-  const yAxisTicks = Array.from({ length: 5 }, (_, i) =>
-    Math.ceil((Math.max(maxCount, 5) / 4) * i)
+  const tickCount = Math.max(maxCount, 5);
+  const stepSize = Math.ceil(tickCount / 4); // Divide into ~4 steps
+  const yAxisTicks = Array.from(
+    { length: Math.floor(tickCount / stepSize) + 1 },
+    (_, i) => i * stepSize
   );
+
+  // const tickCount = Math.max(maxCount, 5); // Ensure at least 5 ticks
+  // const yAxisTicks = Array.from({ length: tickCount + 1 }, (_, i) => i);
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -116,7 +129,7 @@ export const Riders = ({ startDate, endDate }: GraphProps) => {
             tickLine={false}
             ticks={yAxisTicks}
             tickFormatter={(value) => value.toString()}
-            domain={[0, Math.max(maxCount, 5)]}
+            domain={[0, Math.max(maxCount, 6)]}
           />
           <Tooltip
             contentStyle={{ backgroundColor: "transparent", border: "none", boxShadow: "none" }}
@@ -150,12 +163,19 @@ export const Customers = ({ startDate, endDate }: GraphProps) => {
   }
 
   const maxCount = Math.max(...chartData.map((item) => item.count), 1);
-  const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+  // const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+
+  const tickCount = Math.max(maxCount, 5);
+  const stepSize = Math.ceil(tickCount / 4); // Divide into ~4 steps
+  const yAxisTicks = Array.from(
+    { length: Math.floor(tickCount / stepSize) + 1 },
+    (_, i) => i * stepSize
+  );
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
@@ -196,12 +216,19 @@ export const Products = ({ startDate, endDate }: GraphProps) => {
   }
 
   const maxCount = Math.max(...chartData.map((item) => item.count), 1);
-  const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+  // const yAxisTicks = Array.from({ length: 5 }, (_, i) => Math.ceil((maxCount / 4) * i));
+
+  const tickCount = Math.max(maxCount, 5);
+  const stepSize = Math.ceil(tickCount / 4); // Divide into ~4 steps
+  const yAxisTicks = Array.from(
+    { length: Math.floor(tickCount / stepSize) + 1 },
+    (_, i) => i * stepSize
+  );
 
   return (
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 5, right: 30, left: -40, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="date" axisLine={false} tickLine={false} />
           <YAxis
